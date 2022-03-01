@@ -1,0 +1,6 @@
+<prefab version="0.9.3">
+	<group id_="985393920" open_="true" name="instance=MOD/demo/prefab/grass.xml" pos="208.30002 -0.1 -156.8" rot="0.0 0.0 0.0">
+		<voxbox id_="1772201600" pos="-99.9 0.0 -100.0" texture="4" size="2000 1 2000" color="0.1 0.15 0.02"/>
+	</group>
+</prefab>
+

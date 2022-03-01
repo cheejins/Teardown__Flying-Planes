@@ -1,0 +1,180 @@
+<scene id_="33687560" open_="true" version="0.9.5" shadowVolume="100 100 100">
+	<group id_="533167904" open_="true" name="Map Static">
+		<script id_="646945344" file="sandbox.lua"/>
+		<script id_="360732160" file="main.lua"/>
+		<water id_="1473601408" pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="5000 5000" depth="10" wave="0" ripple="0.01" motion="0"/>
+		<spawnpoint id_="170535088" name="spawnpoint" pos="11.49999 2.9 125.99998" rot="0.0 60.0 0.0"/>
+		<body id_="1410289664" open_="true" name="Cheejin Sign" pos="130.10001 -5.3 -90.4" rot="0.0 -90.0 0.0">
+			<vox id_="1972819584" pos="2.5 -3.2 0.2" rot="0.0 90.0 0.0" file="MOD/demo/cheejins_sign.vox"/>
+			<vox id_="1492804608" pos="0.1 -3.2 0.0" rot="0.0 -90.0 0.0" file="MOD/demo/cheejins_sign.vox"/>
+		</body>
+		<environment id_="539000960" template="sunset" skyboxtint="1.0 0.66 0.46" fogColor="0.52 0.35 0.14" fogParams="0 0 0 0" sunBrightness="4" sunColorTint="0.15 0.26 1.0"/>
+	</group>
+	<group id_="1803005440" open_="true" name="Map Solid" pos="100.0 -0.1 -200.10001">
+		<group id_="1967117568" open_="true" name="Runway" pos="-98.7 -0.0 326.79999" rot="0.0 180.0 0.0">
+			<vox id_="344216096" tags="nocull" pos="53.3 0.0 -14.59999" texture="6" file="MOD/demo/ground/runways/runway_main_straight_short.vox"/>
+			<vox id_="2088628736" tags="nocull" pos="-67.2 0.0 -13.50001" rot="0.0 -180.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_straight_start.vox"/>
+			<vox id_="2121005440" tags="nocull" pos="-65.3 0.0 -44.20001" rot="0 0 0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="1771087488" tags="nocull" pos="-42.1 0.0 -69.3" rot="0.0 -30.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="972875776" tags="nocull" pos="-9.5 0.0 -79.40001" rot="0.0 -60.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="621974592" tags="nocull" pos="23.8 0.0 -71.8" rot="0.0 -90.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="1491821440" tags="nocull" pos="48.9 0.0 -48.6" rot="0.0 -120.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="2139618816" tags="nocull" pos="55.0 0.0 -29.3" rot="0.0 -150.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve_short.vox"/>
+			<vox id_="553288704" tags="nocull" pos="-67.2 0.0 50.3" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="700032768" tags="nocull" pos="53.3 0.0 50.30001" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="22480220" tags="nocull" pos="53.29999 0.0 152.60001" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="962454912" tags="nocull" pos="-67.2 0.0 152.60001" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="1465605504" tags="nocull" pos="53.29998 0.0 254.90001" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="1663798400" tags="nocull" pos="-67.2 0.0 254.90001" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="647076416" tags="nocull" pos="53.29997 0.0 357.20001" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="524844320" tags="nocull" pos="-67.2 0.0 357.20001" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="1175656576" tags="nocull" pos="53.29996 0.0 459.5" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="1372866432" tags="nocull" pos="-67.2 0.0 459.5" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="1432573312" tags="nocull" pos="-67.2 0.0 561.90002" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="548831936" tags="nocull" pos="53.29995 0.0 561.90002" texture="6" file="MOD/demo/ground/runways/runway_main_straight.vox"/>
+			<vox id_="493385120" tags="nocull" pos="51.39994 0.0 630.90002" rot="0.0 -180.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="691315904" tags="nocull" pos="28.19991 0.0 655.99994" rot="0.0 150.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="1716951424" tags="nocull" pos="-4.40014 0.0 666.1001" rot="0.0 120.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="450063168" tags="nocull" pos="-62.80011 0.0 635.30005" rot="0.0 60.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="1365525888" tags="nocull" pos="-37.70017 0.0 658.5" rot="0.0 90.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
+			<vox id_="713665088" tags="nocull" pos="-68.90018 0.0 616.0" rot="0.0 30.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve_short.vox"/>
+			<instance id_="1009184896" pos="-6.89998 -0.1 27.30005" rot="0.0 0.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
+			<instance id_="557221056" pos="-6.90002 -0.1 491.20004" rot="0.0 0.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
+			<instance id_="1580497152" pos="-6.9 -0.1 253.00005" rot="0.0 0.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
+		</group>
+		<group id_="2110650112" open_="true" name="Grass" pos="0.0 0.0 0.0" rot="0.0 0.0 0.0">
+			<instance id_="1479893248" pos="88.50001 0.0 23.60001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="823051328" pos="88.50001 0.0 -176.40013" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="691315904" pos="88.50001 0.0 -576.39984" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1882636544" pos="88.50001 0.0 -376.39996" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="760460608" pos="88.50001 0.0 223.60007" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="2108880640" pos="88.50001 0.0 423.6001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1313159424" pos="-111.50001 0.0 23.60001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="565020352" pos="-111.50001 0.0 -176.40013" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="2128870272" pos="-111.50001 0.0 -576.39984" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1123945472" pos="-111.50001 0.0 -376.39996" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1445812352" pos="-111.50001 0.0 223.60007" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1173559296" pos="-111.50001 0.0 423.6001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1409699840" pos="-111.50001 0.0 -776.39972" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1472093952" pos="88.50001 0.0 -776.39972" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="567576384" pos="88.50001 0.0 -890.29974" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="1706727168" pos="-111.50001 0.0 -890.29974" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="291325312" pos="88.50001 0.0 -690.29987" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance id_="433874816" pos="-111.50001 0.0 -690.29987" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+		</group>
+		<group id_="126361120" open_="true" name="Concrete" pos="109.29999 -0.3 314.70001" rot="0.0 0.0 0.0">
+			<vox id_="969008896" tags="nocull" pos="-43.20003 0.1 -150.59996" rot="0.0 180.0 0.0" texture="9" file="MOD/demo/airstrip_atc_tower.vox"/>
+			<voxbox id_="2087645568" pos="-128.3 0.4 -57.8" texture="9" size="1100 1 1330" color="0.43 0.43 0.43"/>
+			<voxbox id_="723823744" pos="-128.3 0.4 -190.8" texture="9" size="1100 1 1330" color="0.43 0.43 0.43"/>
+			<voxbox id_="1261645056" pos="-249.3 0.4 -24.8" texture="9" size="1500 1 1000" color="0.43 0.43 0.43"/>
+		</group>
+	</group>
+	<group id_="1529048192" name="Hummers" pos="0.0">
+		<instance id_="939253760" pos="11.89999 0.0 126.00002" rot="0.0 -90.0 0.0" file="MOD/demo/prefab/humvee.xml"/>
+		<instance id_="2016731392" pos="11.9 0.0 121.30002" rot="0.0 -90.0 0.0" file="MOD/demo/prefab/humvee.xml"/>
+	</group>
+	<group id_="703047552" open_="true" name="Planes">
+		<group id_="623678656" open_="true" name="instance=MOD/prefab/A10.xml" pos="38.0 0.2 117.89999" rot="0.0 -45.0 0.0">
+			<script id_="1246243072" open_="true" pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+				<vehicle id_="1312897280" open_="true" name="a10" tags="planeVehicle planeModel=a10 planeType=jet weaponPreset=none" pos="0.0 3.0 5.2" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="2" damping="2" topspeed="10" acceleration="2" strength="5" antispin="0" antiroll="0" difflock="1" steerassist="0">
+					<body id_="1014624768" open_="true" tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+						<group id_="833668800" open_="true" name="parts_main">
+							<vox id_="93591120" open_="true" tags="planeShape_engine explosive=1" pos="0.0 0.0 -0.7" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="body_nose">
+								<location id_="1438865152" tags="vital" pos="-0.1 0.4 3.7" rot="-180.0 360.0 -180.0"/>
+								<location id_="240531808" tags="player" pos="0.05 1.15 -1.75" rot="0.0 0.0 0.0"/>
+								<light id_="783596224" name="weap_primary" tags="weap_primary" pos="0.05 -0.25 -5.1" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox id_="53480640" tags="explosive=2" pos="0.0 -0.7 7.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="body_tail"/>
+							<vox id_="990833728" pos="-0.0 -1.3 -0.8" rot="0 0 0" texture="14" density="1" strength="1" file="MOD/prefab/A10.vox" object="body_bottom"/>
+							<vox id_="967042688" open_="true" pos="4.5 -1.5 2.1" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="wing_right">
+								<light id_="352343040" name="weap_secondary" tags="weap_secondary" pos="1.25 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light id_="1798417664" name="weap_secondary" tags="weap_secondary" pos="0.55 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox id_="1326332928" open_="true" pos="-4.4 -1.5 2.1" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="wing_left">
+								<light id_="196620000" name="weap_secondary" tags="weap_secondary" pos="-0.75 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light id_="1042741376" name="weap_secondary" tags="weap_secondary" pos="-1.45 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox id_="272974112" pos="0.0 -0.2 9.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="elevators"/>
+							<vox id_="1768531328" pos="0.0 -0.6 9.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="rudder"/>
+							<vox id_="1678610432" open_="true" pos="-1.4 -0.3 5.6" rot="0 0 0" texture="14" density="3" strength="1" file="MOD/prefab/A10.vox" object="engine_left">
+								<light id_="518159232" name="exhaust" tags="exhaust" pos="0.05 0.8 1.7" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox id_="212808384" open_="true" pos="1.4 -0.3 5.6" rot="0 0 0" texture="14" density="3" strength="1" file="MOD/prefab/A10.vox" object="engine_right">
+								<light id_="2036065664" name="exhaust" tags="exhaust" pos="0.05 0.8 1.7" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+						</group>
+						<group id_="151462944" open_="true" name="parts_wheels">
+							<wheel id_="828818816" open_="true" name="wl_l" pos="0.1 -1.7 -2.8" drive="0" steer="1" travel="-0.2 0.2">
+								<vox id_="528383488" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+							</wheel>
+							<wheel id_="558466368" open_="true" name="wl_r" pos="-2.5 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+								<vox id_="1923271296" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+							</wheel>
+							<wheel id_="161228400" open_="true" name="wl_c" pos="2.6 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+								<vox id_="907466816" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+							</wheel>
+						</group>
+					</body>
+				</vehicle>
+			</script>
+		</group>
+		<instance id_="349852512" pos="150.8 0.5 169.60001" rot="0.0 40.0 0.0" file="MOD/prefab/Jet.xml"/>
+		<instance id_="1439717248" pos="93.59998 0.5 164.59999" rot="0.0 40.0 0.0" file="MOD/prefab/AC130.xml"/>
+		<instance id_="137437376" pos="38.7 0.5 92.39999" rot="0.0 -45.0 0.0" file="MOD/prefab/Mig29.xml"/>
+		<group id_="698852992" open_="true" name="instance=MOD/prefab/Mig29.xml" pos="68.4 0.5 131.39999" rot="0.0 0.0 0.0">
+			<script id_="1163597184" open_="true" pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+				<vehicle id_="861654400" open_="true" name="mig29" tags="planeVehicle planeModel=mig29 planeType=jet weaponPreset=none" pos="0.0 2.6 10.0" rot="0.0 0.0 0.0" driven="true" sound="classic" spring="0.5" damping="2" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
+					<body id_="1724029696" open_="true" tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+						<group id_="978446656" open_="true" name="parts_main">
+							<vox id_="411525664" open_="true" tags="planeShape_engine" pos="0.0 0.0 -1.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_middle">
+								<location id_="1285501568" tags="vital" pos="-0.1 1.1 0.6" rot="-180.0 360.0 -180.0"/>
+								<location id_="2011160448" tags="player" pos="0.05 1.95 -5.35" rot="0.0 0.0 0.0"/>
+								<light id_="1478910080" tags="exhaust" pos="-0.9 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light id_="286868576" tags="exhaust" pos="-0.8 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light id_="1240868864" tags="exhaust" pos="0.9 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light id_="1377650816" tags="exhaust" pos="1.0 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light id_="1818276224" name="weap_primary" tags="weap_primary" pos="0.65 1.45 -6.5" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox id_="1149309440" tags="planeShape_wing_right" pos="-0.0 0.3 -9.8" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_nose"/>
+							<vox id_="1151603328" tags="planeShape_bottom" pos="0.0 -0.9 -1.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_bottom"/>
+							<vox id_="1586657920" open_="true" tags="planeShape_wing_right" pos="3.9 0.6 0.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="wing_right">
+								<light id_="1799990528" name="weap_secondary" tags="weap_secondary" pos="-0.85 -0.35 -2.7" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox id_="477262272" open_="true" tags="planeShape_wing_left" pos="-3.8 0.6 0.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="wing_left">
+								<light id_="1592884224" name="weap_secondary" tags="weap_secondary" pos="1.15 -0.35 -2.8" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox id_="1874837248" tags="planeShape_elevator_left" pos="-2.8 0.7 5.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="elevator_left"/>
+							<vox id_="2135031040" tags="planeShape_elevator_left" pos="2.9 0.7 5.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="elevator_right"/>
+							<vox id_="1677365248" tags="planeShape_rudder_left" pos="1.7 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_left"/>
+							<vox id_="767407872" tags="planeShape_rudder_right" pos="-1.6 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_right"/>
+							<vox id_="767407872" tags="planeShape_core explosive=2" pos="0.1 0.7 -1.2" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="core"/>
+						</group>
+						<group id_="745976256" open_="true" name="parts_wheels">
+							<wheel id_="57478580" open_="true" name="wl_r" pos="1.8 -1.3 0.8" drive="0.5" steer="0" travel="-0.4 0.4">
+								<vox id_="357782848" pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+							</wheel>
+							<wheel id_="427058624" open_="true" name="wl_l" pos="-1.6 -1.3 0.9" drive="0.5" steer="0" travel="-0.4 0.4">
+								<vox id_="621319168" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+							</wheel>
+							<wheel id_="705996864" open_="true" name="wl_c" pos="0.05 -1.3 -5.1" drive="1" steer="1" travel="-0.4 0.4">
+								<vox id_="344609312" pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+							</wheel>
+						</group>
+						<group id_="1435194880" open_="true" name="parts_weapons">
+							<vox id_="164702016" pos="-2.7 -0.1 -0.7" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+							<vox id_="1574532992" pos="3.0 -0.1 -0.6" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+							<vox id_="1260006528" pos="-4.0 0.2 0.5" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+							<vox id_="1401441792" pos="4.0 0.2 0.6" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+							<vox id_="1696502912" pos="4.7 0.2 1.3" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+							<vox id_="493712832" pos="-4.7 0.2 1.2" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+						</group>
+					</body>
+				</vehicle>
+			</script>
+		</group>
+		<instance id_="437217344" pos="73.2 -0.2 184.39999" rot="0 0 0" file="MOD/prefab/Spitfire.xml"/>
+		<instance id_="309021088" pos="46.19997 2.0 141.70006" rot="0.0 140.0 0.0" file="MOD/prefab/Cessna172/Cessna172.xml"/>
+	</group>
+	<layers/>
+</scene>
+

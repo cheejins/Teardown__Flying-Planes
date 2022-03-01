@@ -1,0 +1,47 @@
+<prefab version="0.9.4">
+	<group id_="1844164480" open_="true" name="instance=MOD/prefab/A10.xml" pos="38.0 0.0 117.89999" rot="0.0 -45.0 0.0">
+		<script id_="1246243072" open_="true" pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+			<vehicle id_="1312897280" open_="true" name="a10" tags="planeVehicle planeModel=a10 planeType=jet weaponPreset=none" pos="0.0 3.0 5.2" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="2" damping="2" topspeed="10" acceleration="2" strength="5" antispin="0" antiroll="0" difflock="1" steerassist="0">
+				<body id_="1014624768" open_="true" tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+					<group id_="833668800" open_="true" name="parts_main">
+						<vox id_="93591120" open_="true" tags="planeShape_engine explosive=1" pos="0.0 0.0 -0.7" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="body_nose">
+							<location id_="1438865152" tags="vital" pos="-0.1 0.4 3.7" rot="-180.0 360.0 -180.0"/>
+							<location id_="240531808" tags="player" pos="0.05 1.15 -1.75" rot="0.0 0.0 0.0"/>
+							<light id_="783596224" name="weap_primary" tags="weap_primary" pos="0.05 -0.25 -5.1" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+						<vox id_="53480640" tags="explosive=2" pos="0.0 -0.7 7.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="body_tail"/>
+						<vox id_="990833728" pos="-0.0 -1.3 -0.8" rot="0 0 0" texture="14" density="1" strength="1" file="MOD/prefab/A10.vox" object="body_bottom"/>
+						<vox id_="967042688" open_="true" pos="4.5 -1.5 2.1" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="wing_right">
+							<light id_="352343040" name="weap_secondary" tags="weap_secondary" pos="1.25 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light id_="1798417664" name="weap_secondary" tags="weap_secondary" pos="0.55 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+						<vox id_="1326332928" open_="true" pos="-4.4 -1.5 2.1" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="wing_left">
+							<light id_="196620000" name="weap_secondary" tags="weap_secondary" pos="-0.75 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light id_="1042741376" name="weap_secondary" tags="weap_secondary" pos="-1.45 0.6 -1.3" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+						<vox id_="272974112" pos="0.0 -0.2 9.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="elevators"/>
+						<vox id_="1768531328" pos="0.0 -0.6 9.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="rudder"/>
+						<vox id_="1678610432" open_="true" pos="-1.4 -0.3 5.6" rot="0 0 0" texture="14" density="3" strength="1" file="MOD/prefab/A10.vox" object="engine_left">
+							<light id_="518159232" name="exhaust" tags="exhaust" pos="0.05 0.8 1.7" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+						<vox id_="212808384" open_="true" pos="1.4 -0.3 5.6" rot="0 0 0" texture="14" density="3" strength="1" file="MOD/prefab/A10.vox" object="engine_right">
+							<light id_="2036065664" name="exhaust" tags="exhaust" pos="0.05 0.8 1.7" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+					</group>
+					<group id_="151462944" open_="true" name="parts_wheels">
+						<wheel id_="828818816" open_="true" name="wl_l" pos="0.1 -1.7 -2.8" drive="0" steer="1" travel="-0.2 0.2">
+							<vox id_="528383488" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+						</wheel>
+						<wheel id_="558466368" open_="true" name="wl_r" pos="-2.5 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+							<vox id_="1923271296" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+						</wheel>
+						<wheel id_="161228400" open_="true" name="wl_c" pos="2.6 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+							<vox id_="907466816" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+						</wheel>
+					</group>
+				</body>
+			</vehicle>
+		</script>
+	</group>
+</prefab>
+

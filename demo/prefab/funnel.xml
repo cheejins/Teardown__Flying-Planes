@@ -1,0 +1,8 @@
+<prefab version="0.9.3">
+	<group id_="705603648" open_="true" name="instance=MOD/demo/prefab/funnel.xml" pos="-6.89998 -0.1 27.30005" rot="0.0 0.0 0.0">
+		<vox id_="1538027136" tags="nocull" pos="33.20001 0.0 -0.09999" rot="0.0 0.0 0.0" texture="9" file="MOD/demo/ground/general/concrete_floor_funnel.vox"/>
+		<vox id_="1419203200" tags="nocull" pos="-33.4 0.0 0.29998" rot="0.0 -180.0 0.0" texture="9" file="MOD/demo/ground/general/concrete_floor_funnel.vox"/>
+		<voxbox id_="1767155072" pos="-23.7 0.0 -12.9" texture="9" size="470 3 260" color="0.38 0.37 0.37"/>
+	</group>
+</prefab>
+

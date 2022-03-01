@@ -1,0 +1,23 @@
+2022.02.27
+> Tuned planes slightly.
+> Fixed weapon hit detection.
+> Fixed plane responsive glitch (occrred when vsync was off)
+> Added vehicle target indicator.
+
+
+2022.02.25
+> Merged the map with the main mod.
+
+
+2022.02.24
+> Added AC-130 plane
+> Added Thrust and Speed hud meters
+> Tuned the planes a bit
+
+
+2022.02.24
+> Added new flight system
+> Added plane spawning.
+> Added Cessna 172 plane
+> Optimized map.
+> Reduced map mod size from 220MB to 40MB

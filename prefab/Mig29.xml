@@ -1,0 +1,49 @@
+<prefab version="0.9.3">
+	<group id_="1041168448" open_="true" name="instance=MOD/prefab/Mig29.xml" pos="4.0 0.2 -10.0" rot="0.0 0.0 0.0">
+		<script open_="true" pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+			<vehicle id_="861654400" open_="true" name="mig29" tags="planeVehicle planeModel=mig29 planeType=jet weaponPreset=none" pos="0.0 2.6 10.0" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="0.5" damping="2" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
+				<body id_="1724029696" open_="true" tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+					<group id_="978446656" open_="true" name="parts_main">
+						<vox id_="411525664" open_="true" tags="planeShape_engine" pos="0.0 0.0 -1.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_middle">
+							<location id_="1285501568" tags="vital" pos="-0.1 1.1 0.6" rot="-180.0 360.0 -180.0"/>
+							<location id_="2011160448" tags="player" pos="0.05 1.95 -5.35" rot="0.0 0.0 0.0"/>
+							<light id_="1478910080" tags="exhaust" pos="-0.9 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light id_="286868576" tags="exhaust" pos="-0.8 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light id_="1240868864" tags="exhaust" pos="0.9 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light id_="1377650816" tags="exhaust" pos="1.0 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+						<vox id_="1149309440" tags="planeShape_wing_right" pos="-0.0 0.3 -9.8" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_nose"/>
+						<vox id_="1151603328" tags="planeShape_bottom" pos="0.0 -0.9 -1.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_bottom"/>
+						<vox id_="1586657920" tags="planeShape_wing_right" pos="3.9 0.6 0.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="wing_right"/>
+						<vox id_="477262272" tags="planeShape_wing_left" pos="-3.8 0.6 0.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="wing_left"/>
+						<vox id_="1874837248" tags="planeShape_elevator_left" pos="-2.8 0.7 5.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="elevator_left"/>
+						<vox id_="2135031040" tags="planeShape_elevator_left" pos="2.9 0.7 5.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="elevator_right"/>
+						<vox id_="1677365248" tags="planeShape_rudder_left" pos="1.7 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_left"/>
+						<vox id_="767407872" tags="planeShape_rudder_right" pos="-1.6 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_right"/>
+						<vox id_="767407872" tags="planeShape_core explosive=2" pos="0.1 0.7 -1.2" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="core"/>
+					</group>
+					<group id_="745976256" open_="true" name="parts_wheels">
+						<wheel id_="57478580" open_="true" name="wl_r" pos="1.8 -1.3 0.8" drive="0.5" steer="0" travel="-0.4 0.4">
+							<vox id_="357782848" pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+						</wheel>
+						<wheel id_="427058624" open_="true" name="wl_l" pos="-1.6 -1.3 0.9" drive="0.5" steer="0" travel="-0.4 0.4">
+							<vox id_="621319168" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+						</wheel>
+						<wheel id_="705996864" open_="true" name="wl_c" pos="0.05 -1.3 -5.1" drive="1" steer="1" travel="-0.4 0.4">
+							<vox id_="344609312" pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+						</wheel>
+					</group>
+					<group id_="1435194880" open_="true" name="parts_weapons">
+						<vox id_="164702016" pos="-2.7 -0.1 -0.7" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+						<vox id_="1574532992" pos="3.0 -0.1 -0.6" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+						<vox id_="1260006528" pos="-4.0 0.2 0.5" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+						<vox id_="1401441792" pos="4.0 0.2 0.6" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+						<vox id_="1696502912" pos="4.7 0.2 1.3" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+						<vox id_="493712832" pos="-4.7 0.2 1.2" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+					</group>
+				</body>
+			</vehicle>
+		</script>
+	</group>
+</prefab>
+

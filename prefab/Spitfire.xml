@@ -1,0 +1,30 @@
+<prefab version="0.9.3">
+	<group id_="920968064" open_="true" name="instance=MOD/prefab/Spitfire.xml" pos="40.8 -0.2 148.10001" rot="0.0 -45.0 0.0">
+		<vehicle id_="175057344" open_="true" name="spitfire" tags="planeVehicle planeModel=spitfire planeType=propeller weaponPreset=none" pos="0.0 0.9 7.0" rot="10.0 0.0 0.0" driven="false" sound="classic" spring="1" damping="4" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
+			<body id_="197799712" open_="true" tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+				<vox id_="543588736" tags="planeShape_engine explosive=1.4" pos="0 0 -1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Spitfire.vox" object="body">
+					<location id_="1790552832" tags="vital" pos="0.0 1.0 -1.2" rot="-180.0 360.0 -180.0"/>
+					<location id_="1019671296" tags="player" pos="0.05 1.45 0.85" rot="0.0 0.0 0.0"/>
+				</vox>
+				<vox id_="389831936" tags="planeShape_wing_right" pos="2.4 -0.4 -1.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Spitfire.vox" object="wing_r"/>
+				<vox id_="720022464" tags="planeShape_wing_left" pos="-2.4 -0.4 -1.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Spitfire.vox" object="wing_l"/>
+				<vox id_="132390800" tags="planeShape_tail explosive=0.5" pos="0 0.4 2.7" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Spitfire.vox" object="tail"/>
+				<vox id_="1700435328" tags="planeShape_elevators" pos="0 1.5 3.7" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Spitfire.vox" object="elevators"/>
+				<vox id_="2055399936" tags="planeShape_rudder" pos="0 1.5 3.8" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Spitfire.vox" object="rudder"/>
+				<wheel id_="1692570496" open_="true" name="wl_r" pos="1.9 -0.1 -1.2" drive="1" steer="0" travel="-0.4 0.4">
+					<vox id_="2121333120" pos="0.0 -0.25 -0.05" rot="0.0 -180.0 0.0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
+				</wheel>
+				<wheel id_="542146880" open_="true" name="wl_l" pos="-1.9 -0.1 -1.2" drive="1" steer="0" travel="-0.4 0.4">
+					<vox id_="167782400" pos="0.0 -0.25 -0.05" rot="0 180 0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
+				</wheel>
+				<wheel id_="1311455360" open_="true" name="wl_c" pos="0.05 1 4.1" drive="1" steer="-1" travel="-0.4 0.4">
+					<vox id_="1886372224" pos="0.0 -0.25 -0.05" rot="0 180 0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
+				</wheel>
+				<vox id_="1830990976" open_="true" tags="planeShape_rudder" pos="0.0 -0.3 -3.2" rot="0 0 0" texture="14" density="0.001" collide="true" prop="true" file="MOD/prefab/Spitfire.vox" object="propeller">
+					<joint id_="1105528704" tags="planePropeller" pos="0.05 1.05 0.2" type="hinge" collide="true" limits="0 0"/>
+				</vox>
+			</body>
+		</vehicle>
+	</group>
+</prefab>
+
