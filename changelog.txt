@@ -1,3 +1,14 @@
+2022.03.03
+> Slightly improved weapon firing positions and accuracy
+> Tuned plane camera.
+> Added keybinds for respawn and small map mode toggling.
+
+
+2022.03.01
+> Added manual and auto target selection.
+> Added small-map mode for smaller maps. It makes the plane alot more agile.
+
+
 2022.02.27
 > Tuned planes slightly.
 > Fixed weapon hit detection.

@@ -28,7 +28,7 @@ function planeMove(plane)
         local thrustSpeedMult = plane.getSpeed() < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
-            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust))
+            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) * CONFIG.smallMapMode.dragMult
             ApplyBodyImpulse(
                 plane.body,
                 plane.getPos(),
@@ -49,8 +49,7 @@ function planeSteer(plane)
     local turnDiv = 50
     local turnAmt = math.abs(getQuadtratic(divSpeed) / turnDiv)
 
-    -- dbw('divSpeed', sfn(divSpeed, 5))
-    -- dbw('turnAmt', sfn(turnAmt, 5))
+
 
     -- Roll
     if InputDown("a") or InputDown("d") then
@@ -58,7 +57,7 @@ function planeSteer(plane)
         local yawSign = 1
         if InputDown("d") then yawSign = -1 end -- Determine yaw direction
 
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 2
+        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 2 * CONFIG.smallMapMode.turnMult
 
         -- local yawLowerLim = plane.topSpeed/3
         -- local yawUpperLim = plane.topSpeed - (plane.topSpeed/3)
@@ -79,12 +78,10 @@ function planeSteer(plane)
     local rollAmt = VecNormalize(TransformToLocalPoint(plane.getTransform(), crosshairPos))
     rollAmt = rollAmt[1] * turnAmt * -350 / plane.rollVal
     pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt))
-    dbw('rollAmt', sfn(rollAmt, 5))
-
 
     -- Align with crosshair pos
     pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
-    pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / plane.yawFac)
+    pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / plane.yawFac * CONFIG.smallMapMode.turnMult)
 
 
     SetBodyTransform(plane.body, pTr)
@@ -97,30 +94,25 @@ end
 function planeSound(plane)
 
     if plane.engineType == "jet" then
-        PlayLoop(sounds.jet_engine_loop, plane.getPos())
+        PlayLoop(sounds.jet_engine_loop, plane.getPos(), plane.engineVol)
         PlayLoop(sounds.jet_engine_loop, GetCameraTransform().pos, 0.1)
-
-        -- afterburner volume based on thrust amount.
-        if plane.taxiModeEnabled then
-            PlayLoop(sounds.jet_engine_afterburner, plane.getPos(), (plane.thrust/100) - 0.5)
-        end
 
     elseif plane.engineType == "propeller" then
 
         if plane.thrust < 20 then
-            PlayLoop(sounds.prop_5, plane.getPos(), plane.engineVol)
+            PlayLoop(sounds.prop_5, plane.getPos(), plane.engineVol * 2)
             PlayLoop(sounds.prop_5, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 40 then
-            PlayLoop(sounds.prop_4, plane.getPos(), plane.engineVol)
+            PlayLoop(sounds.prop_4, plane.getPos(), plane.engineVol * 2)
             PlayLoop(sounds.prop_4, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 60 then
-            PlayLoop(sounds.prop_3, plane.getPos(), plane.engineVol)
+            PlayLoop(sounds.prop_3, plane.getPos(), plane.engineVol * 2)
             PlayLoop(sounds.prop_3, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 80 then
-            PlayLoop(sounds.prop_2, plane.getPos(), plane.engineVol)
+            PlayLoop(sounds.prop_2, plane.getPos(), plane.engineVol * 2)
             PlayLoop(sounds.prop_2, GetCameraTransform().pos, 0.1)
         elseif plane.thrust <= 100 then
-            PlayLoop(sounds.prop_1, plane.getPos(), plane.engineVol)
+            PlayLoop(sounds.prop_1, plane.getPos(), plane.engineVol * 2)
             PlayLoop(sounds.prop_1, GetCameraTransform().pos, 0.1)
         end
 
@@ -164,12 +156,17 @@ function runEffects(plane)
 
 end
 function handlePlayerInWater()
-    if IsPointInWater(GetPlayerPos()) then
-        if InputPressed(respawnKey) then
-            SetPlayerVehicle(0)
-            RespawnPlayer()
-        end
+
+    local v = GetPlayerVehicle()
+    local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
+
+    local respawnValid = vIsDeadPlane or IsPointInWater(GetPlayerTransform().pos)
+
+    if InputPressed(respawnKey) and respawnValid then
+        SetPlayerVehicle(0)
+        RespawnPlayer()
     end
+
 end
 function planeDebug(plane)
 
@@ -180,8 +177,8 @@ function planeDebug(plane)
 
     dbw('PLANE Vel angle', sfn(plane.getForwardVelAngle()))
     dbw('PLANE Speed', sfn(plane.getSpeed()))
-    dbw('PLANE Model', plane.thrust)
-    dbw('PLANE Thrust', plane.model)
+    dbw('PLANE Model', plane.model)
+    dbw('PLANE Thrust', plane.thrust)
 
 end
 
@@ -202,92 +199,139 @@ end
 function planeShoot(plane)
 
     if plane.isArmed then
-        if InputDown("lmb") then
-            planeShootBullet(plane)
+
+        local plTr = plane.getTransform()
+
+
+        if InputDown('lmb') then
+
+            if plane.model == 'a10' then
+                PlayLoop(sounds.emg, GetBodyTransform(plane.body).pos, 10)
+            else
+                PlayLoop(sounds.mg, GetBodyTransform(plane.body).pos, 10)
+            end
+
+            if plane.timers.weap.primary.time <= 0 then
+
+                TimerResetTime(plane.timers.weap.primary)
+
+                for key, weap in pairs(plane.weap.weaponObjects.primary) do
+
+                    local weapTr = GetLightTransform(weap.light)
+
+                    -- Aim adjust. The shoot location is slightly higher than the weapon body.
+                    -- Moves the aim pos just above where the crosshair (weapon body aligned) hits the world.
+                    local shootTr = TransformCopy(weapTr)
+                    -- local shootDir = QuatToDir(shootTr.rot)
+
+                    -- local trueAimRot = QuatLookAt(shootTr.pos, crosshairPos)
+                    -- local trueAimDir = QuatToDir(trueAimRot)
+                    -- local shootRotAligned =  DirToQuat(Vec(shootDir[1], trueAimDir[2], shootDir[3]))
+                    -- shootTr.rot = shootRotAligned
+
+                    local projPreset = ProjectilePresets.bullets.standard
+                    if plane.model == 'a10' then
+                        projPreset = ProjectilePresets.bullets.emg
+                    end
+
+
+                    -- shootTr.rot = QuatLookAt(plTr.pos, TransformToParentPoint(plTr, Vec(0,0,-200)))
+                    -- shootTr.rot = QuatLookAt(weapTr.pos, crosshairPos)
+
+
+
+                    -- Shoot projectile.
+                    createProjectile(shootTr, Projectiles, projPreset, {plane.body})
+
+
+                    -- Apply recoil,
+                    -- local vel_impulse = VecScale(QuatToDir(weapTr.rot), -4500)
+                    -- ApplyBodyImpulse(robot.body, AabbGetBodyCenterPos(robot.body), vel_impulse)
+
+                    -- Shoot particles,
+                    -- SpawnParticle_aeon_weap_primary(shootTr)
+
+                    -- Exhaust particles.
+                    -- local exhaustTr = TransformCopy(weapTr)
+                    -- exhaustTr.pos = TransformToParentPoint(weapTr, Vec(0,0,1.5))
+                    -- exhaustTr.rot = QuatTrLookBack(weapTr)
+
+                    -- SpawnParticle_aeon_weap_primary_exhaust(exhaustTr, 0)
+                    -- SpawnParticle_aeon_weap_primary_exhaust(exhaustTr, 3)
+                    -- SpawnParticle_aeon_weap_primary_exhaust(exhaustTr, 5)
+
+                end
+
+                -- local index = GetRandomIndex(Sounds.weap_primary.shoot)
+                -- PlayRandomSound(Sounds.weap_primary.shoot, bodyTr.pos, 2, index)
+                -- PlayRandomSound(Sounds.weap_primary.shoot, GetCameraTransform().pos, 0.5, index)
+
+            end
+
         end
-        if InputDown("rmb") and plane.model ~= "spitfire" and plane.model ~= 'cessna172' then
-            planeShootMissile(plane)
-        end
-    end
 
-    if plane.bullets.timer >= 0 then
-        plane.bullets.timer = plane.bullets.timer - GetTimeStep()
-    end
 
-    if plane.missiles.timer >= 0 then
-        plane.missiles.timer = plane.missiles.timer - GetTimeStep()
-    end
+        local planeTr = GetVehicleTransform(plane.vehicle)
+        local targetTr = GetVehicleTransform(plane.targetting.target)
 
-end
-function planeShootBullet(plane)
+        local planeDir = DirLookAt(planeTr.pos, TransformToParentPoint(planeTr, Vec(0,0,-1)))
+        local targetDir = DirLookAt(planeTr.pos, targetTr.pos)
 
-    local plTr = GetBodyTransform(plane.body) -- plane transform
-
-    if plane.bullets.timer <= 0 then -- rpm timer
-        plane.bullets.timer = 60/plane.bullets.rpm
-
-        local shootTr = TransformCopy(GetBodyTransform(plane.body))
-        shootTr.pos = TransformToParentPoint(shootTr, plane.gunPosOffset)
-
-        local spread = 0.02
-        shootTr.rot[1] = shootTr.rot[1] + (math.random()-0.5)*spread
-        shootTr.rot[2] = shootTr.rot[2] + (math.random()-0.5)*spread
-        shootTr.rot[3] = shootTr.rot[3] + (math.random()-0.5)*spread
-
-        createBullet(shootTr, activeBullets, plane.bullets.type, plane.body)
-
-        -- spirfire opposite wing
-        if plane.model == "spitfire" or plane.model == 'cessna172' then
-
-            local shootTr2 = GetBodyTransform(plane.body)
-            shootTr2.pos = TransformToParentPoint(shootTr2, plane.gunPosOffset2)
-
-            shootTr2.rot[1] = shootTr2.rot[1] + (math.random()-0.5)*spread
-            shootTr2.rot[2] = shootTr2.rot[2] + (math.random()-0.5)*spread
-            shootTr2.rot[3] = shootTr2.rot[3] + (math.random()-0.5)*spread
-
-            createBullet(shootTr2, activeBullets, plane.bullets.type, plane.body)
-        end
-    end
-
-    if plane.bullets.type == "mg" then
-        PlayLoop(sounds.mg, plTr.pos, 40)
-        PlayLoop(sounds.mg, GetPlayerPos(), 0.2)
-    elseif plane.bullets.type == "emg" then
-        PlayLoop(sounds.emg, plTr.pos, 40)
-        PlayLoop(sounds.emg, GetPlayerPos(), 0.2)
-    end
-end
-function planeShootMissile(plane)
-    if plane.missiles.timer <= 0 then -- rpm timer
-        plane.missiles.timer = 60/plane.missiles.rpm
-
-        local fireVecOffset = nil
-        if plane.missiles.firePos == "left" then
-            fireVecOffset = Vec(3, -1 ,-1)
-            plane.missiles.firePos = "right"
-        elseif plane.missiles.firePos == "right" then
-            fireVecOffset = Vec(-3, -1, -1)
-            plane.missiles.firePos = "left"
-        end
-
-        local tr = Transform(
-            TransformToParentPoint(plane.getTransform(), fireVecOffset),
-            plane.getTransform().rot) -- shoot from below wing
-
-        -- createMissile(tr, enemy_activeMissiles, false)
-        if plane.model == 'mig29-u' then
-            Spawn("MOD/prefabs/grenade.xml", tr)
+        local targetShape = nil
+        local ang = VecAngle(planeDir, targetDir)
+        if ang < 30 and VecDist(planeTr.pos, targetTr.pos) < 600 then
+            targetShape = GetBodyShapes((GetVehicleBody(plane.targetting.target)))[1]
+            plane.targetting.lock.locked = true
+            beep()
         else
-            createMissile(tr, activeMissiles, false, nil, plane.body)
+            plane.targetting.lock.locked = false
         end
-        PlaySound(sounds.missile, tr.pos, 5)
-        PlaySound(sounds.missile, GetPlayerPos(), 0.1)
+        dbw('Lock Ang', ang)
+
+
+
+        if InputDown('rmb') then
+
+            if plane.timers.weap.secondary.time <= 0 then
+                TimerResetTime(plane.timers.weap.secondary)
+
+                if plane.weap.secondary_lastIndex + 1 > #plane.weap.weaponObjects.secondary then
+                    plane.weap.secondary_lastIndex = 1
+                else
+                    plane.weap.secondary_lastIndex = plane.weap.secondary_lastIndex + 1
+                end
+
+
+                local weapTr = GetLightTransform(plane.weap.weaponObjects.secondary[plane.weap.secondary_lastIndex].light)
+                local shootTr = TransformCopy(weapTr)
+                shootTr.rot = QuatLookAt(plTr.pos, TransformToParentPoint(plTr, Vec(0,0,-300)))
+
+
+
+                if plane.model == 'mig29-u' then
+                    Spawn("MOD/prefabs/grenade.xml", shootTr)
+                else
+                    createProjectile(
+                        shootTr,
+                        Projectiles,
+                        ProjectilePresets.missiles.standard,
+                        {plane.body},
+                        targetShape)
+                end
+
+
+                PlaySound(sounds.missile, shootTr.pos, 10)
+                -- PlayRandomSound(Sounds.weap_secondary.shoot, bodyTr.pos)
+                -- PlayRandomSound(Sounds.weap_secondary.hit, bodyTr.pos, 0.5)
+
+            end
+
+        end
+
     end
+
+    TimerRunTime(plane.timers.weap.primary)
+    TimerRunTime(plane.timers.weap.secondary)
+    -- TimerRunTime(plane.timers.weap.special)
+
 end
-
-
-
---[[MISC]]
-function myDot(a, b) return (a[1] * b[1]) + (a[2] * b[2]) + (a[3] * b[3]) end
-function myMag(a) return math.sqrt((a[1] * a[1]) + (a[2] * a[2]) + (a[3] * a[3])) end

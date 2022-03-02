@@ -1,6 +1,14 @@
 #include "script/utility.lua"
 
+
 function init()
+
+    if GetString('savegame.mod.options.keys.respawn') == '' then
+        SetString('savegame.mod.options.keys.respawn', 'y')
+    end
+    if GetString('savegame.mod.options.keys.smallMapMode') == '' then
+        SetString('savegame.mod.options.keys.smallMapMode', 'o')
+    end
 
     activeAssignment = false
     activePath = '.'
@@ -9,6 +17,20 @@ function init()
     font_size = 32
 
 end
+
+function tick()
+
+    if activeAssignment and InputLastPressedKey() ~= '' then
+
+        SetString(activePath, string.lower(InputLastPressedKey()))
+        activeAssignment = false
+        activePath = ''
+
+    end
+
+end
+
+
 
 function draw()
 
@@ -31,30 +53,12 @@ function draw()
         UiPop() end
 
 
+        -- Button : Start Demo Map
         do UiPush()
 
-            UiTranslate(0, 200)
             UiAlign('center middle')
             UiFont('regular.ttf', font_size*1.5)
-
-
-            -- Spawning warning
-            if not HasVersion("0.9.3") then
-
-                UiTranslate(0, 100)
-                UiColor(1,0,0,1)
-                UiAlign('center middle')
-                UiFont('regular.ttf', font_size)
-                UiTranslate(0, font_size*2)
-
-                UiText('Spawning unavailable!')
-                UiTranslate(0, font_size*1.5)
-                UiText('Please switch to the Teardown experimental beta in Steam to enable spawning.')
-
-            end
-
-            -- Demo map
-            UiTranslate(0, 100)
+            UiTranslate(0, 350)
             local c = oscillate(2)/3 + 2/3
             UiColor(c,c,1,1)
             UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
@@ -62,6 +66,15 @@ function draw()
             if UiTextButton('Start Demo Map', 350, font_size*2.5) then
                 StartLevel('', 'demo.xml', '')
             end
+
+            UiTranslate(0, 150)
+            UiColor(1,1,1,1)
+
+            UiTranslate(0, font_size*2.5)
+            Ui_Option_Keybind('Respawn', 'savegame.mod.options.keys.respawn')
+
+            UiTranslate(0, font_size*2.5)
+            Ui_Option_Keybind('Small-Map Mode', 'savegame.mod.options.keys.smallMapMode')
 
         UiPop() end
 
@@ -84,3 +97,32 @@ function draw()
 
 end
 
+
+function Ui_Option_Keybind(label, regPath)
+
+    do UiPush()
+
+        -- Label
+        UiFont('regular.ttf', font_size)
+        UiAlign('right middle')
+        UiTranslate(0, font_size)
+        UiText(label)
+
+        -- Bind button
+        UiTranslate(font_size, 0)
+        UiAlign('left middle')
+        UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
+        UiButtonHoverColor(0.5,0.5,1,1)
+        if UiTextButton(GetString(regPath), font_size*6, font_size*2) then
+
+            if not activeAssignment then
+                SetString(regPath, 'Press key...')
+                activeAssignment = true
+                activePath = regPath
+            end
+
+        end
+
+    UiPop() end
+
+end

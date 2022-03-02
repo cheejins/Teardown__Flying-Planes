@@ -24,7 +24,13 @@ function manageCamera(plane, disableRotation)
 	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * 2.5
 	plane.camera.zoom = clamp(plane.camera.zoom, 5, 40) * scale
 
-	local cameraPos = TransformToParentPoint(cameraT, Vec(0, 8 * scale + plane.camera.zoom/10, plane.camera.zoom))
+
+    local camAddHeight = 4
+    if plane.model == 'ac130' then
+        camAddHeight = 12
+    end
+    camH = camAddHeight * scale + plane.camera.zoom/10
+	local cameraPos = TransformToParentPoint(cameraT, Vec(0, camH, plane.camera.zoom))
 	local camera = Transform(VecLerp(cameraPos, GetCameraTransform().pos, 0.5), cameraRot)
 
 	-- local hit, p, s, b, d = RaycastFromTransform(camera)
@@ -34,7 +40,6 @@ function manageCamera(plane, disableRotation)
 
 	SetCameraTransform(camera)
 end
-
 function planeCamera(plane)
 
     if camPos == 'freecam' then

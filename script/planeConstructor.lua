@@ -81,10 +81,36 @@ function createPlaneObject(_vehicle)
             camPitch = -7,
     }
 
+    plane.weap = {
+        weaponObjects = GetWeaponLocations(plane),
+        secondary_lastIndex = 1
+    }
+
+    plane.timers = {
+        weap = {
+            primary = {time = 0, rpm = 1200},
+            secondary = {time = 0, rpm = 120},
+            special = {time = 0, rpm = 1},
+        }
+    }
+
+    if plane.model == 'a10' then
+        plane.timers = {
+            weap = {
+                primary = {time = 0, rpm = 800},
+                secondary = {time = 0, rpm = 90},
+                special = {time = 0, rpm = 1},
+            }
+        }
+    end
 
     plane.targetting = {
         -- targets = {}, -- Target bodies.
         target = nil,
+        lock = {
+            timer = {time = 0, rpm = 60/3},
+            locked = false
+        }
     }
 
     plane.camera = {
@@ -259,7 +285,7 @@ function createPlaneObject(_vehicle)
             local aoa = plane.getAoA()
             local speed = plane.getSpeed()
 
-            local liftSpeedInterval = plane.topSpeed/5
+            local liftSpeedInterval = plane.topSpeed/5 * CONFIG.smallMapMode.liftMult
             local liftSpeed = speed
             local liftMult = 0.004
 
@@ -317,7 +343,7 @@ function createPlaneObject(_vehicle)
             local fwdDragAmt = (plane.getForwardVelAngle() * plane.getSpeed()+10) * vel/plane.topSpeed/2
             local fwdDragDir = VecScale(plane.getVel(), -fwdDragAmt)
 
-            plane.fwdDragAmt = 1.5
+            plane.fwdDragAmt = 1.5 * CONFIG.smallMapMode.dragMult
             local fwdDragDirGrav = Vec(
                 fwdDragDir[1],
                 fwdDragDir[2] * speed / vel,

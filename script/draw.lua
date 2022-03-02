@@ -68,6 +68,16 @@ function planeDrawHud(plane)
     UiAlign("center middle")
 
     do UiPush()
+        UiTranslate(UiCenter(), UiHeight()-50)
+        UiColor(1,1,1, 1)
+        UiFont("bold.ttf", 24)
+
+        local smallMapModeEnabled = ternary(SmallMapMode, 'ON', 'OFF')
+        UiText('Press '..smallMapModeKey..' to enable small-map mode. Small Map Mode: ' .. smallMapModeEnabled)
+
+    UiPop() end
+
+    do UiPush()
         UiColor(0,0,0, 0.5)
         UiTranslate(UiCenter(), UiMiddle())
         UiImageBox("MOD/script/img/hud_crosshair_outer.png", 50, 50, 0,0)
@@ -78,7 +88,7 @@ function planeDrawHud(plane)
 
         UiColor(1,1,1, 0.5)
 
-        local fwdVec = Vec(0,0,-1000)
+        local fwdVec = Vec(0,0,-300)
         local pTr = plane.getTransform()
         local pos = TransformToParentPoint(pTr, fwdVec)
 
@@ -92,7 +102,7 @@ function planeDrawHud(plane)
     UiPop() end
 
 
-    UiPush()
+    do UiPush()
 
         local scale = 5
         local w = 1000 / scale
@@ -101,7 +111,7 @@ function planeDrawHud(plane)
         UiTranslate(UiCenter(), 0)
 
         -- hud OVERSPEED
-        UiPush()
+        do UiPush()
             UiTranslate(0, 400)
             if plane.getSpeed() > plane.topSpeed * 0.7 then
                 UiColor(0.1, 0.1, 0.1, 0.15)
@@ -109,10 +119,10 @@ function planeDrawHud(plane)
                 UiColor(1,1,1, oscillate(0.5))
                 UiImageBox("MOD/script/img/hud_overspeed.png", w * 1.25, h * 1.25, 1,1)
             end
-        UiPop()
+        UiPop() end
 
         -- hud STALL
-        UiPush()
+        do UiPush()
             UiTranslate(0, 280)
             if plane.getSpeed()*1.8 < plane.getTotalVelocity() then
                 UiColor(0.1, 0.1, 0.1, 0.15)
@@ -120,24 +130,25 @@ function planeDrawHud(plane)
                 UiColor(1,1,1, oscillate(0.75))
                 UiImageBox("MOD/script/img/hud_stall.png", w, h, 1,1)
             end
-        UiPop()
+        UiPop() end
 
-    UiPop()
+    UiPop() end
 
-    UiPush()
+
+    do UiPush()
         -- hud STATUS
         UiTranslate(960, 900)
         UiFont("bold.ttf", 36)
         UiText(plane.status)
-    UiPop()
+    UiPop() end
 
 
-    UiPush()
+    do UiPush()
         UiAlign("right top")
         UiTranslate(1400, 0)
 
         -- hud THRUST
-        UiPush()
+        do UiPush()
         UiColor(c[1], c[2], c[3])
         UiTranslate(0, 450)
         -- UiImageBox("MOD/script/img/squareBg.png", 160, 90, 0, 0)
@@ -149,10 +160,10 @@ function planeDrawHud(plane)
         UiTranslate(0, 500)
 
         UiText(plane.thrust .. "%")
-        UiPop()
+        UiPop() end
 
         -- hud SPEED
-        UiPush()
+        do UiPush()
             local knots = string.format("%.0f", (plane.getSpeed()*1.94384))
 
             if knots == "-0" then knots = "0" end
@@ -170,151 +181,52 @@ function planeDrawHud(plane)
 
             UiColor(1, speedC, speedC)
             UiText(knots .. " Knots")
-        UiPop()
-    UiPop()
-
-
-    -- -- hud TVEL
-    -- local tVel = string.format("%.0f",plane.getTotalVelocity())
-    -- if tVel == "-0" then tVel = "0" end
-    -- UiColor(c[1], c[2], c[3])
-    -- UiTranslate(1300, 580)
-    --
-    -- UiText("TVEL")
-    -- UiTranslate(-1300, -580)
-    -- UiColor(1,1,1)
-    -- UiTranslate(1300, 630)
-    --
-    -- UiText(tVel .. " m/s")
-    -- UiTranslate(-1300, -630)
-
-
-
-    -- -- hud ANG (Velocity angle)
-    -- UiColor(c[1], c[2], c[3])
-    -- UiTranslate(650, 450)
-    --
-    -- UiText("ANG")
-    -- UiTranslate(-650, -450)
-
-    -- UiColor(1, 1, 1)
-    -- UiTranslate(650, 480)
-    --
-    -- UiText(string.format("%3.1f",plane.getForwardVelAngle()))
-    -- UiTranslate(-650, -480)
-
-
-    -- -- hud AoA (Velocity angle)
-    -- UiColor(c[1], c[2], c[3])
-    -- UiTranslate(800, 450)
-    --
-    -- UiText("AoA")
-    -- UiTranslate(-800, -450)
-
-    -- UiColor(1, 1, 1)
-    -- UiTranslate(800, 480)
-    --
-    -- UiText(string.format("%3.1f", plane.getAoA()))
-    -- UiTranslate(-800, -480)
-
-
-    -- -- hud LIFT
-    -- local alt = string.format("%.0f", plane.getTransform().pos[2])
-    -- UiColor(c[1], c[2], c[3])
-    -- UiTranslate(500, 580)
-    --
-    -- UiText("LIFT")
-    -- UiTranslate(-500, -580)
-
-    -- UiColor(0,1,1)
-    -- UiTranslate(500, 620)
-    --
-    -- UiText(string.format("%.2f", plane.liftVec))
-    -- UiTranslate(-500, -620)
+        UiPop() end
+    UiPop() end
 
 
     -- hud ALT
-    UiPush()
+    do UiPush()
         UiAlign("left top")
         UiTranslate(500, 0)
 
-        UiPush()
-        UiTranslate(0, 720)
-        -- UiImageBox("MOD/script/img/squareBg.png", 160, 90, 0, 0)
         local alt = string.format("%.0f", plane.getTransform().pos[2])
-        UiTranslate(5, 5)
-        UiColor(c[1], c[2], c[3])
+        do UiPush()
+            UiTranslate(0, 720)
+            -- UiImageBox("MOD/script/img/squareBg.png", 160, 90, 0, 0)
+            UiTranslate(5, 5)
+            UiColor(c[1], c[2], c[3])
 
-        UiText("ALT")
-        UiPop()
-        UiPush()
+            UiText("ALT")
+        UiPop() end
+
+        do UiPush()
             UiTranslate(0, 770)
             UiColor(1,1,1)
 
             UiText(alt .. " m")
-        UiPop()
+        UiPop() end
 
-        -- -- hud VEL
-        -- UiPush()
-        --     UiTranslate(0, 470)
-        --     -- UiImageBox("MOD/script/img/squareBg.png", 160, 90, 0, 0)
-        --     UiColor(c[1], c[2], c[3])
+    UiPop() end
 
-        --     UiText("VEL")
-        -- UiPop()
-        -- UiPush()
-        --     local fwdVel = plane.getFwdVel()
-        --     UiTranslate(0, 520)
-        --     UiColor(1, fwdVel, fwdVel)
-
-        --     UiText(string.format("%.3f",fwdVel))
-        -- UiPop()
-
-        -- hud EngineOnOff
-        -- UiPush()
-        --     UiTranslate(0, 900)
-        --     UiFont("bold.ttf", 36)
-        --     local taxiModeEnabled = ""
-        --     if plane.taxiModeEnabled then
-        --         taxiModeEnabled = "OFF"
-        --         UiColor(1,1,1)
-        --     else
-        --         taxiModeEnabled = "ON"
-        --         UiColor(1,0,0)
-        --     end
-        --     UiText("Taxi Mode (v): " .. taxiModeEnabled) -- TODO plane.taxiModeEnabled -> plane.taxiMode
-        --     UiColor(1,1,1)
-        -- UiPop()
-
-        -- hud EnemiesAlive
-        -- UiPush()
-        --     UiTranslate(0, 950)
-        --     UiColor(1,0,0)
-        --     UiFont("bold.ttf", 36)
-        --     local enemiesList = getEnemiesList()
-        --     UiText("Enemies (t): " .. getNumberOfEnemiesAlive(enemiesList))
-        -- UiPop()
-    UiPop()
-
-    -- hud Crosshair
-    -- local crosshairTr = Transform(plane.getFwdPos(-300), plane.getTransform().rot)
-    -- DebugLine(crosshairTr.pos, TransformToParentPoint(crosshairTr, Vec(0,VecDist(crosshairTr.pos, plane.getPos())/20,0)), 1, 1, 1)
-    -- DebugLine(crosshairTr.pos, TransformToParentPoint(crosshairTr, Vec(0,-VecDist(crosshairTr.pos, plane.getPos())/20,0)), 1, 1, 1)
-    -- DebugLine(crosshairTr.pos, TransformToParentPoint(crosshairTr, Vec(VecDist(crosshairTr.pos, plane.getPos())/20,0,0)), 1, 1, 1)
-    -- DebugLine(crosshairTr.pos, TransformToParentPoint(crosshairTr, Vec(-VecDist(crosshairTr.pos, plane.getPos())/20,0,0)), 1, 1, 1)
 end
 
 
 function drawRespawnText()
-    local plane = curPlane
-    local vehicle = GetPlayerVehicle()
-    if (vehicle == plane.vehicle and plane.getHealth() <= 0.5) or IsPointInWater(GetPlayerPos()) then
+
+    local v = GetPlayerVehicle()
+    local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
+
+    local drawText = vIsDeadPlane or IsPointInWater(GetPlayerTransform().pos)
+
+    if drawText then
         UiPush()
         UiTranslate(UiCenter(), 200)
         UiAlign("center middle")
         UiFont("bold.ttf", 40)
         UiColor(1,1,1)
-        UiText("Press \""..respawnKey.."\" to respawn")
+        UiText("Press \"".. respawnKey .."\" to respawn")
         UiPop()
     end
+
 end

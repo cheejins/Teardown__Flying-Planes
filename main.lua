@@ -1,14 +1,15 @@
--- #include "script/ai_enemy_navy.lua"
+#include "script/camera.lua"
+#include "script/config_smallMapMode.lua"
 #include "script/debug.lua"
 #include "script/draw.lua"
-#include "script/camera.lua"
+#include "script/managePlanes.lua"
 #include "script/mod_config.lua"
+#include "script/particles.lua"
 #include "script/plane.lua"
 #include "script/planeConstructor.lua"
-#include "script/particles.lua"
+#include "script/projectiles.lua"
 #include "script/planeHud.lua"
 #include "script/sounds.lua"
-#include "script/managePlanes.lua"
 #include "script/umf.lua"
 #include "script/utility.lua"
 #include "script/weapons.lua"
@@ -22,21 +23,38 @@ hintsOff = false
 isDemoMap = false
 curPlane = nil
 
-respawnKey = "y"
 enemiesKey = "t"
 
 
 function init()
+
+    if GetString('savegame.mod.options.keys.respawn') == '' then
+        SetString('savegame.mod.options.keys.respawn', 'y')
+    end
+    if GetString('savegame.mod.options.keys.smallMapMode') == '' then
+        SetString('savegame.mod.options.keys.smallMapMode', 'o')
+    end
+    respawnKey = GetString('savegame.mod.options.keys.respawn')
+    smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
+
     initSounds()
     initPlanes()
+    initProjectiles()
+
+    SmallMapMode = false
+    config_setSmallMapMode(SmallMapMode)
+
 end
 function tick()
 
+    respawnKey = GetString('savegame.mod.options.keys.respawn')
+    smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
+
     SetBool('level.planeScriptActive', true)
 
+    manageConfig()
     manageSpawning()
-    manageActiveMissiles(activeMissiles)
-    manageActiveBullets(activeBullets)
+    manageActiveProjectiles()
 
     -- Root of plane management.
     planesTick()
@@ -49,11 +67,20 @@ function tick()
     handlePlayerInWater()
     manageDebugMode()
 
+
+    -- for key, plane in pairs(FindVehicles('planeVehicle', true)) do
+
+    --     if GetVehicleHealth(plane) < 0.5 then
+    --         local bodyPos = GetBodyTransform(GetVehicleBody(plane)).pos
+    --         particle_fire(bodyPos, math.random()*3)
+    --     end
+
+    -- end
+
 end
 function update()
     planesUpdate()
 end
-
 
 
 

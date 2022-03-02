@@ -17,6 +17,23 @@ function exhaust_particle_afterburner(tr, amt, vel, alpha, emmissive)
 
     SpawnParticle(tr.pos, VecScale(QuatToDir(tr.rot), -vel), 0.09)
 
-    -- SpawnParticle('smoke', TransformToParentPoint(tr, Vec(0,0,-2)), VecScale(QuatToDir(tr.rot), -vel), 0.5)
-
  end
+
+
+ function particle_fire(pos, rad)
+
+    ParticleReset()
+
+    ParticleType("smoke")
+    ParticleColor(86.0,0.5,0.3, 0.72,0.2,0.1)
+    ParticleRadius(rad, rad*3, "linear")
+    ParticleTile(5)
+    ParticleGravity(0.5)
+    ParticleEmissive(4.0, 1, "easein")
+    ParticleRotation(math.random(), 0, "linear")
+    ParticleStretch(5)
+    ParticleCollide(0.5)
+
+    SpawnParticle(pos, Vec(0, 3, 0), 2)
+
+end

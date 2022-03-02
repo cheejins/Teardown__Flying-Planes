@@ -35,8 +35,16 @@ function drawTarget(plane, vehicle)
 
             UiColor(0.5,1,0.5, 1)
             if vehicle == plane.targetting.target then
+
                 local c = oscillate(0.9)
-                UiColor(1,1,0.5, c)
+                if plane.targetting.lock.locked then
+                    UiColor(1,0,0, 1)
+                    DrawBodyOutline(GetVehicleBody(plane.targetting.target), 1,0,0, 0.5)
+                else
+                    UiColor(1,1,0.5, c)
+                    DrawBodyOutline(GetVehicleBody(plane.targetting.target), 1,1,0.5, 0.5)
+                end
+
             end
 
             UiImageBox('MOD/img/hud/hexagon.png', 40,40, 0,0) -- Draw target at vehicle body pos.

@@ -19,7 +19,9 @@ function planesUpdate()
 
         if GetPlayerVehicle() == plane.vehicle and plane.checkPlayerInUnbrokenPlane() then
 
-            crosshairPos = getCrosshairWorldPos({plane.body}, true)
+            crosshairPos = getCrosshairWorldPos({plane.body})
+            dbdd(crosshairPos, 1,1, 1,0,0, 1)
+
 
             curPlane = plane
             plane.status = '-'
@@ -57,7 +59,5 @@ function planesTick()
             planeChangeCamera()
         end
     end
-
-
 
 end

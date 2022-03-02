@@ -33,13 +33,13 @@
 
         for key, b in pairs(rejectBodies) do QueryRejectBody(b) end
 
-        -- local crosshairTr = getCrosshairTr()
-        -- local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 200)
-        -- if crosshairHit then
-        --     return crosshairHitPos
-        -- elseif not crosshairHit or fwdPos then
-            return TransformToParentPoint(GetCameraTransform(), Vec(0,0,-500))
-        -- end
+        local crosshairTr = getCrosshairTr()
+        local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 300)
+        if crosshairHit then
+            return crosshairHitPos
+        elseif not crosshairHit or fwdPos then
+            return TransformToParentPoint(GetCameraTransform(), Vec(0,0,-300))
+        end
 
     end
 
@@ -451,6 +451,10 @@ do
     end
 end
 
+--[[MISC]]
+function myDot(a, b) return (a[1] * b[1]) + (a[2] * b[2]) + (a[3] * b[3]) end
+function myMag(a) return math.sqrt((a[1] * a[1]) + (a[2] * a[2]) + (a[3] * a[3])) end
+
 
 
 --[[LOGIC]]
@@ -484,7 +488,7 @@ end
 do
 
     function TimerCreate(time, rpm)
-        return {time = time, rpm = rpm}
+        return deepcopy{time = time, rpm = rpm}
     end
 
     ---Run a timer and a table of functions.
