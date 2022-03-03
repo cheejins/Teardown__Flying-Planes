@@ -22,7 +22,9 @@ function draw()
             UiPop() end
 
             do UiPush()
-                drawTargets(plane)
+                if plane.checkPlayerInUnbrokenPlane() then
+                    drawTargets(plane)
+                end
             UiPop() end
 
         end
@@ -138,8 +140,12 @@ function planeDrawHud(plane)
     do UiPush()
         -- hud STATUS
         UiTranslate(960, 900)
-        UiFont("bold.ttf", 36)
+        UiFont("bold.ttf", 24)
+        UiText('Homing Missiles: ' .. ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
+
+        UiTranslate(0, 30)
         UiText(plane.status)
+
     UiPop() end
 
 

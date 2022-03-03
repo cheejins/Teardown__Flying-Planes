@@ -1,7 +1,12 @@
+2022.03.03.1
+> Added homing missiles.
+> Added key binds for targer changing and enabling/disabling missile homing.
+> Fixed plane engine sound.
+
 2022.03.03
-> Slightly improved weapon firing positions and accuracy
-> Tuned plane camera.
 > Added keybinds for respawn and small map mode toggling.
+> Tuned plane camera.
+> Slightly improved weapon firing positions and accuracy.
 
 
 2022.03.01

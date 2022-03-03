@@ -18,6 +18,9 @@ end
 --- Change target to a random vehicle in table v.
 function changeTarget(plane, v)
     plane.targetting.target = GetRandomIndexValue(v)
+    TimerResetTime(plane.targetting.lock.timer)
+    plane.targetting.lock.locked = false
+    plane.targetting.lock.locking = false
 end
 
 --- Draw a single target.
@@ -38,16 +41,32 @@ function drawTarget(plane, vehicle)
 
                 local c = oscillate(0.9)
                 if plane.targetting.lock.locked then
+
                     UiColor(1,0,0, 1)
                     DrawBodyOutline(GetVehicleBody(plane.targetting.target), 1,0,0, 0.5)
+                    UiPush()
+                        UiTranslate(21, 0)
+                        UiTextShadow(0,0,0,1,1,0.1)
+                        UiAlign('left middle')
+                        UiFont('bold.ttf', 20)
+                        UiText('LOCK')
+                    UiPop()
+
+                elseif plane.targetting.lock.locking then
+
+                    UiColor(1,0.6,0.1, c)
+                    DrawBodyOutline(GetVehicleBody(plane.targetting.target), 1,0.5,0, 0.5)
+
                 else
+
                     UiColor(1,1,0.5, c)
                     DrawBodyOutline(GetVehicleBody(plane.targetting.target), 1,1,0.5, 0.5)
+
                 end
 
             end
 
-            UiImageBox('MOD/img/hud/hexagon.png', 40,40, 0,0) -- Draw target at vehicle body pos.
+            UiImageBox('MOD/img/hud/hexagon.png', 40,40, 0,0) -- Draw target at vehicle pos.
 
         end
 
@@ -87,7 +106,7 @@ function manageTargetting(plane)
 
 
                 local ang = VecAngle(camDir, vDir)
-                if ang < 45 then
+                if ang < 30 then
                     table.insert(planesInfront, v)
                 end
 
@@ -105,7 +124,7 @@ function manageTargetting(plane)
         end
 
         -- Manually change target.
-        if InputPressed('t') then
+        if InputPressed(changeTargetKey) then
 
             if #planesInfront >= 1 then
                 changeTarget(plane, planesInfront)

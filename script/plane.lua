@@ -94,25 +94,26 @@ end
 function planeSound(plane)
 
     if plane.engineType == "jet" then
-        PlayLoop(sounds.jet_engine_loop, plane.getPos(), plane.engineVol)
+        PlayLoop(sounds.jet_engine_loop, plane.getTransform().pos, 2)
+        PlayLoop(sounds.jet_engine_afterburner, plane.getTransform().pos, plane.thrust/50)
         PlayLoop(sounds.jet_engine_loop, GetCameraTransform().pos, 0.1)
 
     elseif plane.engineType == "propeller" then
 
         if plane.thrust < 20 then
-            PlayLoop(sounds.prop_5, plane.getPos(), plane.engineVol * 2)
+            PlayLoop(sounds.prop_5, plane.getPos(), plane.engineVol * 3)
             PlayLoop(sounds.prop_5, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 40 then
-            PlayLoop(sounds.prop_4, plane.getPos(), plane.engineVol * 2)
+            PlayLoop(sounds.prop_4, plane.getPos(), plane.engineVol * 3)
             PlayLoop(sounds.prop_4, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 60 then
-            PlayLoop(sounds.prop_3, plane.getPos(), plane.engineVol * 2)
+            PlayLoop(sounds.prop_3, plane.getPos(), plane.engineVol * 3)
             PlayLoop(sounds.prop_3, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 80 then
-            PlayLoop(sounds.prop_2, plane.getPos(), plane.engineVol * 2)
+            PlayLoop(sounds.prop_2, plane.getPos(), plane.engineVol * 3)
             PlayLoop(sounds.prop_2, GetCameraTransform().pos, 0.1)
         elseif plane.thrust <= 100 then
-            PlayLoop(sounds.prop_1, plane.getPos(), plane.engineVol * 2)
+            PlayLoop(sounds.prop_1, plane.getPos(), plane.engineVol * 3)
             PlayLoop(sounds.prop_1, GetCameraTransform().pos, 0.1)
         end
 
@@ -126,9 +127,9 @@ function planeStateText(plane)
     end
 end
 function planeToggleEngine(plane)
-    if InputPressed("v") then
-        plane.taxiModeEnabled = not plane.taxiModeEnabled
-    end
+    -- if InputPressed("v") then
+    --     plane.taxiModeEnabled = not plane.taxiModeEnabled
+    -- end
 end
 function runEffects(plane)
 
@@ -271,22 +272,40 @@ function planeShoot(plane)
         end
 
 
-        local planeTr = GetVehicleTransform(plane.vehicle)
-        local targetTr = GetVehicleTransform(plane.targetting.target)
-
-        local planeDir = DirLookAt(planeTr.pos, TransformToParentPoint(planeTr, Vec(0,0,-1)))
-        local targetDir = DirLookAt(planeTr.pos, targetTr.pos)
-
         local targetShape = nil
-        local ang = VecAngle(planeDir, targetDir)
-        if ang < 30 and VecDist(planeTr.pos, targetTr.pos) < 600 then
-            targetShape = GetBodyShapes((GetVehicleBody(plane.targetting.target)))[1]
-            plane.targetting.lock.locked = true
-            beep()
+        if plane.targetting.lock.enabled then
+            --todo move to targetting section
+            local planeTr = GetVehicleTransform(plane.vehicle)
+            local targetTr = GetVehicleTransform(plane.targetting.target)
+
+            local planeDir = DirLookAt(planeTr.pos, TransformToParentPoint(planeTr, Vec(0,0,-1)))
+            local targetDir = DirLookAt(planeTr.pos, targetTr.pos)
+
+            local ang = VecAngle(planeDir, targetDir)
+            if ang < 30 and VecDist(planeTr.pos, targetTr.pos) < 600 then -- Target in bounds.
+
+                if plane.targetting.lock.timer.time <= 0 then -- Target locked.
+                    plane.targetting.lock.locked = true
+                    plane.targetting.lock.locking = false
+                    targetShape = GetBodyShapes((GetVehicleBody(plane.targetting.target)))[1]
+                else
+                    plane.targetting.lock.locking = true -- Target still locking.
+                    TimerRunTime(plane.targetting.lock.timer)
+                end
+
+            else
+
+                TimerResetTime(plane.targetting.lock.timer)
+
+                plane.targetting.lock.locking = false
+                plane.targetting.lock.locked = false
+
+            end
+            dbw('Target timer', plane.targetting.lock.timer.time)
         else
             plane.targetting.lock.locked = false
+            plane.targetting.lock.locking = false
         end
-        dbw('Lock Ang', ang)
 
 
 
@@ -305,7 +324,6 @@ function planeShoot(plane)
                 local weapTr = GetLightTransform(plane.weap.weaponObjects.secondary[plane.weap.secondary_lastIndex].light)
                 local shootTr = TransformCopy(weapTr)
                 shootTr.rot = QuatLookAt(plTr.pos, TransformToParentPoint(plTr, Vec(0,0,-300)))
-
 
 
                 if plane.model == 'mig29-u' then

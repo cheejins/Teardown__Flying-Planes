@@ -34,8 +34,16 @@ function init()
     if GetString('savegame.mod.options.keys.smallMapMode') == '' then
         SetString('savegame.mod.options.keys.smallMapMode', 'o')
     end
+    if GetString('savegame.mod.options.keys.toggleMissileLock') == '' then
+        SetString('savegame.mod.options.keys.toggleMissileLock', 'c')
+    end
+    if GetString('savegame.mod.options.keys.changeTarget') == '' then
+        SetString('savegame.mod.options.keys.changeTarget', 't')
+    end
     respawnKey = GetString('savegame.mod.options.keys.respawn')
     smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
+    toggleMissileLockKey = GetString('savegame.mod.options.keys.toggleMissileLock')
+    changeTargetKey = GetString('savegame.mod.options.keys.changeTarget')
 
     initSounds()
     initPlanes()
@@ -49,6 +57,9 @@ function tick()
 
     respawnKey = GetString('savegame.mod.options.keys.respawn')
     smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
+    toggleMissileLockKey = GetString('savegame.mod.options.keys.toggleMissileLock')
+    changeTargetKey = GetString('savegame.mod.options.keys.changeTarget')
+
 
     SetBool('level.planeScriptActive', true)
 
@@ -68,14 +79,15 @@ function tick()
     manageDebugMode()
 
 
-    -- for key, plane in pairs(FindVehicles('planeVehicle', true)) do
+    for key, plane in pairs(FindVehicles('planeVehicle', true)) do
 
-    --     if GetVehicleHealth(plane) < 0.5 then
-    --         local bodyPos = GetBodyTransform(GetVehicleBody(plane)).pos
-    --         particle_fire(bodyPos, math.random()*3)
-    --     end
+        if GetVehicleHealth(plane) < 0.5 then
+            local bodyPos = GetBodyTransform(GetVehicleBody(plane)).pos
+            particle_fire(bodyPos, math.random()*3)
+            particle_blackSmoke(VecAdd(bodyPos, Vec(0,1,0)), math.random()*6)
+        end
 
-    -- end
+    end
 
 end
 function update()

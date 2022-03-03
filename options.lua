@@ -9,6 +9,12 @@ function init()
     if GetString('savegame.mod.options.keys.smallMapMode') == '' then
         SetString('savegame.mod.options.keys.smallMapMode', 'o')
     end
+    if GetString('savegame.mod.options.keys.toggleMissileLock') == '' then
+        SetString('savegame.mod.options.keys.toggleMissileLock', 'c')
+    end
+    if GetString('savegame.mod.options.keys.changeTarget') == '' then
+        SetString('savegame.mod.options.keys.changeTarget', 't')
+    end
 
     activeAssignment = false
     activePath = '.'
@@ -58,7 +64,7 @@ function draw()
 
             UiAlign('center middle')
             UiFont('regular.ttf', font_size*1.5)
-            UiTranslate(0, 350)
+            UiTranslate(0, 250)
             local c = oscillate(2)/3 + 2/3
             UiColor(c,c,1,1)
             UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
@@ -67,7 +73,7 @@ function draw()
                 StartLevel('', 'demo.xml', '')
             end
 
-            UiTranslate(0, 150)
+            UiTranslate(0, 100)
             UiColor(1,1,1,1)
 
             UiTranslate(0, font_size*2.5)
@@ -75,6 +81,12 @@ function draw()
 
             UiTranslate(0, font_size*2.5)
             Ui_Option_Keybind('Small-Map Mode', 'savegame.mod.options.keys.smallMapMode')
+
+            UiTranslate(0, font_size*2.5)
+            Ui_Option_Keybind('Toggle homing-missiles', 'savegame.mod.options.keys.toggleMissileLock')
+
+            UiTranslate(0, font_size*2.5)
+            Ui_Option_Keybind('Change target', 'savegame.mod.options.keys.changeTarget')
 
         UiPop() end
 

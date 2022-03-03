@@ -105,11 +105,12 @@ function createPlaneObject(_vehicle)
     end
 
     plane.targetting = {
-        -- targets = {}, -- Target bodies.
-        target = nil,
+        target = 0,
         lock = {
-            timer = {time = 0, rpm = 60/3},
-            locked = false
+            enabled = true,
+            timer = {time = 60/1.2, rpm = 60/1.2},
+            locking = false,
+            locked = false,
         }
     }
 

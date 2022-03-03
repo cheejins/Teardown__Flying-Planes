@@ -22,6 +22,10 @@ function planesUpdate()
             crosshairPos = getCrosshairWorldPos({plane.body})
             dbdd(crosshairPos, 1,1, 1,0,0, 1)
 
+            if InputPressed(toggleMissileLockKey) then
+                beep()
+                plane.targetting.lock.enabled = not plane.targetting.lock.enabled
+            end
 
             curPlane = plane
             plane.status = '-'
@@ -34,6 +38,7 @@ function planesUpdate()
             plane.applyForces()
 
             manageTargetting(plane)
+
             planeShoot(plane)
             planeSound(plane)
             runEffects(plane)
