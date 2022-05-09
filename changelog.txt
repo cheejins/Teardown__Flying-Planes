@@ -1,9 +1,25 @@
-2022.03.03.1
-> Added homing missiles.
-> Added key binds for targer changing and enabling/disabling missile homing.
-> Fixed plane engine sound.
+2022.05.08
+> Added B2 Stealth Bomber and carpet bombing.
+> Mod no longer needs to be enabled.
+> Changed altitude from meters to feet.
+
+
+2022.03.04
+> Added "Map center" indicator for small map mode.
+
 
 2022.03.03
+> Added option to enable/disable "press y to respawn" text when in water.
+
+
+2022.03.02.1
+> Added homing missiles.
+> Added key binds for targer changing and enabling/disabling missile homing.
+> Added runway lights.
+> Fixed plane engine sound.
+
+
+2022.03.02
 > Added keybinds for respawn and small map mode toggling.
 > Tuned plane camera.
 > Slightly improved weapon firing positions and accuracy.

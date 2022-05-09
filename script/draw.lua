@@ -1,4 +1,10 @@
 function draw()
+
+    UiTextShadow(0,0,0, 1, 0.5, 0)
+
+    local uiW = 600
+    local uiH = 650
+
     CAMERA = {}
     CAMERA.xy = {UiCenter(), UiMiddle()}
     local vehicle = GetPlayerVehicle()
@@ -8,23 +14,61 @@ function draw()
             local plane = planeObjectList[i]
 
             do UiPush()
-                planeDrawHud(plane)
+                planeDrawHud(plane, uiW + 200, uiH)
             UiPop() end
 
             do UiPush()
-                UiTranslate(UiCenter()*1.60, UiMiddle())
-                drawThrust(plane)
+                drawUiGyro(plane, uiW, uiH)
             UiPop() end
 
             do UiPush()
-                UiTranslate(UiCenter()*1.60, UiMiddle()+250)
-                drawSpeed(plane)
+                drawCompass(plane, uiW, uiH)
             UiPop() end
 
             do UiPush()
                 if plane.checkPlayerInUnbrokenPlane() then
                     drawTargets(plane)
                 end
+            UiPop() end
+
+            do UiPush()
+
+                local pos = Vec(0,0,0)
+                local dist = VecDist(plane.getTransform().pos, pos)
+                local a = (dist / 800) - 0.6
+
+                UiColor(0.7,0.7,0.7, a)
+                UiTextShadow(0,0,0, a)
+                UiFont("bold.ttf", 20)
+
+
+                if SmallMapMode then
+
+                    local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
+                    if isInfront then
+
+                        local x,y = UiWorldToPixel(pos)
+
+                        UiTranslate(x,y)
+                        UiAlign("center middle")
+                        UiImageBox("MOD/script/img/dot.png", 10, 10, 0,0)
+
+                        do UiPush()
+                            UiTranslate(-15, 0)
+                            UiAlign("right middle")
+                            UiText('Map Center')
+                        UiPop() end
+
+                        do UiPush()
+                            UiTranslate(15, 0)
+                            UiAlign("left middle")
+                            UiText(sfn(dist, 0) .. ' m')
+                        UiPop() end
+
+                    end
+
+                end
+
             UiPop() end
 
         end
@@ -60,7 +104,7 @@ function drawSpeed(plane)
 
 end
 
-function planeDrawHud(plane)
+function planeDrawHud(plane, uiW, uiH)
 
     local c = Vec(0.5,1,0.5)
     if plane.getHealth() <= 0.5 then c = Vec(1,0,0) end
@@ -80,9 +124,13 @@ function planeDrawHud(plane)
     UiPop() end
 
     do UiPush()
+
+        local w = 50
+
         UiColor(0,0,0, 0.5)
         UiTranslate(UiCenter(), UiMiddle())
-        UiImageBox("MOD/script/img/hud_crosshair_outer.png", 50, 50, 0,0)
+        UiImageBox("MOD/script/img/hud_crosshair_outer.png", w, w)
+
     UiPop() end
 
 
@@ -150,22 +198,28 @@ function planeDrawHud(plane)
 
 
     do UiPush()
-        UiAlign("right top")
-        UiTranslate(1400, 0)
+        UiAlign("left top")
+        UiTranslate(UiCenter() +  uiW / 2, 0)
 
         -- hud THRUST
         do UiPush()
-        UiColor(c[1], c[2], c[3])
-        UiTranslate(0, 450)
-        -- UiImageBox("MOD/script/img/squareBg.png", 160, 90, 0, 0)
 
-        UiText("THRUST ")
-        UiTranslate(-0, -450)
-        local lerpThrustColor = VecLerp(Vec(0,0,0),Vec(1,1,1), plane.thrust/100)
-        UiColor(lerpThrustColor[1],lerpThrustColor[2],lerpThrustColor[3])
-        UiTranslate(0, 500)
+            UiColor(c[1], c[2], c[3])
+            UiTranslate(0, 450)
 
-        UiText(plane.thrust .. "%")
+            UiText("THRUST ")
+            UiTranslate(-0, -450)
+            local lerpThrustColor = VecLerp(Vec(0,0,0),Vec(1,1,1), plane.thrust/100)
+            UiColor(lerpThrustColor[1],lerpThrustColor[2],lerpThrustColor[3])
+            UiTranslate(0, 500)
+
+            UiText(plane.thrust .. "%")
+
+        UiPop() end
+
+        do UiPush()
+            UiTranslate(275, 525)
+            drawThrust(plane)
         UiPop() end
 
         -- hud SPEED
@@ -187,16 +241,26 @@ function planeDrawHud(plane)
 
             UiColor(1, speedC, speedC)
             UiText(knots .. " Knots")
+
+
+            UiTranslate(275, 25)
+            drawSpeed(plane)
+
         UiPop() end
+
+
+
+
+
     UiPop() end
 
 
     -- hud ALT
     do UiPush()
-        UiAlign("left top")
-        UiTranslate(500, 0)
+        UiAlign("right middle")
+        UiTranslate(UiCenter() - uiW/2, 0)
 
-        local alt = string.format("%.0f", plane.getTransform().pos[2])
+        local alt = string.format("%.0f", plane.getTransform().pos[2] * 3.28084)
         do UiPush()
             UiTranslate(0, 720)
             -- UiImageBox("MOD/script/img/squareBg.png", 160, 90, 0, 0)
@@ -210,7 +274,7 @@ function planeDrawHud(plane)
             UiTranslate(0, 770)
             UiColor(1,1,1)
 
-            UiText(alt .. " m")
+            UiText(alt .. " ft")
         UiPop() end
 
     UiPop() end
@@ -220,19 +284,23 @@ end
 
 function drawRespawnText()
 
-    local v = GetPlayerVehicle()
-    local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
+    if showRespawnText then
 
-    local drawText = vIsDeadPlane or IsPointInWater(GetPlayerTransform().pos)
+        local v = GetPlayerVehicle()
+        local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
 
-    if drawText then
-        UiPush()
-        UiTranslate(UiCenter(), 200)
-        UiAlign("center middle")
-        UiFont("bold.ttf", 40)
-        UiColor(1,1,1)
-        UiText("Press \"".. respawnKey .."\" to respawn")
-        UiPop()
+        local drawText = vIsDeadPlane or IsPointInWater(GetPlayerTransform().pos)
+
+        if drawText then
+            UiPush()
+            UiTranslate(UiCenter(), 200)
+            UiAlign("center middle")
+            UiFont("bold.ttf", 40)
+            UiColor(1,1,1)
+            UiText("Press \"".. respawnKey .."\" to respawn")
+            UiPop()
+        end
+
     end
 
 end

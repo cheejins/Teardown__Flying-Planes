@@ -10,6 +10,10 @@ end
 
 function tick()
 
+    if GetBool('level.planeScriptActive') == false then
+        Spawn('MOD/prefab/script.xml', Transform())
+        SetBool('level.planeScriptActive', true)
+    end
 
     local vehicle = GetPlayerVehicle()
     if HasTag(vehicle, 'planeVehicle') and not GetBool('level.planeScriptActive') and not hideMessage then

@@ -32,8 +32,8 @@ function planesUpdate()
 
             if camPos == 'custom' then
                 planeSteer(plane)
-                planeMove(plane)
             end
+            planeMove(plane)
             plane.checkIsAlive()
             plane.applyForces()
 

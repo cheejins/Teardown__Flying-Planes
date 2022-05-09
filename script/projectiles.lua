@@ -284,6 +284,46 @@ function initProjectiles()
 
         },
 
+        bombs = {
+
+            standard = {
+
+                isActive = true, -- Active when firing, inactive after hit.
+                hit = false,
+                hitInitial = false,
+                lifeLength = 15, --Seconds
+
+                category = 'bomb',
+
+                speed = 0.55,
+                spread = 0.22,
+                drop = 0.25,
+                dropIncrement = 0,
+                explosionSize = 4,
+                rcRad = 0.3,
+                force = 0,
+                penetrate = false,
+                holeSize = 0,
+
+                effects = {
+                    particle = 'smoke',
+                    color = Vec(1,0.5,0.3),
+                    sprite = 'MOD/script/img/bomb1.png',
+                    sprite_dimensions = {2, 1},
+                    sprite_facePlayer = false,
+                },
+
+                homing = {
+                    force = 0,
+                    gain = 0,
+                    max = 0,
+                    targetShape = nil,
+                    targetPos = Vec(),
+                    targetPosRadius = 0,
+                }
+
+        }
+    }
 
     }
 

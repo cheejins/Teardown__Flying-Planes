@@ -1,7 +1,17 @@
 #include "script/utility.lua"
+#include "script/registry.lua"
+
+
+
+activeAssignment = false
+activePath = '.'
+lastKeyPressed = '.'
+font_size = 32
 
 
 function init()
+
+    checkRegInitialized()
 
     if GetString('savegame.mod.options.keys.respawn') == '' then
         SetString('savegame.mod.options.keys.respawn', 'y')
@@ -15,12 +25,6 @@ function init()
     if GetString('savegame.mod.options.keys.changeTarget') == '' then
         SetString('savegame.mod.options.keys.changeTarget', 't')
     end
-
-    activeAssignment = false
-    activePath = '.'
-    lastKeyPressed = '.'
-
-    font_size = 32
 
 end
 
@@ -64,19 +68,22 @@ function draw()
 
             UiAlign('center middle')
             UiFont('regular.ttf', font_size*1.5)
-            UiTranslate(0, 250)
-            local c = oscillate(2)/3 + 2/3
-            UiColor(c,c,1,1)
-            UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
-            UiButtonHoverColor(0.5,0.5,1,1)
-            if UiTextButton('Start Demo Map', 350, font_size*2.5) then
-                StartLevel('', 'demo.xml', '')
-            end
+            UiTranslate(0, 190)
+            -- local c = oscillate(2)/3 + 2/3
+            -- UiColor(c,c,1,1)
+            -- UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
+            -- UiButtonHoverColor(0.5,0.5,1,1)
+            -- if UiTextButton('Start Demo Map', 350, font_size*2.5) then
+            --     StartLevel('', 'demo.xml', '')
+            -- end
 
-            UiTranslate(0, 100)
+            UiTranslate(0, 80)
             UiColor(1,1,1,1)
 
-            UiTranslate(0, font_size*2.5)
+            UiTranslate(0, font_size*3)
+            ui_createToggleSwitch('Show respawn notification', 'savegame.mod.options.showRespawnText')
+
+            UiTranslate(0, font_size*1.5)
             Ui_Option_Keybind('Respawn', 'savegame.mod.options.keys.respawn')
 
             UiTranslate(0, font_size*2.5)
@@ -138,3 +145,62 @@ function Ui_Option_Keybind(label, regPath)
     UiPop() end
 
 end
+
+
+function ui_createToggleSwitch(title, registryPath)
+
+    do UiPush()
+
+        local value = GetBool(registryPath)
+
+        UiAlign('right middle')
+
+        -- Text header
+        UiColor(1,1,1, 1)
+        UiFont('regular.ttf', font_size)
+        UiText(title)
+        UiTranslate(font_size, -font_size/2)
+
+
+        -- Toggle BG
+        UiAlign('left top')
+        UiColor(0.4,0.4,0.4, 1)
+        local tglW = 130
+        local tglH = 40
+        UiRect(tglW, tglH)
+
+        -- Render toggle
+        do UiPush()
+
+            local toggleText = 'ON'
+
+            if value then
+                UiTranslate(tglW/2, 0)
+                UiColor(0,0.8,0, 1)
+            else
+                toggleText = 'OFF'
+                UiColor(0.8,0,0, 1)
+            end
+
+            UiRect(tglW/2, tglH)
+
+            do UiPush()
+                UiTranslate(tglW/4, tglH/2)
+                UiColor(1,1,1, 1)
+                UiFont('bold.ttf', font_size)
+                UiAlign('center middle')
+                UiText(toggleText)
+            UiPop() end
+
+        UiPop() end
+
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 0,0,0, a)
+        if UiBlankButton(tglW, tglH) then
+            SetBool(registryPath, not value)
+            PlaySound(LoadSound('clickdown.ogg'), GetCameraTransform().pos, 1)
+        end
+
+    UiPop() end
+
+end
+

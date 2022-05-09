@@ -37,6 +37,11 @@ function planeMove(plane)
 
     end
 
+    -- local angVel = GetBodyAngularVelocity(plane.body)
+    -- local turbulence = VecScale(Vec(math.random()-0.5, math.random()-0.5, math.random()-0.5), speed/500)
+    -- turbulence = VecAdd(turbulence, angVel)
+    -- SetBodyAngularVelocity(plane.body, turbulence)
+
 end
 function planeSteer(plane)
 
@@ -57,7 +62,7 @@ function planeSteer(plane)
         local yawSign = 1
         if InputDown("d") then yawSign = -1 end -- Determine yaw direction
 
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 2 * CONFIG.smallMapMode.turnMult
+        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 3 * CONFIG.smallMapMode.turnMult
 
         -- local yawLowerLim = plane.topSpeed/3
         -- local yawUpperLim = plane.topSpeed - (plane.topSpeed/3)
@@ -82,7 +87,6 @@ function planeSteer(plane)
     -- Align with crosshair pos
     pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
     pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / plane.yawFac * CONFIG.smallMapMode.turnMult)
-
 
     SetBodyTransform(plane.body, pTr)
 
@@ -346,10 +350,45 @@ function planeShoot(plane)
 
         end
 
+        if #plane.weap.weaponObjects.special >= 1 then
+
+            for key, weap in pairs(plane.weap.weaponObjects.special) do
+
+                local tr = GetLightTransform(weap.light)
+                tr.rot = QuatLookDown(tr.pos)
+
+                local hit, pos, dist = RaycastFromTransform(tr, nil, nil, {plane.body})
+                if hit and dist > 6 then
+                    DrawDot(pos, 2,2, 0,1,0,0.5)
+                end
+
+            end
+
+            if InputDown('rmb') then
+
+                if plane.timers.weap.special.time <= 0 then
+
+                    TimerResetTime(plane.timers.weap.special)
+
+                    for key, weap in pairs(plane.weap.weaponObjects.special) do
+
+                        local tr = GetLightTransform(weap.light)
+                        local bombTr = Transform(tr.pos, QuatLookDown(tr.pos))
+
+                        createProjectile(bombTr, Projectiles, ProjectilePresets.bombs.standard, {plane.body})
+
+                    end
+
+                end
+
+            end
+
+        end
+
     end
 
     TimerRunTime(plane.timers.weap.primary)
     TimerRunTime(plane.timers.weap.secondary)
-    -- TimerRunTime(plane.timers.weap.special)
+    TimerRunTime(plane.timers.weap.special)
 
 end

@@ -27,6 +27,9 @@
         for i = 1, 3 do vec[i] = vec1[i] * vec2[i] end
         return vec
     end
+    function VecAvg(v1, v2)
+        VecApproach(v1, v2, VecDist(v1,v2)/2)
+    end
 
 
     getCrosshairWorldPos = function(rejectBodies, fwdPos)

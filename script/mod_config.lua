@@ -93,3 +93,21 @@ function convertPlaneToAC130(plane)
     plane.camUp = 15
     plane.camPitch = 0
 end
+
+function convertPlaneToB2(plane)
+    plane.isArmed = true
+
+    plane.topSpeed = 130
+    plane.thrustImpulseAmount = 400
+    plane.engineVol = 1
+
+    plane.brakeImpulseAmt = 500
+
+    plane.pitchVal = 1
+    plane.rollVal = 3
+    plane.yawFac = 2
+
+    plane.camBack = 45
+    plane.camUp = 15
+    plane.camPitch = 0
+end

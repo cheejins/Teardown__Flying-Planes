@@ -90,7 +90,7 @@ function createPlaneObject(_vehicle)
         weap = {
             primary = {time = 0, rpm = 1200},
             secondary = {time = 0, rpm = 120},
-            special = {time = 0, rpm = 1},
+            special = {time = 0, rpm = 1200},
         }
     }
 
@@ -414,6 +414,8 @@ function createPlaneObject(_vehicle)
             convertPlaneToCessna172(plane)
         elseif plane.model == "ac130" then
             convertPlaneToAC130(plane)
+        elseif plane.model == "b2" then
+            convertPlaneToB2(plane)
         end
     end
 
