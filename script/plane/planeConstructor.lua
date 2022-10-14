@@ -173,10 +173,11 @@ function createPlaneObject(_vehicle)
     -- Returns the angle between the plane's direction and velocity
     plane.getForwardVelAngle = function()
 
-        local angle = QuatAngle(plane.tr.rot, DirToQuat(plane.vel))
-        angle = clamp(angle, 1, angle)
+        local lvel = TransformToLocalVec(plane.tr, plane.vel)
+        lvel = 1 - math.rad(math.abs(lvel[1] + lvel[2]))
+        lvel = clamp(lvel, 0, 1)
 
-        return angle
+        return lvel
 
     end
 
@@ -221,14 +222,18 @@ function createPlaneObject(_vehicle)
 
         if VecLength(plane.vel) >= 1 or VecLength(plane.vel) <= -1 then
 
+            local lvel = TransformToLocalVec(plane.tr, plane.vel)
+            local fac = plane.topSpeed / math.abs(lvel[3]) * 1.5
 
             local x = 0
             local y = 0
             local z = 0
 
-            local x = math.deg(GetRollAoA(plane.tr, plane.vel))
-            local y = math.deg(GetPitchAoA(plane.tr, plane.vel))
-            local z = math.deg(GetYawAoA(plane.tr, plane.vel))
+            local x = math.deg(GetRollAoA(plane.tr, plane.vel)) / fac / 1.5
+            local y = math.deg(GetPitchAoA(plane.tr, plane.vel)) / fac
+            local z = math.deg(GetYawAoA(plane.tr, plane.vel)) / fac / 1.5
+
+            -- print(plane.topSpeed / math.abs(lvel[3]))
 
 
             dbw("AERO FORCE X", sfn(x))
@@ -237,12 +242,8 @@ function createPlaneObject(_vehicle)
             dbw("SPEED FAC", speedFac)
 
 
-            -- local lvel = TransformToLocalVec(plane.tr, plane.vel)
-            -- dbw("LVEL", VecLength(lvel))
-
-
             local forces = Vec(x,y,0)
-            local imp = GetBodyMass(plane.body)/20 * plane.speedFac
+            local imp = GetBodyMass(plane.body)/15 * plane.speedFac
 
             dbw("imp", imp)
 
@@ -286,15 +287,15 @@ function createPlaneObject(_vehicle)
 
         end
 
-        local angDim = plane.speedFac / plane.topSpeed * 3
-        angDim = clamp(1-angDim, 0, 1)
-        print(sfn(angDim))
+        local angDim = 1 - (plane.speedFac / plane.topSpeed * 5)
+        angDim = clamp(angDim, 0, 1)
+        -- print(sfn(angDim))
 
         -- Diminish ang vel
-        -- SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), 0.98))
         SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), angDim))
 
     end
+
 
     plane.getFwdDragAmt = function()
         return plane.fwdDragAmt
@@ -387,9 +388,9 @@ function GetPitchAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
-    if aoa == -1 then
+    if aoa <= -0.999 then
         aoa = 0
-    elseif aoa == 1 then
+    elseif aoa >= 0.999 then
         aoa = 0
     end
     return aoa
@@ -404,9 +405,9 @@ function GetYawAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
-    if aoa == -1 then
+    if aoa <= -0.999 then
         aoa = 0
-    elseif aoa == 1 then
+    elseif aoa >= 0.999 then
         aoa = 0
     end
     return aoa
@@ -421,9 +422,9 @@ function GetRollAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
-    if aoa == -1 then
+    if aoa <= -0.999 then
         aoa = 0
-    elseif aoa == 1 then
+    elseif aoa >= 0.999 then
         aoa = 0
     end
     return aoa

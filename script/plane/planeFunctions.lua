@@ -28,7 +28,7 @@ function planeMove(plane)
         local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
-            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) * CONFIG.smallMapMode.dragMult
+            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 3
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
@@ -40,11 +40,13 @@ function planeMove(plane)
 end
 function planeSteer(plane)
 
-    local angDim = plane.speedFac / (plane.topSpeed) * 100
+    local angDim = plane.speedFac / (plane.topSpeed) * 100 * plane.getForwardVelAngle()
     -- angDim = clamp(1-angDim, 0, 1)
 
-    local imp = 7500 * angDim
+    local imp = 10000 * angDim
     dbw("steer angDim", angDim)
+
+    -- print("ang", plane.getForwardVelAngle())
 
 
     local nose = TransformToParentPoint(plane.tr, Vec(0,0,-10))

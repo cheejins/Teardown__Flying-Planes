@@ -3,6 +3,48 @@ message = message .. "At the moment the plane is one large 'air foil'. After par
 message = message .. "The goal is to have moving components that contribute to the combined forces instead of applying an impulse directly to the plane's central body."
 
 
+function DrawControls()
+    UiPush()
+
+        local fs = 28
+
+        UiTranslate(50, UiHeight()-50)
+        UiTextShadow(0,0,0, 1, 0.2)
+        UiColor(1,1,1, 1)
+        UiFont("regular.ttf", fs)
+        UiAlign("left bottom")
+
+
+
+        UiText('Change camera = R')
+        UiTranslate(0, -fs)
+        UiText('Change zoom = Mouse wheel')
+        UiTranslate(0, -fs)
+        UiText('Shoot = LMB/RMB')
+        UiTranslate(0, -fs)
+        UiTranslate(0, -fs)
+
+        UiText('Pitch = W/S')
+        UiTranslate(0, -fs)
+        UiText('Roll = A/D')
+        UiTranslate(0, -fs)
+        UiText('Yaw = Z/C')
+        UiTranslate(0, -fs)
+        UiTranslate(0, -fs)
+
+        UiText('Air brakes = ALT')
+        UiTranslate(0, -fs)
+        UiText('Thrust = SHIFT/CTRL')
+        UiTranslate(0, -fs)
+
+        UiTranslate(0, -fs)
+        UiText('CONTROLS')
+
+    UiPop()
+end
+
+
+
 function draw()
 
     UiColor(1,1,1, 1)
@@ -10,6 +52,8 @@ function draw()
     UiFont("bold.ttf", 24)
 
     -- WriteMessage(message)
+
+    DrawControls()
 
 
     local uiW = 600

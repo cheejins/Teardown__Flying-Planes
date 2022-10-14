@@ -27,8 +27,8 @@ function manageCamera(plane, disableRotation)
 
     local scale = 1
 
-	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * 5
-	plane.camera.zoom = clamp(plane.camera.zoom, 10, 100) * scale
+	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * 10
+	plane.camera.zoom = clamp(plane.camera.zoom, 10, 200) * scale
 
 
     local camAddHeight = 4
