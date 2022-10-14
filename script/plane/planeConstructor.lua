@@ -86,7 +86,7 @@ function createPlaneObject(_vehicle)
             camPitch = -7,
     }
 
-    plane.dirs = {Vec()}
+    plane.dirs = {Quat(),Quat(),Quat()}
 
 
     plane_update(plane)
@@ -180,35 +180,6 @@ function createPlaneObject(_vehicle)
 
     end
 
-    -- Returns the angle of attack of the chord line (used to calculate airfoil lift and drag)
-    plane.getPitchAoA = function()
-
-        local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
-        local aoa =  (-(math.deg(math.atan2(lVel[3], lVel[2]))) - 90) * math.pi
-
-        return aoa
-
-    end
-
-    plane.getYawAoA = function()
-
-        local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
-        local aoa =  (-(math.deg(math.atan2(lVel[1], -lVel[3]))) - 90) * math.pi
-
-        return aoa
-
-    end
-
-    plane.getRollAoA = function()
-
-        local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
-        local aoa =  (-(math.deg(math.atan2(lVel[1], -lVel[2]))) - 90) * math.pi
-
-        return aoa
-
-    end
-
-
 
     -- - plane.thrust*amt. amt+ = larger output.
     plane.getThrustFac = function(amt)
@@ -239,10 +210,6 @@ function createPlaneObject(_vehicle)
         local isf =
         (-1*((((s-(m/lowOffset))*a)^2)/((m/10)^2))+101)/100
 
-        if upperLim and s > m then
-            return isf * 2
-        end
-
         return isf
     end
 
@@ -251,60 +218,6 @@ function createPlaneObject(_vehicle)
 
     -- forces
     plane.applyForces = function()
-
-    -- --[LIFT]
-    --     -- Lift determined by AoA and speed
-    --     local aoa = plane.getPitchAoA()
-    --     local speed = plane.speed
-
-    --     local liftSpeedInterval = plane.topSpeed/5 * CONFIG.smallMapMode.liftMult
-    --     local liftSpeed = speed
-    --     local liftMult = 0.004
-
-    --     if speed < liftSpeedInterval and speed > 0 then
-    --         liftSpeed = liftSpeed^0.2 -- (x^2)/100
-    --     end
-    --     local liftAmt = aoa * liftSpeed * liftMult
-
-    --     -- Add upwards velocity
-    --     local pTr = plane.tr
-    --     if aoa > -180 and aoa < 180 then
-    --         ApplyBodyImpulse(
-    --             plane.body,
-    --             plane.tr.pos,
-    --             TransformToParentPoint(
-    --                 pTr,
-    --                 Vec(
-    --                     0,
-    --                     plane.getLiftSpeedFac()*liftAmt*1000,
-    --                     0)))
-    --     end
-
-
-    --     local vel = plane.vel
-
-    --     -- Yaw determined by AoA and speed
-    --     local aoa = nZero(plane.getYawAoA())
-    --     local speed = gtZero(plane.speed)
-
-    --     -- local yawSpeedInterval = plane.topSpeed/5
-    --     local yawSpeed = gtZero(speed)
-    --     local yawAmt = aoa * yawSpeed * 15 ^ 1.2
-    --     -- DebugWatch("yawAmt", yawAmt)
-    --     -- DebugWatch("rollAoA", plane.getRollAoA())
-
-    --     -- Add upwards velocity
-    --     local pTr = plane.tr
-    --     ApplyBodyImpulse(
-    --         plane.body,
-    --         plane.tr.pos,
-    --         TransformToParentPoint(pTr, Vec(yawAmt, 0, 0)))
-
-    --     -- local newVel = plane.vel
-    --     -- local newVelY = VecScale(newVel, 0.1)
-    --     -- newVelY = newVel[2]
-    --     -- SetBodyVelocity(plane.body, Vec(newVel[1], newVelY, newVel[3]))
-
 
         if VecLength(plane.vel) >= 1 or VecLength(plane.vel) <= -1 then
 
@@ -315,9 +228,7 @@ function createPlaneObject(_vehicle)
 
             local x = math.deg(GetRollAoA(plane.tr, plane.vel))
             local y = math.deg(GetPitchAoA(plane.tr, plane.vel))
-            -- local z = math.deg(GetYawAoA(plane.tr, plane.vel))
-
-            local speedFac = clamp(plane.speed, 0.00000001, plane.speed) / plane.topSpeed
+            local z = math.deg(GetYawAoA(plane.tr, plane.vel))
 
 
             dbw("AERO FORCE X", sfn(x))
@@ -326,11 +237,12 @@ function createPlaneObject(_vehicle)
             dbw("SPEED FAC", speedFac)
 
 
-            local forces = Vec(x,y,z)
-            local imp = GetBodyMass(plane.body)/20 * speedFac
+            -- local lvel = TransformToLocalVec(plane.tr, plane.vel)
+            -- dbw("LVEL", VecLength(lvel))
 
-            -- imp = imp * plane.getIdealSpeedFactor()
-            -- imp = clamp(imp, 0, imp)
+
+            local forces = Vec(x,y,0)
+            local imp = GetBodyMass(plane.body)/20 * plane.speedFac
 
             dbw("imp", imp)
 
@@ -338,15 +250,49 @@ function createPlaneObject(_vehicle)
             ApplyBodyImpulse(plane.body, plane.tr.pos, TransformToParentPoint(plane.tr, VecScale(forces, imp)))
 
 
-            DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, forces) , 1,1,0, 1)
-            DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel) , 1,0.25,0, 1)
-            DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0,0,-10)) , 1,1,1, 1)
+            local lp = 5
+            local sc = 10
+
+            DebugLine(
+                TransformToParentPoint(plane.tr, Vec(0, 0, -lp)),
+                TransformToParentPoint(plane.tr, Vec(x, 0, -lp)),
+                0, 0, 1, 1)
+            DebugLine(
+                TransformToParentPoint(plane.tr, Vec(0, 0, lp)),
+                TransformToParentPoint(plane.tr, Vec(-x, 0, lp)),
+                0, 0, 1, 1)
+
+            DebugLine(
+                TransformToParentPoint(plane.tr, Vec(0, 0, -lp)),
+                TransformToParentPoint(plane.tr, Vec(0, y, -lp)),
+                0, 1, 0, 1)
+            DebugLine(
+                TransformToParentPoint(plane.tr, Vec(0, 0, lp)),
+                TransformToParentPoint(plane.tr, Vec(0, -y, lp)),
+                0, 1, 0, 1)
+
+            DebugLine(
+                TransformToParentPoint(plane.tr, Vec(lp, 0, 0)),
+                TransformToParentPoint(plane.tr, Vec(lp, z / sc, 0)),
+                1, 0, 0, 1)
+            DebugLine(
+                TransformToParentPoint(plane.tr, Vec(-lp, 0, 0)),
+                TransformToParentPoint(plane.tr, Vec(-lp, -z / sc, 0)),
+                1, 0, 0, 1)
+
+            -- DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, forces) , 1,1,0, 1)
+            DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel) , 1,1,0, 1)
+            DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0,0,-20)) , 1,1,1, 1)
 
         end
 
+        local angDim = plane.speedFac / plane.topSpeed * 3
+        angDim = clamp(1-angDim, 0, 1)
+        print(sfn(angDim))
 
         -- Diminish ang vel
-        SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), 0.98))
+        -- SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), 0.98))
+        SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), angDim))
 
     end
 
@@ -411,25 +357,28 @@ function plane_update(plane)
     plane.playerInUnbrokenPlane = plane.playerInPlane and plane.isAlive
 
 
-    -- local x,y,z = GetQuatEuler(GetBodyTransform(plane.body).rot)
-    -- plane.dirs[#plane.dirs + 1] = Vec(x,y,z)
-    plane.dirs[#plane.dirs + 1] = MakeQuaternion()
+    plane.dirs[#plane.dirs+1] = GetBodyTransform(plane.body).rot
 
 
-    plane.angleChange = VecAngle(
-        -- plane.dirs[#plane.dirs],
-        -- plane.dirs[#plane.dirs-1] or plane.dirs[#plane.dirs])
-        plane.dirs[#plane.dirs],
-        plane.dirs[#plane.dirs-1] or plane.dirs[#plane.dirs])
+    -- plane.angleChange = QuatAngle(
+    --     plane.dirs[#plane.dirs],
+    --     plane.dirs[#plane.dirs-1])
 
 
-    print(sfn(plane.angleChange))
+    -- print(sfn(plane.angleChange))
+
+
+    -- if plane.angleChange ~= plane.angleChange then
+    --     plane.angleChange = 0
+    -- end
+
+    plane.speedFac = clamp(plane.speed, 0.00000001, plane.speed) / plane.topSpeed
+
 
 end
 
 
 
--- Very smooth brain of doing this but it works pretty well.
 function GetPitchAoA(tr, vel)
 
     local lVel = TransformToLocalVec(tr, vel) -- local velocity
@@ -438,11 +387,15 @@ function GetPitchAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
+    if aoa == -1 then
+        aoa = 0
+    elseif aoa == 1 then
+        aoa = 0
+    end
     return aoa
 
 end
 
--- Very smooth brain of doing this but it works pretty well.
 function GetYawAoA(tr, vel)
 
     local lVel = TransformToLocalVec(tr, vel) -- local velocity
@@ -451,11 +404,15 @@ function GetYawAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
+    if aoa == -1 then
+        aoa = 0
+    elseif aoa == 1 then
+        aoa = 0
+    end
     return aoa
 
 end
 
--- Very smooth brain of doing this but it works pretty well.
 function GetRollAoA(tr, vel)
 
     local lVel = TransformToLocalVec(tr, vel) -- local velocity
@@ -464,6 +421,11 @@ function GetRollAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
+    if aoa == -1 then
+        aoa = 0
+    elseif aoa == 1 then
+        aoa = 0
+    end
     return aoa
 
 end

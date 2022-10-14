@@ -4,7 +4,7 @@
 		<script file="main.lua"/>
 		<water pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="10000 10000" depth="10" wave="0" ripple="0.01" motion="0"/>
 		<spawnpoint name="spawnpoint" pos="11.49999 2.9 125.99998" rot="0.0 60.0 0.0"/>
-		<environment template="sunset" skybox="day.dds" skyboxtint="1.0 0.66 0.46" skyboxbrightness="1" fogColor="0.52 0.35 0.14" fogParams="300 500 1 6" sunBrightness="3" sunColorTint="0.15 0.26 1.0" sunSpread="0.05"/>
+		<environment template="sunny" skybox="sunset_in_the_chalk_quarry_2k.dds" skyboxtint="1.0 0.66 0.46" skyboxbrightness="1" fogColor="0.52 0.35 0.14" fogParams="0 0 0 0" sunBrightness="3" sunColorTint="0.15 0.26 1.0" sunSpread="0.05"/>
 	</group>
 	<group name="Planes" pos="-70.2 0.0 -101.0">
 		<instance pos="38.0 0.2 117.89999" rot="0.0 -45.0 0.0" file="MOD/prefab/A10.xml"/>

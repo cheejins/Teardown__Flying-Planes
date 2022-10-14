@@ -40,13 +40,11 @@ function planeMove(plane)
 end
 function planeSteer(plane)
 
-    local imp = 0
+    local angDim = plane.speedFac / (plane.topSpeed) * 100
+    -- angDim = clamp(1-angDim, 0, 1)
 
-    if plane.speed > 1 then
-        imp = 2000 / (plane.angleChange)+1
-    end
-
-    dbw("steer imp", imp)
+    local imp = 7500 * angDim
+    dbw("steer angDim", angDim)
 
 
     local nose = TransformToParentPoint(plane.tr, Vec(0,0,-10))
@@ -65,10 +63,10 @@ function planeSteer(plane)
 
 
     if InputDown("a") then
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp))
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp/1.5))
     end
     if InputDown("d") then
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp))
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp/1.5))
     end
 
 
@@ -168,6 +166,7 @@ function planeDebug(plane)
     dbw('PLANE Speed', sfn(plane.speed))
     dbw("PLANE IdealSpeedFactor", plane.getIdealSpeedFactor())
     dbw("PLANE ForwardVelAngle", plane.getForwardVelAngle())
+    dbw("PLANE plane.speedFac", plane.speedFac)
 
 end
 

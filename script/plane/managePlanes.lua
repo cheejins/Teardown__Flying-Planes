@@ -21,8 +21,6 @@ function planesUpdate()
         if GetPlayerVehicle() == plane.vehicle  then
         -- if GetPlayerVehicle() == plane.vehicle and plane.playerInUnbrokenPlane then
 
-            print(plane.model)
-
 
             planeCamera(plane)
             plane_update(plane)

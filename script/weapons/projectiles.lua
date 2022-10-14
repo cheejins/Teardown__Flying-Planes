@@ -189,9 +189,9 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
     proj.ignoreBodies = DeepCopy(ignoreBodies)
 
     proj.transform = transform
-    local trDir = QuatToDir(proj.transform.rot)
-    trDir = VecNormalize(VecAdd(trDir, VecRdm(proj.spread)))
-    proj.transform.rot = DirToQuat(trDir)
+    -- local trDir = QuatToDir(proj.transform.rot)
+    -- trDir = VecNormalize(VecAdd(trDir, VecRdm(proj.spread)))
+    -- proj.transform.rot = DirToQuat(trDir)
 
     if proj.homing.max > 0 and homingShape ~= nil then
         proj.homing.targetShape = homingShape

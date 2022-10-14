@@ -1,8 +1,15 @@
+local message = "The drag calculation for roll seems to work now, and the plane doesn't hover at low speeds anymore. "
+message = message .. "At the moment the plane is one large 'air foil'. After parting it out, each aero component like a wing, aileron and so on, will have their own aerodynamics act on the plane as a whole. "
+message = message .. "The goal is to have moving components that contribute to the combined forces instead of applying an impulse directly to the plane's central body."
+
+
 function draw()
 
     UiColor(1,1,1, 1)
     UiTextShadow(0,0,0, 1, 0.3, 0)
     UiFont("bold.ttf", 24)
+
+    -- WriteMessage(message)
 
 
     local uiW = 600
@@ -317,4 +324,25 @@ function drawRespawnText()
 
     end
 
+end
+
+function WriteMessage(message, fontSize)
+    UiPush()
+
+        fontSize = fontSize or 34
+        local width = UiWidth()/2
+
+        UiTranslate(UiCenter(), 0)
+        UiTextShadow(0,0,0, 1, 0)
+        UiFont("regular.ttf", fontSize)
+        UiAlign("center top")
+        UiWordWrap(width)
+
+        UiColor(0,0,0, 0.5)
+        UiRect(width, 6 * fontSize)
+
+        UiColor(1,1,1, 1)
+        UiText(message)
+
+    UiPop()
 end
