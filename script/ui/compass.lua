@@ -31,7 +31,7 @@ function drawCompass(plane, uiW, uiH)
 
 
     local camTr = GetCameraTransform()
-    -- local camTr = plane.getTransform()
+    -- local camTr = plane.tr
 
     for i, dir in pairs(CompassDirections) do
 
@@ -74,25 +74,25 @@ function drawUiGyro(plane, width, height)
     do UiPush()
         UiAlign("left middle")
         UiTranslate(-width/2, 0)
-        UiRect(80, 4)
+        UiRect(120, 6)
     UiPop() end
     do UiPush()
         UiAlign("right middle")
         UiTranslate(width/2, 0)
-        UiRect(80, 4)
+        UiRect(120, 6)
     UiPop() end
 
 
     local camTr = GetCameraTransform()
-    -- local camTr = plane.getTransform()
+    -- local camTr = plane.tr
     local camDir = QuatToDir(camTr.rot)
     local camDirY = math.deg(camDir[2]) * math.pi / 2
     dbw('camDirY', camDirY)
 
 
-    local s = 0.4
+    local s = 1
 
-    local deg = 180
+    local deg = 120
     local angIncrement = 2
     local points = deg / angIncrement
 
@@ -113,10 +113,10 @@ function drawUiGyro(plane, width, height)
             local lineH = 3
             local drawText = false
             if val % 90 == 0 then
-                w = 80
+                w = 120
                 drawText = true
             elseif val % 30 == 0 then
-                w = 50
+                w = 60
                 drawText = true
             elseif val % 10 == 0 then
                 w = 20

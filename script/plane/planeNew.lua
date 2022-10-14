@@ -170,28 +170,28 @@ function createPlaneObject(_vehicle)
         -- tr
         -- plane.getTransform = function() return GetBodyTransform(plane.body) end
         -- pos
-        -- plane.getPos = function() return plane.getTransform().pos end
+        -- plane.getPos = function() return plane.tr.pos end
         -- vel
         -- plane.getVel = function() return GetBodyVelocity(plane.body) end
 
 
         -- -- vel scalar
         -- plane.getTotalVelocity = function ()
-        --     local vel = plane.getVel()
+        --     local vel = plane.vel
         --     local totalVel =  math.abs(vel[1]) +  math.abs(vel[2]) +  math.abs(vel[3])
         --     return totalVel
         -- end
 
         -- -- speed
         -- plane.getSpeed = function()
-        --     local vel = -TransformToLocalVec(plane.getTransform(), plane.getVel())[3]
+        --     local vel = -TransformToLocalVec(plane.tr, plane.vel)[3]
         --     return -vel[3]
         -- end
 
         -- fwd vel
         plane.getFwdVel = function()
-            if plane.getTotalVelocity() == 0 then return 0.00001 end
-            local fwdVel = plane.getSpeed() / plane.getTotalVelocity()
+            if plane.totalVel == 0 then return 0.00001 end
+            local fwdVel = plane.speed / plane.totalVel
             -- if fwdVel < 0.2 then return 0.2 end
             return fwdVel
         end
@@ -213,7 +213,7 @@ function createPlaneObject(_vehicle)
         --- Get direction with offset. Can be used for lift.
         plane.getDirectionOffset = function(v1,v2,v3)
             return VecNormalize(VecSub(
-                plane.getPos(),
+                plane.tr.pos,
                 TransformToParentPoint(
                     GetBodyTransform(
                         plane.body),
@@ -224,23 +224,23 @@ function createPlaneObject(_vehicle)
             -- - Returns the angle between the plane's direction and velocity
 
             local velSub = VecNormalize(VecSub(Vec(0,0,0),GetBodyVelocity(plane.body)))
-            local velTr = Transform(plane.getPos(), velSub)
+            local velTr = Transform(plane.tr.pos, velSub)
 
             local VecVel =
                 VecSub(
-                    plane.getPos(),
+                    plane.tr.pos,
                     TransformToParentPoint(velTr, VecScale(GetBodyVelocity(plane.body), -1)))
 
             local VecTr =
                 VecSub(
-                    plane.getPos(),
-                    TransformToParentPoint(plane.getTransform(), Vec(0,0,1)))
+                    plane.tr.pos,
+                    TransformToParentPoint(plane.tr, Vec(0,0,1)))
 
             local c = {VecVel[1], VecVel[2], VecVel[3]}
             local d = {VecTr[1], VecTr[2], VecTr[3]}
 
             local angle = math.deg(math.acos(myDot(c, d) / (myMag(c) * myMag(d))))
-            if plane.getSpeed() < 0 then angle = 1 end
+            if plane.speed < 0 then angle = 1 end
 
             return angle
         end
@@ -248,10 +248,10 @@ function createPlaneObject(_vehicle)
         --- Returns the angle of attack of the chord line (used to calculate airfoil lift and drag)
         plane.getAoA = function()
 
-            local lVel = TransformToLocalVec(plane.getTransform(), plane.getVel()) -- local velocity
+            local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
             local aoa =  (-(math.deg(math.atan2(lVel[3], lVel[2]))) - 90) * math.pi
 
-            if plane.getSpeed() < 0 then
+            if plane.speed < 0 then
                 aoa = 0.00001
             end
 
@@ -259,19 +259,19 @@ function createPlaneObject(_vehicle)
         end
 
         plane.getYawAoA = function()
-            local lVel = TransformToLocalVec(plane.getTransform(), plane.getVel()) -- local velocity
+            local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
             local aoa =  (-(math.deg(math.atan2(lVel[1], -lVel[3])))) * math.pi
-            if plane.getSpeed() < 0 then
+            if plane.speed < 0 then
                 aoa = 0.00001
             end
             return aoa
         end
 
         -- plane.getRollAoA = function()
-        --     local lVel = TransformToLocalVec(plane.getTransform(), plane.getVel()) -- local velocity
+        --     local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
         --     local aoa =  (-(math.deg(math.atan2(lVel[1], -lVel[2])))) * math.pi
 
-        --     if plane.getSpeed() < 0 then
+        --     if plane.speed < 0 then
         --         aoa = 0.00001
         --     end
 
@@ -299,7 +299,7 @@ function createPlaneObject(_vehicle)
 
         --- Returns the ideal turn speed, which is closest to plane.topSpeed/2. Exponential approach to ideal val.
         plane.getIdealSpeedFactor = function(x)
-            local s = x or plane.getSpeed()
+            local s = x or plane.speed
             local m = plane.topSpeed*0.5
             local a = 2
             local lowOffset = 1.4 -- transform function right
@@ -320,7 +320,7 @@ function createPlaneObject(_vehicle)
         --[LIFT]
             -- Lift determined by AoA and speed
             local aoa = plane.getAoA()
-            local speed = plane.getSpeed()
+            local speed = plane.speed
 
             local liftSpeedInterval = plane.topSpeed/5
             local liftSpeed = speed
@@ -332,11 +332,11 @@ function createPlaneObject(_vehicle)
             local liftAmt = aoa * liftSpeed * liftMult
 
             -- Add upwards velocity
-            local pTr = plane.getTransform()
+            local pTr = plane.tr
             if aoa > -180 and aoa < 180 then
                 ApplyBodyImpulse(
                     plane.body,
-                    plane.getPos(),
+                    plane.tr.pos,
                     TransformToParentPoint(
                         pTr,
                         Vec(
@@ -346,11 +346,11 @@ function createPlaneObject(_vehicle)
             end
 
 
-            local vel = plane.getVel()
+            local vel = plane.vel
 
             -- Yaw determined by AoA and speed
             local aoa = nZero(plane.getYawAoA())
-            local speed = gtZero(plane.getSpeed())
+            local speed = gtZero(plane.speed)
 
             -- local yawSpeedInterval = plane.topSpeed/5
             local yawSpeed = gtZero(speed)
@@ -359,13 +359,13 @@ function createPlaneObject(_vehicle)
             -- DebugWatch("rollAoA", plane.getRollAoA())
 
             -- Add upwards velocity
-            local pTr = plane.getTransform()
+            local pTr = plane.tr
             ApplyBodyImpulse(
                 plane.body,
-                plane.getPos(),
+                plane.tr.pos,
                 TransformToParentPoint(pTr, Vec(yawAmt, 0, 0)))
 
-            local newVel = plane.getVel()
+            local newVel = plane.vel
             local newVelY = VecScale(newVel, 0.1)
             newVelY = newVel[2]
             SetBodyVelocity(plane.body, Vec(newVel[1], newVelY, newVel[3]))
@@ -373,19 +373,19 @@ function createPlaneObject(_vehicle)
         -- [DRAG]
 
             -- fwdvel drag
-            local vel = gtZero(plane.getTotalVelocity())
-            local speed = gtZero(plane.getSpeed())
+            local vel = gtZero(plane.totalVel)
+            local speed = gtZero(plane.speed)
 
             -- low fwd vel angle * speed = min drag
-            local fwdDragAmt = (plane.getForwardVelAngle() * plane.getSpeed()+10) * vel/plane.topSpeed/2
-            local fwdDragDir = VecScale(plane.getVel(), -fwdDragAmt)
+            local fwdDragAmt = (plane.getForwardVelAngle() * plane.speed+10) * vel/plane.topSpeed/2
+            local fwdDragDir = VecScale(plane.vel, -fwdDragAmt)
 
             plane.fwdDragAmt = 1.5
             local fwdDragDirGrav = Vec(
                 fwdDragDir[1],
                 fwdDragDir[2] * speed / vel,
                 fwdDragDir[3])
-            ApplyBodyImpulse(plane.body, plane.getPos(), fwdDragDirGrav)
+            ApplyBodyImpulse(plane.body, plane.tr.pos, fwdDragDirGrav)
             -- DebugWatch("fwdDragAmt", sfn(fwdDragAmt))
             -- DebugWatch("fwdDragDir[2]", sfn(fwdDragDir[2] * speed / vel, 4))
 
@@ -402,8 +402,8 @@ function createPlaneObject(_vehicle)
         end
 
         plane.getLiftSpeedFac = function()
-            local x = plane.getSpeed()
-            local b = plane.getSpeed()/3
+            local x = plane.speed
+            local b = plane.speed/3
             local result = (1/b)*(x^2)
             if x >= b then
                 result = x
@@ -426,10 +426,10 @@ function createPlaneObject(_vehicle)
             return GetVehicleHealth(plane.vehicle)
         end
         plane.checkIsAlive = function()
-            if plane.getHealth() < 0.5 then plane.isAlive = false end
+            if plane.health < 0.5 then plane.isAlive = false end
         end
         plane.respawnPlayer = function()
-            if plane.getHealth() <= 0.5 then
+            if plane.health <= 0.5 then
                 if InputPressed("y") then
                     SetPlayerVehicle(0)
                     RespawnPlayer()

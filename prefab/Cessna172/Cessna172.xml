@@ -1,152 +1,154 @@
-<prefab version="0.9.5">
-	<group id_="1117194880" open_="true" name="instance=MOD/prefab/Cessna172/Cessna172.xml" pos="46.19997 2.0 141.70006" rot="0.0 140.0 0.0">
-		<script id_="570394624" open_="true" pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
-			<script id_="1360020608" open_="true" pos="0.0 0.0 0.0" rot="0.0 0.0 0.0" file="MOD/prefab/Cessna172/Cessna172.lua">
-				<vehicle id_="1381910912" open_="true" name="Cessna 172 Default Livery" tags="planeVehicle planeModel=cessna172 planeType=propeller" pos="0.0 0.0 0.0" rot="0.0 180.0 0.0" driven="false" sound="default" spring="0.5" damping="3" topspeed="9" acceleration="1" strength="2" difflock="0.6" friction="1">
-					<body id_="815907456" open_="true" name="Cessna 172 fuselage" pos="0.20002 -0.00001 3.6" rot="0.0 0.0 0.0" dynamic="true">
-						<vox id_="876531968" open_="true" pos="0.0 0.0 2.3" rot="0.0 180.0 0.0" density="2" strength="10" file="MOD/prefab/Cessna172/Cessna172.vox" object="main fuselage">
-							<group id_="1062796672" name="yoke" pos="0.0 0.0 -0.9"/>
-							<group id_="1219043968" name="fuel tanks" pos="-3.0 3.3 1.8"/>
-							<group id_="663526976" name="lights" pos="0.0 -0.1 0.0">
-								<group id_="1784129920" name="outer lights" pos="0.0 0.0 0.1">
-									<voxbox id_="1405439744" name="anti collision light" pos="0.0 4.5 -6.4" rot="0.0 90.0 0.0" size="1 3 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="anti collision light brush">
-										<light id_="1367688704" tags="navlight beacon" pos="0.05 0.25 0.05" color="1.0 0.0 0.0" scale="2" size="0.1" glare="0.8"/>
+<prefab version="1.0.0">
+	<group name="instance=MOD/prefab/Cessna172/Cessna172.xml" pos="46.19997 2.0 141.70006" rot="0.0 140.0 0.0">
+		<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+			<script pos="0.0 0.0 0.0" rot="0.0 0.0 0.0" file="MOD/prefab/Cessna172/Cessna172.lua">
+				<vehicle name="Cessna 172 Default Livery" tags="planeVehicle planeModel=cessna172 planeType=propeller" pos="0.0 0.0 0.0" rot="0.0 180.0 0.0" driven="false" sound="classic" spring="0.5" damping="3" topspeed="9" acceleration="1" strength="2" difflock="0.6" friction="1">
+					<body name="Cessna 172 fuselage" pos="0.20002 -0.00001 3.6" rot="0.0 0.0 0.0" dynamic="true">
+						<vox pos="0.0 0.0 2.3" rot="0.0 180.0 0.0" density="2" strength="10" file="MOD/prefab/Cessna172/Cessna172.vox" object="main fuselage">
+							<group name="yoke" pos="0.0 0.0 -0.9"/>
+							<group name="fuel tanks" pos="-3.0 3.3 1.8"/>
+							<group name="lights" pos="0.0 -0.1 0.0">
+								<group name="outer lights" pos="0.0 0.0 0.1">
+									<voxbox name="anti collision light" pos="0.0 4.5 -6.4" rot="0.0 90.0 0.0" size="1 3 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="anti collision light brush">
+										<light tags="navlight beacon" pos="0.05 0.25 0.05" color="1.0 0.0 0.0" scale="2" size="0.1" glare="0.8"/>
 									</voxbox>
 								</group>
-								<group id_="2078076800" name="inner lights" pos="0.0 0.0 0.1">
-									<voxbox id_="1560572928" name="cabin light " pos="-0.2 3.4 3.2" rot="0.0 90.0 0.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="yellow light brush">
-										<light id_="2016534784" tags="cabin" pos="0.05 0.0 0.05" rot="90.0 -90.0 0.0" type="area" color="0.99 0.92 0.38" size="0.01"/>
+								<group name="inner lights" pos="0.0 0.0 0.1">
+									<voxbox name="cabin light " pos="-0.2 3.4 3.2" rot="0.0 90.0 0.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="yellow light brush">
+										<light tags="cabin" pos="0.05 0.0 0.05" rot="90.0 -90.0 0.0" type="area" color="0.99 0.92 0.38" size="0.01"/>
 									</voxbox>
-									<voxbox id_="220738720" name="cabin light " pos="0.2 3.4 3.2" rot="0.0 90.0 0.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="yellow light brush">
-										<light id_="1937165824" tags="cabin" pos="0.05 0.0 0.05" rot="90.0 90.0 0.0" type="area" color="0.99 0.92 0.38" size="0.01"/>
+									<voxbox name="cabin light " pos="0.2 3.4 3.2" rot="0.0 90.0 0.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="yellow light brush">
+										<light tags="cabin" pos="0.05 0.0 0.05" rot="90.0 90.0 0.0" type="area" color="0.99 0.92 0.38" size="0.01"/>
 									</voxbox>
-									<voxbox id_="115350400" open_="true" name="instrument light " pos="0.0 1.2 3.7" rot="0.0 90.0 0.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="anti collision light brush">
-										<light id_="400187232" tags="instrument" pos="0.05 0.1 0.05" rot="-130.0 90.0 0.0" type="area" color="1.0 0.0 0.0" size="0.01"/>
+									<voxbox name="instrument light " pos="0.0 1.2 3.7" rot="0.0 90.0 0.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="anti collision light brush">
+										<light tags="instrument" pos="0.05 0.1 0.05" rot="-130.0 90.0 0.0" type="area" color="1.0 0.0 0.0" size="0.01"/>
 									</voxbox>
 								</group>
 							</group>
-							<group id_="1756275328" name="doors" pos="0.9 0.4 2.6"/>
-							<group id_="2057628288" open_="true" name="wing struts" pos="0.0 0.2 3.3">
-								<voxbox id_="1214390656" open_="true" pos="-1.1 0.4 0.4" rot="0.0 171.0 40.9" density="1" strength="0.2" prop="true" size="41 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush" material="lightmetal">
-									<joint id_="1635026432" pos="0.0 0.05 0.05" type="hinge" limits="-90 50"/>
-									<joint id_="667787072" pos="4.1 0.05 0.04999" type="hinge"/>
+							<group name="doors" pos="0.9 0.4 2.6"/>
+							<group name="wing struts" pos="0.0 0.2 3.3">
+								<voxbox pos="-1.1 0.4 0.4" rot="0.0 171.0 40.9" density="1" strength="0.2" prop="true" size="41 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush" material="lightmetal">
+									<joint pos="0.0 0.05 0.05" type="hinge" limits="-90 50"/>
+									<joint pos="4.1 0.05 0.04999" type="hinge"/>
 								</voxbox>
-								<voxbox id_="382032672" pos="1.2 0.4 0.3" rot="0.0 1.0 40.9" density="1" strength="0.2" prop="true" size="41 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush" material="lightmetal">
-									<joint id_="1606057728" pos="0.0 0.05 0.05" type="hinge" limits="-90 50"/>
-									<joint id_="1870052864" pos="4.1 0.05 0.04999" type="hinge"/>
+								<voxbox pos="1.2 0.4 0.3" rot="0.0 1.0 40.9" density="1" strength="0.2" prop="true" size="41 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush" material="lightmetal">
+									<joint pos="0.0 0.05 0.05" type="hinge" limits="-90 50"/>
+									<joint pos="4.1 0.05 0.04999" type="hinge"/>
 								</voxbox>
 							</group>
-							<group id_="1005252544" open_="true" name="control surfaces" pos="6.9 3.2 0.9">
-								<vox id_="1900397824" open_="true" pos="-5.1 -1.5 -7.6" density="0.3" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="elevator left">
-									<joint id_="402350048" pos="1.4 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
-									<joint id_="1253518080" pos="-1.3 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
+							<group name="control surfaces" pos="6.9 3.2 0.9">
+								<vox pos="-5.1 -1.5 -7.6" density="0.3" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="elevator left">
+									<joint pos="1.4 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
+									<joint pos="-1.3 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
 								</vox>
-								<vox id_="206647616" open_="true" pos="-8.7 -1.5 -7.6" density="0.3" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="elevator right">
-									<joint id_="247937824" pos="-1.3 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
-									<joint id_="1937821184" pos="1.4 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
+								<vox pos="-8.7 -1.5 -7.6" density="0.3" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="elevator right">
+									<joint pos="-1.3 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
+									<joint pos="1.4 0.2 0.3" rot="0.0 90.0 0.0" type="hinge" limits="-30 30"/>
 								</vox>
-								<vox id_="2067787008" open_="true" pos="-6.9 -1.8 -7.9" density="0.3" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="rudder">
-									<joint id_="331435776" pos="0.05 0.0 0.2" rot="-90.0 90.0 0.0" type="hinge" limits="-30 30"/>
-									<joint id_="111811240" pos="0.05 3.2 0.2" rot="-90.0 90.0 0.0" type="hinge" limits="-30 30"/>
+								<vox pos="-6.9 -1.8 -7.9" density="0.3" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="rudder">
+									<joint pos="0.05 0.0 0.2" rot="-90.0 90.0 0.0" type="hinge" limits="-30 30"/>
+									<joint pos="0.05 3.2 0.2" rot="-90.0 90.0 0.0" type="hinge" limits="-30 30"/>
 								</vox>
 							</group>
-							<group id_="1434998272" open_="true" name="engine" pos="-0.0 1.1 10.5">
-								<group id_="458583392" open_="true" name="engine cover" pos="0.0 -1.1 -4.5">
-									<vox id_="1999166592" pos="0.0 0.1 0.0" density="1" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="engine cover"/>
-									<voxbox id_="841861312" pos="-0.65 -0.1 -0.07" rot="0.0 10.0 0.0" texture="7" size="2 2 4" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
-									<voxbox id_="826262784" pos="-0.6 0.1 0.1" rot="0.0 0.0 0.0" texture="7" size="2 5 2" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
+							<group name="engine" pos="-0.0 1.1 10.5">
+								<group name="engine cover" pos="0.0 -1.1 -4.5">
+									<vox pos="0.0 0.1 0.0" density="1" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="engine cover"/>
+									<voxbox pos="-0.65 -0.1 -0.07" rot="0.0 10.0 0.0" texture="7" size="2 2 4" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
+									<voxbox pos="-0.6 0.1 0.1" rot="0.0 0.0 0.0" texture="7" size="2 5 2" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
 								</group>
-								<group id_="1319975552" open_="true" name="engine propeller" pos="0.0 0.0 -4.9" rot="0.0 0.0 0.0">
-									<body id_="1864612992" open_="true" name="propeller" pos="0.0 -2.0 0.2" dynamic="true">
-										<vox id_="551650176" open_="true" tags="unbreakable" pos="-0.0 2.1 1.4" rot="0.0 0.0 0.0" density="2" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="engine axle">
-											<joint id_="2041439872" tags="planePropeller" pos="0.05 0.25 -0.3" type="hinge" rotstrength="0" rotspring="0" limits="0 0"/>
-											<group id_="1860746112" open_="true" pos="0.0 -2.1 0.3" prop0="tags=unbreakable">
-												<vox id_="1934806400" pos="0.2 1.1 -0.4" rot="0.0 180.0 -90.0" density="0.001" file="MOD/prefab/Cessna172/Cessna172.vox" object="propeller blade"/>
-												<vox id_="1357923328" pos="-1.04 2.79 -0.4" rot="0.0 180.0 30.0" density="0.001" file="MOD/prefab/Cessna172/Cessna172.vox" object="propeller blade"/>
-												<vox id_="1911736320" pos="0.98 3.05 -0.4" rot="180.0 0.0 30.0" density="0.001" file="MOD/prefab/Cessna172/Cessna172.vox" object="propeller blade"/>
+								<group name="engine propeller" pos="0.0 0.0 -4.9" rot="0.0 0.0 0.0">
+									<body name="propeller" pos="0.0 -2.0 0.2" dynamic="true">
+										<vox tags="unbreakable" pos="-0.0 2.1 1.4" rot="0.0 0.0 0.0" density="2" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="engine axle">
+											<joint tags="planePropeller" pos="0.05 0.25 -0.3" type="hinge" rotstrength="0" rotspring="0" limits="0 0"/>
+											<group pos="0.0 -2.1 0.3" prop0="tags=unbreakable">
+												<vox pos="0.2 1.1 -0.4" rot="0.0 180.0 -90.0" density="0.001" file="MOD/prefab/Cessna172/Cessna172.vox" object="propeller blade"/>
+												<vox pos="-1.04 2.79 -0.4" rot="0.0 180.0 30.0" density="0.001" file="MOD/prefab/Cessna172/Cessna172.vox" object="propeller blade"/>
+												<vox pos="0.98 3.05 -0.4" rot="180.0 0.0 30.0" density="0.001" file="MOD/prefab/Cessna172/Cessna172.vox" object="propeller blade"/>
 											</group>
 										</vox>
 									</body>
 								</group>
 							</group>
-							<group id_="294667840" open_="true" name="landing gear" pos="0.0 -1.7 5.0" rot="0.0 0.0 0.0">
-								<wheel id_="614044288" open_="true" pos="0.25 0.75 -0.05" rot="0.0 180.0 0.0" drive="-1" steer="1" travel="-0.5 0.3">
-									<vox id_="632460992" pos="0.2 -0.5 0.0" density="0.3" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="landing gear"/>
+							<group name="landing gear" pos="0.0 -1.7 5.0" rot="0.0 0.0 0.0">
+								<wheel pos="0.25 0.75 -0.05" rot="0.0 180.0 0.0" drive="-1" steer="1" travel="-0.5 0.3">
+									<vox pos="0.2 -0.5 0.0" density="0.3" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="landing gear">
+										<light name="Ground level" tags="ground" scale="0"/>
+									</vox>
 								</wheel>
-								<vox id_="481850080" tags="unbreakable" pos="0.0 0.7 -0.1" rot="0" density="2" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="front landing gear axle"/>
+								<vox tags="unbreakable" pos="0.0 0.7 -0.1" rot="0" density="2" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="front landing gear axle"/>
 							</group>
-							<location id_="233191328" tags="player" pos="0.5 2.6 2.8"/>
-							<location id_="671719488" tags="engine" pos="0.05 1.9 6.0"/>
-							<location id_="2135883008" tags="exhaust" pos="-0.55 0.0 5.9" rot="0.0 10.0 0.0"/>
-							<light id_="1079574912" name="weap_primary" tags="weap_primary" pos="2.95008 3.25 4.65002" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
-							<light id_="1108215808" name="weap_primary" tags="weap_primary" pos="-2.85 3.25 4.6" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
-							<light id_="526351744" name="weap_primary" tags="weap_primary" pos="-1.95 3.25 4.9" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
-							<light id_="189148448" name="weap_primary" tags="weap_primary" pos="2.05008 3.25 4.85002" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<location tags="player" pos="0.5 2.6 2.8"/>
+							<location tags="engine" pos="0.05 1.9 6.0"/>
+							<location tags="exhaust" pos="-0.55 0.0 5.9" rot="0.0 10.0 0.0"/>
+							<light name="weap_primary" tags="weap_primary" pos="2.95008 3.25 4.65002" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light name="weap_primary" tags="weap_primary" pos="-2.85 3.25 4.6" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light name="weap_primary" tags="weap_primary" pos="-1.95 3.25 4.9" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							<light name="weap_primary" tags="weap_primary" pos="2.05008 3.25 4.85002" rot="0.0 180.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
 						</vox>
-						<group id_="2087514496" open_="true" name="landing gear" pos="0.0 -1.7 -2.7" rot="0.0 180.0 0.0">
-							<voxbox id_="1618969088" pos="1.023 2.178 -4.1" rot="0.0 0.0 -40.0" strength="5" size="22 1 2" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush">
-								<voxbox id_="896259520" pos="2.33886 -0.01258 -0.10014" rot="0.0 0.0 40.0" size="1 3 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
-								<voxbox id_="954459008" pos="2.19788 -0.00015 0.0" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush"/>
-								<voxbox id_="1454398208" pos="2.27458 0.06403 -0.00014" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
+						<group name="landing gear" pos="0.0 -1.7 -2.7" rot="0.0 180.0 0.0">
+							<voxbox pos="1.023 2.178 -4.1" rot="0.0 0.0 -40.0" strength="5" size="22 1 2" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush">
+								<voxbox pos="2.33886 -0.01258 -0.10014" rot="0.0 0.0 40.0" size="1 3 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
+								<voxbox pos="2.19788 -0.00015 0.0" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush"/>
+								<voxbox pos="2.27458 0.06403 -0.00014" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
 							</voxbox>
-							<voxbox id_="937484160" open_="true" pos="-0.923 2.178 -3.9" rot="0.0 -180.0 -40.0" strength="5" size="22 1 2" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush">
-								<voxbox id_="184101856" pos="2.33886 -0.01258 -0.00014" rot="0.0 0.0 40.0" size="1 3 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
-								<voxbox id_="2053040512" pos="2.19788 -0.00015 0.1" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush"/>
-								<voxbox id_="1276653696" pos="2.27458 0.06403 0.09986" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
+							<voxbox pos="-0.923 2.178 -3.9" rot="0.0 -180.0 -40.0" strength="5" size="22 1 2" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush">
+								<voxbox pos="2.33886 -0.01258 -0.00014" rot="0.0 0.0 40.0" size="1 3 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
+								<voxbox pos="2.19788 -0.00015 0.1" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="wing strut brush"/>
+								<voxbox pos="2.27458 0.06403 0.09986" rot="0.0 0.0 40.0" size="1 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="metal brush"/>
 							</voxbox>
-							<wheel id_="694527360" open_="true" pos="3.2 0.8 -4.15" rot="0 0 0" drive="-1" steer="0" travel="-0.5 0.3">
-								<vox id_="462581312" pos="-0.1 -0.5 -0.0" rot="0.0 0.0 0.0" density="0.3" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="landing gear"/>
+							<wheel pos="3.2 0.8 -4.15" rot="0 0 0" drive="-1" steer="0" travel="-0.5 0.3">
+								<vox pos="-0.1 -0.5 -0.0" rot="0.0 0.0 0.0" density="0.3" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="landing gear"/>
 							</wheel>
-							<wheel id_="586714112" open_="true" pos="-3.1 0.8 -3.95" drive="-1" steer="0" travel="-0.5 0.3">
-								<vox id_="1883226368" pos="0.1 -0.5 0.0" rot="0.0 0.0 0.0" density="0.3" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="landing gear"/>
+							<wheel pos="-3.1 0.8 -3.95" drive="-1" steer="0" travel="-0.5 0.3">
+								<vox pos="0.1 -0.5 0.0" rot="0.0 0.0 0.0" density="0.3" strength="5" file="MOD/prefab/Cessna172/Cessna172.vox" object="landing gear"/>
 							</wheel>
 						</group>
 					</body>
 				</vehicle>
-				<group id_="1334328832" name="wings" pos="-4.6 3.2 -4.4" rot="0.0 -180.0 0.0">
-					<body id_="2097542144" open_="true" name="wing right" pos="0.6 0.1 -0.9" rot="0.0 180.0 0.0" dynamic="true">
-						<vox id_="1592228736" pos="0.0 0.0 0.0" density="0.01" strength="0.5" file="MOD/prefab/Cessna172/Cessna172.vox" object="right wing"/>
-						<joint id_="1245194496" pos="3.9 0.1 -1.5" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1019933504" pos="3.9 0.1 1.3" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="565872384" pos="3.9 0.1 0.5" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="2040784512" pos="3.9 0.1 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1739497088" pos="3.9 0.4 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1584822784" pos="3.9 0.4 0.6" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="282477408" pos="3.9 0.4 -0.8" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1765385472" pos="3.9 0.4 -0.6" rot="0.0 -90.0 0.0" type="hinge"/>
-						<voxbox id_="913627584" open_="true" name="nav light right" pos="-3.9 0.1 0.0" rot="0.0 -90.0 0.0" collide="true" prop="true" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="navigation light brush">
-							<light id_="482964256" tags="navlight" pos="0.15 0.05 0.1" rot="-170.0 -180.0 0.0" type="area" color="0.04 1.0 0.0" size="0.2" glare="0.5"/>
-							<joint id_="1277309056" pos="0.0 0.0 -0.0"/>
-							<joint id_="1908786944" pos="0.0 0.1 0.0"/>
-							<joint id_="365516576" pos="0.3 0.0 0.0"/>
-							<joint id_="454978688" pos="0.3 0.1 0.0"/>
+				<group name="wings" pos="-4.6 3.2 -4.4" rot="0.0 -180.0 0.0">
+					<body name="wing right" pos="0.6 0.1 -0.9" rot="0.0 180.0 0.0" dynamic="true">
+						<vox pos="0.0 0.0 0.0" density="0.01" strength="0.5" file="MOD/prefab/Cessna172/Cessna172.vox" object="right wing"/>
+						<joint pos="3.9 0.1 -1.5" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="3.9 0.1 1.3" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="3.9 0.1 0.5" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="3.9 0.1 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="3.9 0.4 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="3.9 0.4 0.6" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="3.9 0.4 -0.8" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="3.9 0.4 -0.6" rot="0.0 -90.0 0.0" type="hinge"/>
+						<voxbox name="nav light right" pos="-3.9 0.1 0.0" rot="0.0 -90.0 0.0" collide="true" prop="true" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="navigation light brush">
+							<light tags="navlight" pos="0.15 0.05 0.1" rot="-170.0 -180.0 0.0" type="area" color="0.04 1.0 0.0" size="0.2" glare="0.5"/>
+							<joint pos="0.0 0.0 -0.0"/>
+							<joint pos="0.0 0.1 0.0"/>
+							<joint pos="0.3 0.0 0.0"/>
+							<joint pos="0.3 0.1 0.0"/>
 						</voxbox>
 					</body>
-					<body id_="1717737856" open_="true" name="wing right" pos="-9.5 0.1 -0.9" rot="0.0 -180.0 0.0" dynamic="true">
-						<vox id_="612798976" open_="true" pos="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="left wing">
-							<voxbox id_="893179136" name="landing light" pos="0.2 0.2 1.0" rot="0.0 0.0 0.0" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="light brush">
-								<light id_="1624998784" tags="navlight" pos="0.15 0.0 0.1" rot="0.0 0.0 0.0" type="cone" scale="10" penumbra="5" size="1" reach="30" glare="0.6"/>
-								<voxbox id_="1194794240" pos="0.0 -0.1 0.0" rot="0.0 0.0 0.0" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="light brush"/>
+					<body name="wing right" pos="-9.5 0.1 -0.9" rot="0.0 -180.0 0.0" dynamic="true">
+						<vox pos="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" prop="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="left wing">
+							<voxbox name="landing light" pos="0.2 0.2 1.0" rot="0.0 0.0 0.0" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="light brush">
+								<light tags="navlight" pos="0.15 0.0 0.1" rot="0.0 0.0 0.0" type="cone" scale="10" penumbra="5" size="1" reach="30" glare="0.6"/>
+								<voxbox pos="0.0 -0.1 0.0" rot="0.0 0.0 0.0" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="light brush"/>
 							</voxbox>
-							<vox id_="288244928" pos="-3.2 -0.3 1.1" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun left"/>
-							<vox id_="1376733184" pos="-2.3 -0.3 0.9" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun left"/>
-							<vox id_="826393856" pos="-6.9 -0.3 1.1" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun right"/>
-							<vox id_="1939918464" pos="-7.8 -0.3 0.9" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun right"/>
+							<vox pos="-3.2 -0.3 1.1" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun left"/>
+							<vox pos="-2.3 -0.3 0.9" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun left"/>
+							<vox pos="-6.9 -0.3 1.1" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun right"/>
+							<vox pos="-7.8 -0.3 0.9" rot="0.0 0.0 0.0" density="0.01" strength="0.5" collide="true" file="MOD/prefab/Cessna172/Cessna172.vox" object="gun right"/>
 						</vox>
-						<joint id_="361715264" pos="-3.9 0.1 -1.5" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1069678336" pos="-3.9 0.1 1.3" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1510696960" pos="-3.9 0.1 0.5" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="2089153024" pos="-3.9 0.1 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1296381184" pos="-3.9 0.4 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1306867584" pos="-3.9 0.4 0.6" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1628931200" pos="-3.9 0.4 -0.6" rot="0.0 -90.0 0.0" type="hinge"/>
-						<joint id_="1597996288" pos="-3.9 0.4 -0.8" rot="0.0 -90.0 0.0" type="hinge"/>
-						<voxbox id_="415261440" open_="true" name="nav light left" pos="3.9 0.1 0.3" rot="0.0 90.0 0.0" collide="true" prop="true" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="anti collision light brush">
-							<light id_="2126576384" tags="navlight" pos="0.15 0.05 0.1" rot="-170.0 -180.0 0.0" type="area" color="1.0 0.0 0.0" size="0.2" glare="0.5"/>
-							<joint id_="1239623552" pos="0.0 0.0 -0.0"/>
-							<joint id_="319441952" pos="0.0 0.1 0.0"/>
-							<joint id_="302991424" pos="0.3 0.0 0.0"/>
-							<joint id_="922082240" pos="0.3 0.1 0.0"/>
+						<joint pos="-3.9 0.1 -1.5" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="-3.9 0.1 1.3" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="-3.9 0.1 0.5" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="-3.9 0.1 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="-3.9 0.4 0.8" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="-3.9 0.4 0.6" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="-3.9 0.4 -0.6" rot="0.0 -90.0 0.0" type="hinge"/>
+						<joint pos="-3.9 0.4 -0.8" rot="0.0 -90.0 0.0" type="hinge"/>
+						<voxbox name="nav light left" pos="3.9 0.1 0.3" rot="0.0 90.0 0.0" collide="true" prop="true" size="3 1 1" brush="MOD/prefab/Cessna172/Cessna172.vox" object="anti collision light brush">
+							<light tags="navlight" pos="0.15 0.05 0.1" rot="-170.0 -180.0 0.0" type="area" color="1.0 0.0 0.0" size="0.2" glare="0.5"/>
+							<joint pos="0.0 0.0 -0.0"/>
+							<joint pos="0.0 0.1 0.0"/>
+							<joint pos="0.3 0.0 0.0"/>
+							<joint pos="0.3 0.1 0.0"/>
 						</voxbox>
 					</body>
 				</group>

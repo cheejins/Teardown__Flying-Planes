@@ -28,7 +28,9 @@
 					</group>
 					<group name="parts_wheels">
 						<wheel name="wl_l" pos="0.1 -1.7 -2.8" drive="0" steer="1" travel="-0.2 0.2">
-							<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+							<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel">
+								<light name="Ground level" tags="ground" scale="0"/>
+							</vox>
 						</wheel>
 						<wheel name="wl_r" pos="-2.5 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
 							<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>

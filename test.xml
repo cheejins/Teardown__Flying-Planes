@@ -1,0 +1,116 @@
+<scene version="1.1.0">
+	<group name="Map Static" pos="-70.2 0.0 -101.0">
+		<script file="sandbox.lua"/>
+		<script file="main.lua"/>
+		<water pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="10000 10000" depth="10" wave="0" ripple="0.01" motion="0"/>
+		<spawnpoint name="spawnpoint" pos="11.49999 2.9 125.99998" rot="0.0 60.0 0.0"/>
+		<environment template="sunset" skybox="day.dds" skyboxtint="1.0 0.66 0.46" skyboxbrightness="1" fogColor="0.52 0.35 0.14" fogParams="300 500 1 6" sunBrightness="3" sunColorTint="0.15 0.26 1.0" sunSpread="0.05"/>
+	</group>
+	<group name="Planes" pos="-70.2 0.0 -101.0">
+		<instance pos="38.0 0.2 117.89999" rot="0.0 -45.0 0.0" file="MOD/prefab/A10.xml"/>
+		<instance pos="150.00002 0.7 167.00002" rot="0.0 50.0 0.0" file="MOD/prefab/Jet.xml"/>
+		<instance pos="105.69998 0.5 167.7" rot="0.0 0.0 0.0" file="MOD/prefab/AC130.xml"/>
+		<instance pos="38.7 0.5 92.39999" rot="0.0 -45.0 0.0" file="MOD/prefab/Mig29.xml"/>
+		<group name="instance=MOD/prefab/Mig29.xml" pos="68.4 0.5 131.39999" rot="0.0 0.0 0.0">
+			<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+				<vehicle name="mig29" tags="planeVehicle planeModel=mig29 planeType=jet weaponPreset=none" pos="0.0 2.6 10.0" rot="0.0 0.0 0.0" driven="true" sound="classic" spring="0.5" damping="2" topspeed="20" acceleration="5" strength="0" antispin="0" antiroll="0" difflock="1" steerassist="0">
+					<body tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+						<group name="parts_main">
+							<vox tags="planeShape_engine" pos="0.0 0.0 -1.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_middle">
+								<location tags="vital" pos="-0.1 1.1 0.6" rot="-180.0 360.0 -180.0"/>
+								<location tags="player" pos="0.05 1.95 -5.35" rot="0.0 0.0 0.0"/>
+								<light tags="exhaust" pos="-0.9 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light tags="exhaust" pos="-0.8 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light tags="exhaust" pos="0.9 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light tags="exhaust" pos="1.0 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light name="weap_primary" tags="weap_primary" pos="1.65 0.85 -1.8" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+								<light name="Cockpit camera" tags="cockpit_camera" pos="0.0 1.8 -5.7" rot="0.0 -180.0 0.0" type="cone" scale="0"/>
+							</vox>
+							<vox tags="planeShape_wing_right" pos="-0.0 0.3 -9.8" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_nose"/>
+							<vox tags="planeShape_bottom" pos="0.0 -0.9 -1.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_bottom"/>
+							<vox tags="planeShape_wing_right" pos="3.9 0.6 0.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="wing_right">
+								<light name="weap_secondary" tags="weap_secondary" pos="-0.85 -0.35 -2.7" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox tags="planeShape_wing_left" pos="-3.8 0.6 0.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="wing_left">
+								<light name="weap_secondary" tags="weap_secondary" pos="1.15 -0.35 -2.8" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox tags="planeShape_elevator_left" pos="-2.8 0.7 5.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="elevator_left"/>
+							<vox tags="planeShape_elevator_left" pos="2.9 0.7 5.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="elevator_right"/>
+							<vox tags="planeShape_rudder_left" pos="1.7 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_left"/>
+							<vox tags="planeShape_rudder_right" pos="-1.6 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_right"/>
+							<vox tags="planeShape_core explosive=2" pos="0.1 0.7 -1.2" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="core"/>
+						</group>
+						<group name="parts_wheels">
+							<wheel name="wl_r" pos="1.8 -1.3 0.8" drive="0.5" steer="0" travel="-0.4 0.4">
+								<vox pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+							</wheel>
+							<wheel name="wl_l" pos="-1.6 -1.3 0.9" drive="0.5" steer="0" travel="-0.4 0.4">
+								<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+							</wheel>
+							<wheel name="wl_c" pos="0.05 -1.3 -5.1" steer="1" travel="-0.4 0.4">
+								<vox pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center">
+									<light name="Ground level" tags="ground" scale="0"/>
+								</vox>
+							</wheel>
+						</group>
+						<group name="parts_weapons">
+							<vox pos="-2.7 -0.1 -0.7" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+							<vox pos="3.0 -0.1 -0.6" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+							<vox pos="-4.0 0.2 0.5" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+							<vox pos="4.0 0.2 0.6" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+							<vox pos="4.7 0.2 1.3" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+							<vox pos="-4.7 0.2 1.2" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile2"/>
+						</group>
+					</body>
+				</vehicle>
+			</script>
+		</group>
+		<group name="instance=MOD/prefab/Spitfire.xml" pos="73.2 -0.7 184.39999" rot="0.0 0.0 0.0">
+			<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+				<vehicle name="spitfire" tags="planeVehicle planeModel=spitfire planeType=propeller weaponPreset=none" pos="0.0 0.9 7.0" rot="10.0 0.0 0.0" driven="false" sound="classic" spring="1" damping="4" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
+					<body tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+						<vox tags="planeShape_engine explosive=1.4" pos="0.0 0.0 -1.0" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="body">
+							<location tags="vital" pos="0.0 1.0 -1.2" rot="-180.0 360.0 -180.0"/>
+							<location tags="player" pos="0.05 1.45 0.85" rot="0.0 0.0 0.0"/>
+							<light name="Ground level" tags="ground" pos="0.0 -0.6 0.0" scale="0"/>
+						</vox>
+						<vox tags="planeShape_wing_right" pos="2.4 -0.4 -1.1" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="wing_r">
+							<light name="weap_primary" tags="weap_primary" pos="-1.15 0.65 -3.2" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+						<vox tags="planeShape_wing_left" pos="-2.4 -0.4 -1.1" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="wing_l">
+							<light name="weap_primary" tags="weap_primary" pos="1.15 0.65 -3.2" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+						</vox>
+						<vox tags="planeShape_tail explosive=0.5" pos="0.0 0.4 2.7" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="tail"/>
+						<vox tags="planeShape_elevators" pos="0.0 1.5 3.7" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="elevators"/>
+						<vox tags="planeShape_rudder" pos="0.0 1.5 3.8" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="rudder"/>
+						<wheel name="wl_r" pos="1.9 -0.3 -1.2" drive="1" steer="0" travel="-0.4 0.4">
+							<vox pos="0.0 -0.25 -0.05" rot="0.0 -180.0 0.0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
+						</wheel>
+						<wheel name="wl_l" pos="-1.9 -0.3 -1.2" drive="1" steer="0" travel="-0.4 0.4">
+							<vox pos="0.0 -0.25 -0.05" rot="0 180 0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
+						</wheel>
+						<wheel name="wl_c" pos="0.05 0.8 4.1" drive="1" steer="-1" travel="-0.4 0.4">
+							<vox pos="0.0 -0.25 -0.05" rot="0 180 0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
+						</wheel>
+						<vox tags="planeShape_rudder" pos="0.0 -0.3 -3.2" rot="0 0 0" texture="14" density="0.001" collide="true" prop="true" file="MOD/prefab/Spitfire.vox" object="propeller">
+							<joint tags="planePropeller" pos="0.05 1.05 0.2" type="hinge" collide="true" limits="0 0"/>
+						</vox>
+					</body>
+				</vehicle>
+			</script>
+		</group>
+		<instance pos="46.19997 2.0 141.70006" rot="0.0 140.0 0.0" file="MOD/prefab/Cessna172/Cessna172.xml"/>
+		<instance pos="158.59999 1.8 119.2" rot="0.0 90.0 0.0" file="MOD/prefab/B2.xml"/>
+	</group>
+	<voxbox tags="unbreakable" pos="-100.0 -0.2 -700" texture="11" size="2000 2 2000" color="0.5 0.5 0.5"/>
+	<voxbox tags="unbreakable" pos="-100.0 -0.2 -100.0" texture="11" size="2000 2 2000" color="0.25 0.25 0.25"/>
+	<voxbox tags="unbreakable" pos="-100.0 -0.2 -900" texture="11" size="2000 2 2000" color="0.25 0.25 0.25"/>
+	<voxbox tags="unbreakable" pos="-100.0 -0.2 -500" texture="11" size="2000 2 2000" color="0.75 0.75 0.75"/>
+	<voxbox tags="unbreakable" pos="-100.0 -0.2 -300" texture="11" size="2000 2 2000" color="0.5 0.5 0.5"/>
+	<voxbox tags="unbreakable" pos="-22.5 0.1 -100.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
+	<voxbox tags="unbreakable" pos="-22.5 0.1 -300" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
+	<voxbox tags="unbreakable" pos="-22.5 0.1 -500" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
+	<voxbox tags="unbreakable" pos="-22.5 0.1 -700" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
+	<voxbox tags="unbreakable" pos="-22.5 0.1 -900.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
+</scene>
+

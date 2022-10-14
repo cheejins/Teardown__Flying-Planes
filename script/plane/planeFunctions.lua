@@ -1,20 +1,20 @@
 --[[Plane Physics]]
 function planeMove(plane)
 
-    local speed = plane.getSpeed()
+    local speed = plane.speed
 
-    if InputDown("w") and plane.thrust + plane.thrustIncrement <= 101 then
+    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
         plane.thrust = plane.thrust + 1
     end
-    if InputDown("s") and plane.thrust - plane.thrustIncrement >= 0 then
+    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
         plane.thrust = plane.thrust - 1
     end
 
-    if InputDown("space") then
+    if InputDown("alt") then
         ApplyBodyImpulse(
             plane.body,
             TransformToParentPoint(
-                plane.getTransform(), Vec(0,0,-5)),
+                plane.tr, Vec(0,0,-5)),
             plane.getFwdPos(speed*plane.brakeImpulseAmt))
         plane.status = 'Air Braking'
     end
@@ -25,70 +25,59 @@ function planeMove(plane)
         plane.setThrustOutput()
 
         local thrustSpeed = plane.thrust/100
-        local thrustSpeedMult = plane.getSpeed() < plane.topSpeed * thrustSpeed
+        local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
             local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) * CONFIG.smallMapMode.dragMult
             ApplyBodyImpulse(
                 plane.body,
-                plane.getPos(),
+                plane.tr.pos,
                 plane.getFwdPos(thrustImpulseAmt))
         end
 
     end
 
-    -- local angVel = GetBodyAngularVelocity(plane.body)
-    -- local turbulence = VecScale(Vec(math.random()-0.5, math.random()-0.5, math.random()-0.5), speed/500)
-    -- turbulence = VecAdd(turbulence, angVel)
-    -- SetBodyAngularVelocity(plane.body, turbulence)
-
 end
 function planeSteer(plane)
 
-    local pTr = plane.getTransform()
+    local imp = 0
 
-    local speed = plane.getSpeed()
-    local speedClamped = (clamp(speed, 0.01, speed+0.01))
+    if plane.speed > 1 then
+        imp = 2000 / (plane.angleChange)+1
+    end
 
-    local divSpeed = speedClamped / plane.topSpeed
-    local turnDiv = 50
-    local turnAmt = math.abs(getQuadtratic(divSpeed) / turnDiv)
-
+    dbw("steer imp", imp)
 
 
-    -- Roll
-    if InputDown("a") or InputDown("d") then
+    local nose = TransformToParentPoint(plane.tr, Vec(0,0,-10))
+    local wing = TransformToParentPoint(plane.tr, Vec(-10,0,0))
 
-        local yawSign = 1
-        if InputDown("d") then yawSign = -1 end -- Determine yaw direction
+    local planeUp = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0,10,0)))
+    local planeLeft = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(10,0,0)))
 
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 3 * CONFIG.smallMapMode.turnMult
 
-        -- local yawLowerLim = plane.topSpeed/3
-        -- local yawUpperLim = plane.topSpeed - (plane.topSpeed/3)
-        -- if plane.getSpeed() < yawLowerLim then
-        --     yawAmt = yawAmt * (plane.getSpeed()/yawLowerLim)
-        -- elseif plane.getSpeed() > plane.topSpeed/5 then
-        --     yawAmt = yawAmt * (yawUpperLim/plane.getSpeed())
-        -- end
-
-        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, yawAmt))
-
+    if InputDown("w") then
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, imp))
+    end
+    if InputDown("s") then
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, -imp))
     end
 
 
-    local crosshairRot = QuatLookAt(plane.getTransform().pos, crosshairPos)
+    if InputDown("a") then
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp))
+    end
+    if InputDown("d") then
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp))
+    end
 
-    -- Roll plane based on crosshair
-    local rollAmt = VecNormalize(TransformToLocalPoint(plane.getTransform(), crosshairPos))
-    rollAmt = rollAmt[1] * turnAmt * -350 / plane.rollVal
-    pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt))
 
-    -- Align with crosshair pos
-    pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
-    pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / plane.yawFac * CONFIG.smallMapMode.turnMult)
-
-    SetBodyTransform(plane.body, pTr)
+    if InputDown("z") then
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp))
+    end
+    if InputDown("c") then
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp))
+    end
 
 end
 
@@ -98,26 +87,26 @@ end
 function planeSound(plane)
 
     if plane.engineType == "jet" then
-        PlayLoop(sounds.jet_engine_loop, plane.getTransform().pos, 2)
-        PlayLoop(sounds.jet_engine_afterburner, plane.getTransform().pos, plane.thrust/50)
+        PlayLoop(sounds.jet_engine_loop, plane.tr.pos, 2)
+        PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
         PlayLoop(sounds.jet_engine_loop, GetCameraTransform().pos, 0.1)
 
     elseif plane.engineType == "propeller" then
 
         if plane.thrust < 20 then
-            PlayLoop(sounds.prop_5, plane.getPos(), plane.engineVol * 3)
+            PlayLoop(sounds.prop_5, plane.tr.pos, plane.engineVol * 3)
             PlayLoop(sounds.prop_5, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 40 then
-            PlayLoop(sounds.prop_4, plane.getPos(), plane.engineVol * 3)
+            PlayLoop(sounds.prop_4, plane.tr.pos, plane.engineVol * 3)
             PlayLoop(sounds.prop_4, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 60 then
-            PlayLoop(sounds.prop_3, plane.getPos(), plane.engineVol * 3)
+            PlayLoop(sounds.prop_3, plane.tr.pos, plane.engineVol * 3)
             PlayLoop(sounds.prop_3, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 80 then
-            PlayLoop(sounds.prop_2, plane.getPos(), plane.engineVol * 3)
+            PlayLoop(sounds.prop_2, plane.tr.pos, plane.engineVol * 3)
             PlayLoop(sounds.prop_2, GetCameraTransform().pos, 0.1)
         elseif plane.thrust <= 100 then
-            PlayLoop(sounds.prop_1, plane.getPos(), plane.engineVol * 3)
+            PlayLoop(sounds.prop_1, plane.tr.pos, plane.engineVol * 3)
             PlayLoop(sounds.prop_1, GetCameraTransform().pos, 0.1)
         end
 
@@ -175,15 +164,10 @@ function handlePlayerInWater()
 end
 function planeDebug(plane)
 
-    dbw('CAM camPos', camPos)
-    dbw('CAM X', plane.camera.cameraX)
-    dbw('CAM Y', plane.camera.cameraY)
-    dbw('CAM zoom', plane.camera.zoom)
-
-    dbw('PLANE Vel angle', sfn(plane.getForwardVelAngle()))
-    dbw('PLANE Speed', sfn(plane.getSpeed()))
-    dbw('PLANE Model', plane.model)
-    dbw('PLANE Thrust', plane.thrust)
+    dbw('CAM', camPos)
+    dbw('PLANE Speed', sfn(plane.speed))
+    dbw("PLANE IdealSpeedFactor", plane.getIdealSpeedFactor())
+    dbw("PLANE ForwardVelAngle", plane.getForwardVelAngle())
 
 end
 
@@ -205,10 +189,10 @@ function planeShoot(plane)
 
     if plane.isArmed then
 
-        local plTr = plane.getTransform()
+        local plTr = plane.tr
 
 
-        if InputDown('lmb') then
+        if InputDown('lmb') and #plane.weap.weaponObjects.primary >= 1 then
 
             if plane.model == 'a10' then
                 PlayLoop(sounds.emg, GetBodyTransform(plane.body).pos, 10)
@@ -278,7 +262,7 @@ function planeShoot(plane)
 
         local targetShape = nil
         if plane.targetting.lock.enabled then
-            --todo move to targetting section
+
             local planeTr = GetVehicleTransform(plane.vehicle)
             local targetTr = GetVehicleTransform(plane.targetting.target)
 
@@ -313,7 +297,7 @@ function planeShoot(plane)
 
 
 
-        if InputDown('rmb') then
+        if InputDown('rmb') and #plane.weap.weaponObjects.secondary >= 1 then
 
             if plane.timers.weap.secondary.time <= 0 then
                 TimerResetTime(plane.timers.weap.secondary)

@@ -81,14 +81,13 @@ function manageTargetting(plane)
     plane.targetting.targetVehicles = {}
     for key, tv in pairs(worldVehicles) do
 
-        if plane.vehicle ~= tv
-        and GetVehicleHealth(tv) > 0
-        then
+        if plane.vehicle ~= tv and GetVehicleHealth(tv) > 0 then
             table.insert(plane.targetting.targetVehicles, tv)
         end
 
     end
 
+    dbw('#targetVehicles', #plane.targetting.targetVehicles)
 
     if #plane.targetting.targetVehicles >= 1 then
 
@@ -114,15 +113,6 @@ function manageTargetting(plane)
 
         end
 
-        -- Auto change target.
-        if plane.targetting.target == nil
-        or not IsHandleValid(plane.targetting.target)
-        or not IsHandleValid(GetVehicleBody(plane.targetting.target))
-        or GetVehicleHealth(plane.targetting.target) <= 0
-        then
-            changeTarget(plane, plane.targetting.targetVehicles)
-        end
-
         -- Manually change target.
         if InputPressed(changeTargetKey) then
 
@@ -131,11 +121,19 @@ function manageTargetting(plane)
                 dbp('Manually changed to forward taget: ' .. plane.targetting.target)
                 beep()
             else
-                changeTarget(plane, planesInfront)
-                dbp('Manually changed to random taget: ' .. plane.targetting.target)
+                plane.targetting.target = nil
                 beep()
             end
 
+        end
+
+        -- Auto change target.
+        if plane.targetting.target == nil
+        or not IsHandleValid(plane.targetting.target)
+        or not IsHandleValid(GetVehicleBody(plane.targetting.target))
+        or GetVehicleHealth(plane.targetting.target) <= 0
+        then
+            changeTarget(plane, plane.targetting.targetVehicles)
         end
 
     end

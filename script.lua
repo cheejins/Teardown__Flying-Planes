@@ -1,25 +1,36 @@
-#include "script/camera.lua"
-#include "script/compass.lua"
 #include "script/config_smallMapMode.lua"
 #include "script/debug.lua"
-#include "script/draw.lua"
-#include "script/managePlanes.lua"
-#include "script/mod_config.lua"
+#include "script/input/controlPanel.lua"
+#include "script/input/input.lua"
+#include "script/input/keybinds.lua"
 #include "script/particles.lua"
-#include "script/plane.lua"
-#include "script/planeConstructor.lua"
-#include "script/planeHud.lua"
-#include "script/projectiles.lua"
+#include "script/plane/camera.lua"
+#include "script/plane/managePlanes.lua"
+#include "script/plane/planeConstructor.lua"
+#include "script/plane/planeFunctions.lua"
+#include "script/plane/planeHud.lua"
+#include "script/plane/planePresets.lua"
 #include "script/registry.lua"
 #include "script/sounds.lua"
+#include "script/ui/compass.lua"
+#include "script/ui/draw.lua"
+#include "script/ui/draw.lua"
+#include "script/ui/ui.lua"
+#include "script/ui/uiDebug.lua"
+#include "script/ui/uiModItem.lua"
+#include "script/ui/uiPanes.lua"
+#include "script/ui/uiPresetSystem.lua"
+#include "script/ui/uiTextBinding.lua"
+#include "script/ui/uiTools.lua"
 #include "script/umf.lua"
 #include "script/utility.lua"
-#include "script/weapons.lua"
+#include "script/weapons/projectiles.lua"
+#include "script/weapons/weapons.lua"
 
 
 
 ----------------------------------------------------------------------------------------
--- THIS SCRIPT IS PRETTY OLD AND MESSY. I'M GOING TO BE RECREATING THE MOD FROM SCRATCH.
+-- THIS SCRIPT IS PRETTY OLD AND MESSY. I'M GOING TO BE RECREATING A LOT OF IT.
 ----------------------------------------------------------------------------------------
 
 
@@ -34,8 +45,15 @@ curPlane = nil
 
 enemiesKey = "t"
 
+-- Global mod config.
+cfg = {
+
+}
+
 
 function init()
+
+    Tick = 1
 
     checkRegInitialized()
 
@@ -57,9 +75,11 @@ function init()
     changeTargetKey = GetString('savegame.mod.options.keys.changeTarget')
     showRespawnText = GetBool('savegame.mod.options.showRespawnText')
 
+    -- Init core functions.
     initSounds()
     initPlanes()
     initProjectiles()
+    InitKeys()
 
     SmallMapMode = false
     config_setSmallMapMode(SmallMapMode)
@@ -78,6 +98,8 @@ function tick()
 
     -- Root of plane management.
     planesTick()
+    planesUpdate()
+
 
     local propellers = FindJoints('planePropeller', true)
     for key, propeller in pairs(propellers) do
@@ -87,20 +109,10 @@ function tick()
     handlePlayerInWater()
     manageDebugMode()
 
-
-    for key, plane in pairs(FindVehicles('planeVehicle', true)) do
-
-        if GetVehicleHealth(plane) < 0.5 then
-            local bodyPos = GetBodyTransform(GetVehicleBody(plane)).pos
-            particle_fire(bodyPos, math.random()*3)
-            particle_blackSmoke(VecAdd(bodyPos, Vec(0,1,0)), math.random()*6)
-        end
-
-    end
+    Tick = Tick + 1
 
 end
 function update()
-    planesUpdate()
 end
 
 
@@ -129,8 +141,9 @@ function checkScriptValid()
     else
         scriptValid = true
     end
-    dbw("Script valid", scriptValid)
+    -- dbw("Script valid", scriptValid)
 end
 function getCurrentPlane()
     return curPlane
 end
+

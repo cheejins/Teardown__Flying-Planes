@@ -1,6 +1,15 @@
-camPositions = {"custom", "vehicle"}
+camPositions = {
+    "custom",
+    "aligned",
+    "vehicle",
+    -- "seat"
+}
+
+
 camPos = camPositions[1]
+
 function setCamPos(_campPos) camPos = _campPos end
+
 
 function manageCamera(plane, disableRotation)
 
@@ -11,18 +20,15 @@ function manageCamera(plane, disableRotation)
 
 	plane.camera.cameraX = plane.camera.cameraX - mx / 10
 	plane.camera.cameraY = plane.camera.cameraY - my / 10
-	plane.camera.cameraY = clamp(plane.camera.cameraY, -89, 89)
+	-- plane.camera.cameraY = clamp(plane.camera.cameraY, -89, 89)
 
 	local cameraRot = QuatEuler(plane.camera.cameraY, plane.camera.cameraX, 0)
 	local cameraT = Transform(VecAdd(GetBodyTransform(plane.body).pos, 5), cameraRot)
 
     local scale = 1
-    -- if plane.model == 'ac130' then
-    --     scale = 2
-    -- end
 
-	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * 2.5
-	plane.camera.zoom = clamp(plane.camera.zoom, 5, 40) * scale
+	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * 5
+	plane.camera.zoom = clamp(plane.camera.zoom, 10, 100) * scale
 
 
     local camAddHeight = 4
@@ -42,10 +48,17 @@ function manageCamera(plane, disableRotation)
 end
 function planeCamera(plane)
 
-    if camPos == 'freecam' then
+    if camPos == 'aligned' then
+
+        local camPos = TransformToParentPoint(plane.tr, Vec(0, 10, 30))
+        local camRot = plane.tr.rot
+        local camTr = Transform(camPos, camRot)
+        SetCameraTransform(camTr)
 
     elseif camPos == 'custom' then
+
         manageCamera(plane)
+
     end
 
 end
@@ -75,5 +88,17 @@ function planeChangeCamera()
             end
         end
     end
+
+end
+
+function AimSteerVehicle(v)
+
+    local vTr = GetVehicleTransform(v)
+    local camFwd = TransformToParentPoint(GetCameraTransform(), Vec(0,0,-1))
+
+    local pos = TransformToLocalPoint(vTr, camFwd)
+    local steer = pos[1] / 10
+
+    DriveVehicle(v, 0, steer, false)
 
 end

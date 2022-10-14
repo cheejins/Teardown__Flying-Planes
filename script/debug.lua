@@ -3,10 +3,25 @@
 function manageDebugMode()
 
     db = GetBool('savegame.mod.debugMode')
+    if InputDown('ctrl') and InputDown('shift') and InputPressed('d')  then
 
-    if InputDown('ctrl') and InputDown('alt') and InputPressed('d')  then
         SetBool('savegame.mod.debugMode', not GetBool('savegame.mod.debugMode'))
         db = GetBool('savegame.mod.debugMode')
+
+    end
+
+    db_map = GetBool('savegame.mod.testMap')
+    if InputDown('ctrl') and InputDown('shift') and InputPressed('c')  then
+
+        SetBool('savegame.mod.testMap', not GetBool('savegame.mod.testMap'))
+        db_map = GetBool('savegame.mod.testMap')
+
+        if db_map then
+            StartLevel('', 'MOD/test.xml', '')
+        else
+            StartLevel('', 'MOD/demo.xml', '')
+        end
+
     end
 
 end

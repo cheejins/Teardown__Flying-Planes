@@ -1,3 +1,22 @@
+function convertPlaneToPreset(plane)
+
+    if plane.model == "spitfire" then
+        convertPlaneToSpitfire(plane)
+    elseif plane.model == "a10" then
+        convertPlaneToA10(plane)
+    elseif plane.model == "bombardierJet" then
+        convertPlaneToBombardierJet(plane)
+    elseif plane.model == "cessna172" then
+        convertPlaneToCessna172(plane)
+    elseif plane.model == "ac130" then
+        convertPlaneToAC130(plane)
+    elseif plane.model == "b2" then
+        convertPlaneToB2(plane)
+    end
+
+end
+
+
 function convertPlaneToSpitfire(plane)
     plane.topSpeed = 70
     plane.thrustImpulseAmount = 20
@@ -44,13 +63,13 @@ end
 function convertPlaneToBombardierJet(plane)
     plane.isArmed = false
 
-    plane.topSpeed = 110
-    plane.thrustImpulseAmount = 100
+    plane.topSpeed = 130
+    plane.thrustImpulseAmount = 150
     plane.engineVol = 1
 
     plane.pitchVal = 1
-    plane.rollVal = 1
-    plane.yawFac = 1
+    plane.rollVal = 2
+    plane.yawFac = 2
 
     plane.camBack = 45
     plane.camUp = 15
@@ -80,12 +99,12 @@ function convertPlaneToAC130(plane)
     plane.isArmed = false
 
     plane.topSpeed = 130
-    plane.thrustImpulseAmount = 360
+    plane.thrustImpulseAmount = 440
     plane.engineVol = 1
 
-    plane.brakeImpulseAmt = 500
+    plane.brakeImpulseAmt = 300
 
-    plane.pitchVal = 1
+    plane.pitchVal = 1.5
     plane.rollVal = 3
     plane.yawFac = 3
 
@@ -97,11 +116,11 @@ end
 function convertPlaneToB2(plane)
     plane.isArmed = true
 
-    plane.topSpeed = 130
-    plane.thrustImpulseAmount = 400
+    plane.topSpeed = 120
+    plane.thrustImpulseAmount = 300
     plane.engineVol = 1
 
-    plane.brakeImpulseAmt = 500
+    plane.brakeImpulseAmt = 400
 
     plane.pitchVal = 1
     plane.rollVal = 3

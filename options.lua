@@ -1,206 +1,125 @@
-#include "script/utility.lua"
-#include "script/registry.lua"
-
-
-
-activeAssignment = false
-activePath = '.'
-lastKeyPressed = '.'
-font_size = 32
+#include "script.lua"
 
 
 function init()
 
-    checkRegInitialized()
+    OPTIONS = true
 
-    if GetString('savegame.mod.options.keys.respawn') == '' then
-        SetString('savegame.mod.options.keys.respawn', 'y')
-    end
-    if GetString('savegame.mod.options.keys.smallMapMode') == '' then
-        SetString('savegame.mod.options.keys.smallMapMode', 'o')
-    end
-    if GetString('savegame.mod.options.keys.toggleMissileLock') == '' then
-        SetString('savegame.mod.options.keys.toggleMissileLock', 'c')
-    end
-    if GetString('savegame.mod.options.keys.changeTarget') == '' then
-        SetString('savegame.mod.options.keys.changeTarget', 't')
-    end
+    InitKeys()
+    initUiControlPanel()
+
+    TB = {name = 'text'}
 
 end
 
 function tick()
 
-    if activeAssignment and InputLastPressedKey() ~= '' then
-
-        SetString(activePath, string.lower(InputLastPressedKey()))
-        activeAssignment = false
-        activePath = ''
-
-    end
-
 end
-
-
 
 function draw()
 
-    UiColor(1,1,1,1)
-    UiFont('regular.ttf', font_size)
-    UiTranslate(UiCenter(), 0)
+    uiSetFont(24)
+    UiButtonHoverColor(0.5,0.5,1, 1)
+
+
+    local itemH = 35
+    local col = {
+        {'',            itemH + 20},
+        {'',            180},
+        {'Combo Key',   180},
+        {'Main Key',    180},
+    }
+    local function colVal(index)
+        return col[index][2]
+    end
+
+    local keybindsW = 0
+    for index, value in ipairs(col) do
+        keybindsW = keybindsW + value[2]
+    end
+
 
     do UiPush()
 
-        -- Title
+        -- Title.
+        UiAlign('left top')
+        uiSetFont(50)
+
+        margin(0, 50)
         do UiPush()
-            UiTranslate(0, font_size)
-            UiFont('regular.ttf', 64)
-            UiAlign('center top')
-            UiText('Flying Planes')
-
-            UiTranslate(0, 64)
-            UiFont('regular.ttf', 32)
-            UiText('By: Cheejins')
-        UiPop() end
-
-
-        -- Button : Start Demo Map
-        do UiPush()
-
+            margin(UiCenter(), 0)
             UiAlign('center middle')
-            UiFont('regular.ttf', font_size*1.5)
-            UiTranslate(0, 190)
-            -- local c = oscillate(2)/3 + 2/3
-            -- UiColor(c,c,1,1)
-            -- UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
-            -- UiButtonHoverColor(0.5,0.5,1,1)
-            -- if UiTextButton('Start Demo Map', 350, font_size*2.5) then
-            --     StartLevel('', 'demo.xml', '')
-            -- end
-
-            UiTranslate(0, 80)
-            UiColor(1,1,1,1)
-
-            UiTranslate(0, font_size*3)
-            ui_createToggleSwitch('Show respawn notification', 'savegame.mod.options.showRespawnText')
-
-            UiTranslate(0, font_size*1.5)
-            Ui_Option_Keybind('Respawn', 'savegame.mod.options.keys.respawn')
-
-            UiTranslate(0, font_size*2.5)
-            Ui_Option_Keybind('Small-Map Mode', 'savegame.mod.options.keys.smallMapMode')
-
-            UiTranslate(0, font_size*2.5)
-            Ui_Option_Keybind('Toggle homing-missiles', 'savegame.mod.options.keys.toggleMissileLock')
-
-            UiTranslate(0, font_size*2.5)
-            Ui_Option_Keybind('Change target', 'savegame.mod.options.keys.changeTarget')
-
+            UiText('Advanced Camera - Options')
         UiPop() end
 
+
+        -- Table headers.
+        uiSetFont(24)
+        margin(UiCenter() - keybindsW/2, 100)
+        do UiPush()
+            for index, value in ipairs(col) do
+                UiText(string.upper(value[1]))
+                margin(value[2], 0)
+            end
+        UiPop() end
+
+
+        -- Draw keybind list.
+        margin(0, 50)
+        for index, value in ipairs(UiControls) do
+
+            local key = UiControls[index].name
+
+            for k, v in pairs(KEYS) do
+                if k == key then
+                    do UiPush()
+
+                        UiImageBox(UiControls[index].icon, itemH, itemH, 0,0) -- Icon
+                        margin(colVal(1), 0)
+
+                        UiText(v.title)
+                        margin(colVal(2), 0)
+
+                        Ui_Option_Keybind_Combo(180, itemH, 200, v.title, convertKeyTitle(v.key1), v, 'key1') -- Combo key
+                        margin(colVal(3), 0)
+
+                        Ui_Option_Keybind(180, itemH, 200, ' ', convertKeyTitle(v.key2), v, 'key2') -- Key
+                        margin(colVal(4), 0)
+
+                    UiPop() end
+
+                    margin(0, itemH * 1.5)
+                end
+            end
+
+        end
+
+        UiAlign('center middle')
+        margin(keybindsW/2, 50)
+
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 1,1,1, 1)
+        if UiTextButton('Reset Keybinds', 300, 40) then
+
+            ClearKey("savegame.mod.keys")
+            InitKeys()
+
+        end
 
     UiPop() end
 
 
+    -- Close button.
     do UiPush()
 
-        UiTranslate(0, UiHeight() - 100)
-
+        uiSetFont(36)
         UiAlign('center middle')
-        UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
-        UiButtonHoverColor(0.5,0.5,1,1)
-        if UiTextButton('Close', 150, font_size*2) then
+        margin(UiCenter(), UiHeight() - 100)
+
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 1,1,1, 1)
+        if UiTextButton('Close', 120, 50) then
             Menu()
         end
 
     UiPop() end
 
 end
-
-
-function Ui_Option_Keybind(label, regPath)
-
-    do UiPush()
-
-        -- Label
-        UiFont('regular.ttf', font_size)
-        UiAlign('right middle')
-        UiTranslate(0, font_size)
-        UiText(label)
-
-        -- Bind button
-        UiTranslate(font_size, 0)
-        UiAlign('left middle')
-        UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
-        UiButtonHoverColor(0.5,0.5,1,1)
-        if UiTextButton(GetString(regPath), font_size*6, font_size*2) then
-
-            if not activeAssignment then
-                SetString(regPath, 'Press key...')
-                activeAssignment = true
-                activePath = regPath
-            end
-
-        end
-
-    UiPop() end
-
-end
-
-
-function ui_createToggleSwitch(title, registryPath)
-
-    do UiPush()
-
-        local value = GetBool(registryPath)
-
-        UiAlign('right middle')
-
-        -- Text header
-        UiColor(1,1,1, 1)
-        UiFont('regular.ttf', font_size)
-        UiText(title)
-        UiTranslate(font_size, -font_size/2)
-
-
-        -- Toggle BG
-        UiAlign('left top')
-        UiColor(0.4,0.4,0.4, 1)
-        local tglW = 130
-        local tglH = 40
-        UiRect(tglW, tglH)
-
-        -- Render toggle
-        do UiPush()
-
-            local toggleText = 'ON'
-
-            if value then
-                UiTranslate(tglW/2, 0)
-                UiColor(0,0.8,0, 1)
-            else
-                toggleText = 'OFF'
-                UiColor(0.8,0,0, 1)
-            end
-
-            UiRect(tglW/2, tglH)
-
-            do UiPush()
-                UiTranslate(tglW/4, tglH/2)
-                UiColor(1,1,1, 1)
-                UiFont('bold.ttf', font_size)
-                UiAlign('center middle')
-                UiText(toggleText)
-            UiPop() end
-
-        UiPop() end
-
-        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 0,0,0, a)
-        if UiBlankButton(tglW, tglH) then
-            SetBool(registryPath, not value)
-            PlaySound(LoadSound('clickdown.ogg'), GetCameraTransform().pos, 1)
-        end
-
-    UiPop() end
-
-end
-
