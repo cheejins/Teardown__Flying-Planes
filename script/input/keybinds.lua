@@ -1,74 +1,135 @@
+Actions = {
+    shoot_primary,
+    shoot_secondary,
+    homing,
+    thrust_increase,
+    thrust_decrease,
+    pitch_up,
+    pitch_down,
+    roll_left,
+    roll_right,
+    yaw_left,
+    yaw_right,
+    airbrake,
+    freecam,
+    change_camera,
+    next_target,
+    disable_input,
+}
+
+
+Keys = {
+
+    Weapons = {
+        {
+            key =     "lmb",
+            action =  "shoot_primary",
+            title =   "Shoot primary",
+        },
+        {
+            key =     "rmb",
+            action =  "shoot_secondary",
+            title =   "Shoot secondary",
+        },
+        {
+            key =     "h",
+            action =  "homing",
+            title =   "Toggle missile homing on/off",
+        },
+    },
+
+    Movement = {
+        {
+            key =     "shift",
+            action =  "thrust_increase",
+            title =   "Thrust increase",
+        },
+        {
+            key =     "ctrl",
+            action =  "thrust_decrease",
+            title =   "Thrust decrease",
+        },
+        {
+            key =     "s",
+            action =  "pitch_up",
+            title =   "Pitch up",
+        },
+        {
+            key =     "w",
+            action =  "pitch_down",
+            title =   "Pitch down",
+        },
+        {
+            key =     "a",
+            action =  "roll_left",
+            title =   "Roll left",
+        },
+        {
+            key =     "d",
+            action =  "roll_right",
+            title =   "Roll right",
+        },
+        {
+            key =     "z",
+            action =  "yaw_left",
+            title =   "Yaw left",
+        },
+        {
+            key =     "c",
+            action =  "yaw_right",
+            title =   "Yaw right",
+        },
+        {
+            key =     "space",
+            action =  "airbrake",
+            title =   "Airbrake",
+        },
+    },
+
+    Camera = {
+        {
+            key =     "x",
+            action =  "freecam",
+            title =   "Free camera (hold)",
+        },
+        {
+            key =     "r",
+            action =  "change_camera",
+            title =   "Switch to the next camera view",
+        },
+    },
+
+    Targeting = {
+        {
+            key =     "q",
+            action =  "next_target",
+            title =   "Select next target",
+        },
+    },
+
+    Misc = {
+        {
+            key =     "k",
+            action =  "disable_input",
+            title =   "Temporarily disable all plane inputs.",
+        },
+    },
+
+}
+
+
 function InitKeys()
 
-    KEYS = util.structured_table("savegame.mod.keys", {
+    KEYS = util.shared_table("savegame.mod.keys", Keys)
 
-        -- Weapons
-        shoot_primary = {
-            key =     {'string', 'lmb'},
-            title =   {'string', 'Shoot primary'},
-        },
-        shoot_secondary = {
-            key =     {'string', 'rmb'},
-            title =   {'string', 'Shoot primary'},
-        },
+    -- -- Assign all updated keys.
+    -- for key, category in pairs(Keys) do
+    --     for bindKey, bindData in ipairs(category) do
+    --         Actions[bindData.action] = KEYS[key][bindKey].key
+    --     end
+    -- end
 
-
-        -- Movement controls.
-        thrust_add = {
-            key =     {'string', 'w'},
-            title =   {'string', 'Thrust increase'},
-        },
-        thrust_sub = {
-            key =     {'string', 's'},
-            title =   {'string', 'Thrust decrease'},
-        },
-        roll_left = {
-            key =     {'string', 'a'},
-            title =   {'string', 'Roll left'},
-        },
-        roll_right = {
-            key =     {'string', 'd'},
-            title =   {'string', 'Roll right'},
-        },
-        yaw_left = {
-            key =     {'string', 'z'},
-            title =   {'string', 'Yaw left'},
-        },
-        yaw_right = {
-            key =     {'string', 'c'},
-            title =   {'string', 'Yaw right'},
-        },
-        airbrake = {
-            key =     {'string', 'space'},
-            title =   {'string', 'Airbrake'},
-        },
-
-
-        -- Camera
-        freecam = {
-            key =     {'string', 'x'},
-            title =   {'string', 'Free camera (hold)'},
-        },
-        resetCameraAlignment = {
-            key =     {'string', 'mmb'},
-            title =   {'string', 'Reset camera alignment'},
-        },
-
-
-        -- Targeting
-        changeTarget = {
-            key =     {'string', 'q'},
-            title =   {'string', 'Reset camera alignment'},
-        },
-        toggleHoming = {
-            key =     {'string', 'q'},
-            title =   {'string', 'Toggle missile homing on/off'},
-        },
-
-    })
-
-
-    PrintTable(ConvertSharedTable('savegame.mod.keys'))
+    -- PrintTable(Actions)
 
 end
 

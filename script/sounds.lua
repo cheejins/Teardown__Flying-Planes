@@ -18,5 +18,7 @@ function initSounds()
         bullet_mg1 = LoadSound("MOD/snd/bullet_mg1.ogg"),
         emg = LoadLoop("MOD/snd/weapon_emg.ogg"),
         mg = LoadLoop("MOD/snd/weapon_mg.ogg"),
+        mg2 = LoadLoop("MOD/snd/weapon_mg2.ogg"),
+        mg3 = LoadLoop("MOD/snd/weapon_mg3.ogg"),
     }
 end

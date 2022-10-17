@@ -2,7 +2,7 @@
 	<group name="Map Static" pos="-70.2 0.0 -101.0">
 		<script file="sandbox.lua"/>
 		<script file="main.lua"/>
-		<water pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="5000 5000" depth="10" wave="0" ripple="0.01" motion="0"/>
+		<water pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="5000 5000" depth="10" wave="3" ripple="0.5" motion="1" foam="1"/>
 		<spawnpoint name="spawnpoint" pos="11.49999 2.9 125.99998" rot="0.0 60.0 0.0"/>
 		<body name="Cheejin Sign" pos="130.10001 -5.3 -90.4" rot="0.0 -90.0 0.0"/>
 		<environment template="sunset" skyboxtint="1.0 0.66 0.46" fogColor="0.52 0.35 0.14" fogParams="0 0 0 0" sunBrightness="3" sunColorTint="0.15 0.26 1.0"/>
@@ -124,11 +124,54 @@
 		<instance pos="11.9 0.0 121.30002" rot="0.0 -90.0 0.0" file="MOD/demo/prefab/humvee.xml"/>
 	</group>
 	<group name="Planes" pos="-70.2 0.0 -101.0">
-		<instance pos="38.0 0.2 117.89999" rot="0.0 -45.0 0.0" file="MOD/prefab/A10.xml"/>
+		<group name="instance=MOD/prefab/A10.xml" pos="38.0 0.2 117.89999" rot="0.0 -45.0 0.0">
+			<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+				<vehicle name="a10" tags="planeVehicle planeModel=a10 planeType=jet weaponPreset=none" pos="0.0 3.0 5.2" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="2" damping="2" topspeed="10" acceleration="2" strength="5" antispin="0" antiroll="0" difflock="1" steerassist="0">
+					<body tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
+						<group name="parts_main">
+							<vox tags="planeShape_engine explosive=1" pos="0.0 0.0 -0.7" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="body_nose">
+								<location tags="vital" pos="-0.1 0.4 -1.5" rot="-180.0 360.0 -180.0"/>
+								<location tags="player" pos="0.05 1.15 -1.75" rot="0.0 0.0 0.0"/>
+								<light name="weap_primary" tags="weap_primary" pos="0.05 -0.25 -5.1" rot="-2.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox tags="explosive=2" pos="0.0 -0.7 7.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="body_tail"/>
+							<vox pos="-0.0 -1.3 -0.8" rot="0 0 0" texture="14" density="1" strength="1" file="MOD/prefab/A10.vox" object="body_bottom"/>
+							<vox pos="4.5 -1.5 2.1" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="wing_right">
+								<light name="weap_secondary" tags="weap_secondary" pos="0.65 1.15 -1.5" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox pos="-4.4 -1.5 2.1" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="wing_left">
+								<light name="weap_secondary" tags="weap_secondary" pos="-0.65 1.15 -1.6" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox pos="0.0 -0.2 9.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="elevators"/>
+							<vox pos="0.0 -0.6 9.0" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="rudder"/>
+							<vox pos="-1.4 -0.3 5.6" rot="0 0 0" texture="14" density="3" strength="1" file="MOD/prefab/A10.vox" object="engine_left">
+								<light name="exhaust" tags="exhaust" pos="0.05 0.8 1.7" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+							<vox pos="1.4 -0.3 5.6" rot="0 0 0" texture="14" density="3" strength="1" file="MOD/prefab/A10.vox" object="engine_right">
+								<light name="exhaust" tags="exhaust" pos="0.05 0.8 1.7" type="cone" color="0.0 0.0 0.0" scale="0"/>
+							</vox>
+						</group>
+						<group name="parts_wheels">
+							<wheel name="wl_l" pos="0.1 -1.7 -2.8" drive="0" steer="1" travel="-0.2 0.2">
+								<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel">
+									<light name="Ground level" tags="ground" scale="0"/>
+								</vox>
+							</wheel>
+							<wheel name="wl_r" pos="-2.5 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+								<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+							</wheel>
+							<wheel name="wl_c" pos="2.6 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+								<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
+							</wheel>
+						</group>
+					</body>
+				</vehicle>
+			</script>
+		</group>
 		<instance pos="150.00002 0.7 167.00002" rot="0.0 50.0 0.0" file="MOD/prefab/Jet.xml"/>
 		<instance pos="105.69998 0.5 167.7" rot="0.0 0.0 0.0" file="MOD/prefab/AC130.xml"/>
 		<instance pos="38.7 0.5 92.39999" rot="0.0 -45.0 0.0" file="MOD/prefab/Mig29.xml"/>
-		<group name="instance=MOD/prefab/Mig29.xml" pos="68.4 0.5 131.39999" rot="0.0 0.0 0.0">
+		<group name="instance=MOD/prefab/Mig29.xml" pos="68.5 0.5 125.1" rot="0.0 0.0 0.0">
 			<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
 				<vehicle name="mig29" tags="planeVehicle planeModel=mig29 planeType=jet weaponPreset=none" pos="0.0 2.6 10.0" rot="0.0 0.0 0.0" driven="true" sound="classic" spring="0.5" damping="2" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
 					<body tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
@@ -141,10 +184,11 @@
 								<light tags="exhaust" pos="0.9 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
 								<light tags="exhaust" pos="1.0 0.6 5.9" type="cone" color="0.0 0.0 0.0" scale="0"/>
 								<light name="weap_primary" tags="weap_primary" pos="1.65 0.85 -1.8" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
-								<light name="Cockpit camera" tags="cockpit_camera" pos="0.0 1.8 -5.7" rot="0.0 -180.0 0.0" type="cone" scale="0"/>
 							</vox>
 							<vox tags="planeShape_wing_right" pos="-0.0 0.3 -9.8" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_nose"/>
-							<vox tags="planeShape_bottom" pos="0.0 -0.9 -1.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_bottom"/>
+							<vox tags="planeShape_bottom" pos="0.0 -0.3 -0.9" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="body_bottom"/>
+							<vox tags="gear" pos="0.0 -0.9 0.9" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="gear_rear"/>
+							<vox tags="gear" pos="0.0 -0.9 -5.2" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="gear_front"/>
 							<vox tags="planeShape_wing_right" pos="3.9 0.6 0.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="wing_right">
 								<light name="weap_secondary" tags="weap_secondary" pos="-0.85 -0.35 -2.7" rot="0.0 0.0 0.0" type="cone" color="0.0 0.0 0.0" scale="0"/>
 							</vox>
@@ -155,17 +199,16 @@
 							<vox tags="planeShape_elevator_left" pos="2.9 0.7 5.1" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="elevator_right"/>
 							<vox tags="planeShape_rudder_left" pos="1.7 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_left"/>
 							<vox tags="planeShape_rudder_right" pos="-1.6 1.1 3.0" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="rudder_right"/>
-							<vox tags="planeShape_core explosive=2" pos="0.1 0.7 -1.2" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Mig29.vox" object="core"/>
 						</group>
 						<group name="parts_wheels">
-							<wheel name="wl_r" pos="1.8 -1.3 0.8" drive="0.5" steer="0" travel="-0.4 0.4">
-								<vox pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+							<wheel name="wl_r" pos="1.8 -1.3 0.8" drive="0" steer="0" travel="-0.4 0.4">
+								<vox tags="gear" pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
 							</wheel>
-							<wheel name="wl_l" pos="-1.6 -1.3 0.9" drive="0.5" steer="0" travel="-0.4 0.4">
-								<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
+							<wheel name="wl_l" pos="-1.6 -1.3 0.9" drive="0" steer="0" travel="-0.4 0.4">
+								<vox tags="gear" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
 							</wheel>
-							<wheel name="wl_c" pos="0.05 -1.3 -5.1" drive="1" steer="1" travel="-0.4 0.4">
-								<vox pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center">
+							<wheel name="wl_c" pos="0.05 -1.3 -5.1" drive="0" steer="0" travel="-0.4 0.4">
+								<vox tags="gear" pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center">
 									<light name="Ground level" tags="ground" scale="0"/>
 								</vox>
 							</wheel>

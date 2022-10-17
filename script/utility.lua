@@ -82,7 +82,7 @@ do
     end
 
 
-    function DirToQuat(dir) return QuatLookAt(Vec(0, 0, 0), dir) end -- Normalized dir to quat.
+    function DirToQuat(dir) return QuatEuler(math.deg(dir[1]),math.deg(dir[2]),math.deg(dir[3])) end -- Normalized dir to quat.
 
     function DirLookAt(eye, target) return VecNormalize(VecSub(eye, target)) end -- Normalized dir of two positions.
 
@@ -386,10 +386,6 @@ do
             local b = GetShapeBody(s)
             return h, p, d, s, b, n
 
-        elseif not returnNil then
-            return false, TransformToParentPoint(tr, Vec(0,0,-dist))
-        else
-            return nil
         end
 
     end
@@ -545,7 +541,7 @@ end
 do
 
     function TimerCreate(time, rpm)
-        return deepcopy{time = time, rpm = rpm}
+        return { time = time, rpm = rpm }
     end
 
     ---Run a timer and a table of functions.
@@ -567,9 +563,7 @@ do
 
     -- Only runs the timer countdown if there is time left.
     function TimerRunTime(timer)
-        if timer.time > 0 then
-            timer.time = timer.time - GetTimeStep()
-        end
+        timer.time = timer.time - GetTimeStep()
     end
 
     -- Set time left to 0.
@@ -581,6 +575,11 @@ do
     function TimerResetTime(timer)
         timer.time = 60/timer.rpm
     end
+
+    function TimerConsumed(timer)
+        return timer.time <= 0
+    end
+
 end
 
 

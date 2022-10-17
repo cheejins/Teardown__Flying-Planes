@@ -26,6 +26,7 @@
 #include "script/utility.lua"
 #include "script/weapons/projectiles.lua"
 #include "script/weapons/weapons.lua"
+#include "script/ai_SAMS.lua"
 
 
 
@@ -49,6 +50,7 @@ enemiesKey = "t"
 cfg = {
 
 }
+
 
 
 function init()
@@ -79,15 +81,18 @@ function init()
     initSounds()
     initPlanes()
     initProjectiles()
-    InitKeys()
+    -- InitKeys()
 
     SmallMapMode = false
     config_setSmallMapMode(SmallMapMode)
 
+    InitEnemies()
+
 end
 function tick()
 
-    respawnKey = GetString('savegame.mod.options.keys.respawn')
+    -- respawnKey = GetString('savegame.mod.options.keys.respawn')
+    respawnKey = "-asd"
     smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
     toggleMissileLockKey = GetString('savegame.mod.options.keys.toggleMissileLock')
     changeTargetKey = GetString('savegame.mod.options.keys.changeTarget')
@@ -108,6 +113,8 @@ function tick()
 
     handlePlayerInWater()
     manageDebugMode()
+
+    TickEnemies()
 
     Tick = Tick + 1
 

@@ -15,7 +15,7 @@ function initProjectiles()
 
                 category = 'bullet',
 
-                speed = 6,
+                speed = 10,
                 spread = 0.005,
                 drop = 0,
                 dropIncrement = 0,
@@ -23,7 +23,7 @@ function initProjectiles()
                 rcRad = 0.2,
                 force = 0,
                 penetrate = false,
-                holeSize = 1,
+                holeSize = 0.2,
 
                 effects = {
                     -- particle = 'aeon_secondary',
@@ -61,8 +61,8 @@ function initProjectiles()
                 spread = 0.01,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 1.5,
-                rcRad = 0.2,
+                explosionSize = 2.5,
+                rcRad = 0.1,
                 force = 0,
                 penetrate = false,
                 holeSize = 1,
@@ -193,7 +193,7 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
     -- trDir = VecNormalize(VecAdd(trDir, VecRdm(proj.spread)))
     -- proj.transform.rot = DirToQuat(trDir)
 
-    if proj.homing.max > 0 and homingShape ~= nil then
+    if proj.homing.max > 0 and homingShape then
         proj.homing.targetShape = homingShape
         proj.homing.targetPos = GetShapeLocalTransform(homingShape).pos
     end
@@ -311,8 +311,8 @@ function propelProjectile(proj)
     if proj.effects.sprite_facePlayer then
         DrawSprite(LoadSprite(proj.effects.sprite), Transform(proj.transform.pos, QuatLookAt(proj.transform.pos, GetCameraTransform().pos)), proj.effects.sprite_dimensions[1], proj.effects.sprite_dimensions[2], 1, 1, 1, 1, true)
     else
-        DrawSprite(LoadSprite(proj.effects.sprite), Transform(proj.transform.pos, QuatRotateQuat(proj.transform.rot, QuatEuler(90,-90,0))), proj.effects.sprite_dimensions[1], proj.effects.sprite_dimensions[2], 1, 1, 1, 1, true)
-        DrawSprite(LoadSprite(proj.effects.sprite), Transform(proj.transform.pos, QuatRotateQuat(proj.transform.rot, QuatEuler(0,-90,0))), proj.effects.sprite_dimensions[1], proj.effects.sprite_dimensions[2], 1, 1, 1, 1, true)
+        DrawSprite(LoadSprite(proj.effects.sprite), Transform(proj.transform.pos, QuatRotateQuat(proj.transform.rot, QuatEuler(math.random(88,92),-math.random(88,92),0))), proj.effects.sprite_dimensions[1], proj.effects.sprite_dimensions[2], 1, 1, 1, 1, true)
+        DrawSprite(LoadSprite(proj.effects.sprite), Transform(proj.transform.pos, QuatRotateQuat(proj.transform.rot, QuatEuler(0,-math.random(88,92),0))), proj.effects.sprite_dimensions[1], proj.effects.sprite_dimensions[2], 1, 1, 1, 1, true)
     end
 
 
@@ -324,7 +324,7 @@ function propelProjectile(proj)
 
 
     local c = proj.effects.color
-    PointLight(proj.transform.pos, c[1], c[2], c[3], 1)
+    PointLight(proj.transform.pos, c[1], c[2], c[3], 2)
 
 end
 

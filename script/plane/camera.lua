@@ -27,8 +27,8 @@ function manageCamera(plane, disableRotation)
 
     local scale = 1
 
-	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * 10
-	plane.camera.zoom = clamp(plane.camera.zoom, 10, 200) * scale
+	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * plane.camera.zoom/8
+	plane.camera.zoom = clamp(plane.camera.zoom, 10, 500) * scale
 
 
     local camAddHeight = 4
@@ -51,7 +51,9 @@ function planeCamera(plane)
     if camPos == 'aligned' then
 
         local camPos = TransformToParentPoint(plane.tr, Vec(0, 10, 30))
-        local camRot = plane.tr.rot
+        -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(plane.forces[1], plane.forces[2], plane.forces[3]))
+        local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(Vec(math.rad(plane.forces[2]), 0, 0)))
+
         local camTr = Transform(camPos, camRot)
         SetCameraTransform(camTr)
 

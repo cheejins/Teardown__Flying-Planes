@@ -1,3 +1,13 @@
+InputControlIncrement = 0.05
+InputControls = {
+    w = 0,
+    a = 0,
+    s = 0,
+    d = 0,
+    c = 0,
+    z = 0,
+}
+
 --[[Plane Physics]]
 function planeMove(plane)
 
@@ -28,7 +38,7 @@ function planeMove(plane)
         local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
-            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 3
+            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 2
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
@@ -41,12 +51,9 @@ end
 function planeSteer(plane)
 
     local angDim = plane.speedFac / (plane.topSpeed) * 100 * plane.getForwardVelAngle()
-    -- angDim = clamp(1-angDim, 0, 1)
 
-    local imp = 10000 * angDim
+    local imp = 1000 * angDim * GetBodyMass(plane.body)/10000
     dbw("steer angDim", angDim)
-
-    -- print("ang", plane.getForwardVelAngle())
 
 
     local nose = TransformToParentPoint(plane.tr, Vec(0,0,-10))
@@ -55,28 +62,79 @@ function planeSteer(plane)
     local planeUp = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0,10,0)))
     local planeLeft = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(10,0,0)))
 
-
-    if InputDown("w") then
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, imp))
-    end
-    if InputDown("s") then
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, -imp))
-    end
+    local ic = InputControls
+    local inc = InputControlIncrement
 
 
-    if InputDown("a") then
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp/1.5))
+    local w = InputDown("w")
+    local s = InputDown("s")
+    local a = InputDown("a")
+    local d = InputDown("d")
+    local z = InputDown("z")
+    local c = InputDown("c")
+
+
+    -- if camPos == "aligned" then
+
+    --     if InputValue("mousedy") > 1 then
+    --         s = true
+    --         ic.s = InputValue("mousedy")/10
+    --     end
+    --     if InputValue("mousedy") < -1 then
+    --         w = true
+    --         ic.w = -InputValue("mousedy")/10
+    --     end
+    --     if InputValue("mousedx") > 1 then
+    --         c = true
+    --         ic.c = InputValue("mousedx")/10
+    --     end
+    --     if InputValue("mousedx") < -1 then
+    --         z = true
+    --         ic.z = -InputValue("mousedx")/10
+    --     end
+
+    -- end
+
+
+    if w then
+        ic.w = clamp(ic.w + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, imp * ic.w))
+    else
+        ic.w = clamp(ic.w - inc, 0, 1)
     end
-    if InputDown("d") then
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp/1.5))
+    if s then
+        ic.s = clamp(ic.s + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, -imp * ic.s))
+    else
+        ic.s = clamp(ic.s - inc, 0, 1)
     end
 
 
-    if InputDown("z") then
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp))
+    if a then
+        ic.a = clamp(ic.a + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp/1.5 * ic.a))
+    else
+        ic.a = clamp(ic.a - inc, 0, 1)
     end
-    if InputDown("c") then
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp))
+    if d then
+        ic.d = clamp(ic.d + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp/1.5 * ic.d))
+    else
+        ic.d = clamp(ic.d - inc, 0, 1)
+    end
+
+
+    if z then
+        ic.z = clamp(ic.z + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.z))
+    else
+        ic.z = clamp(ic.z - inc, 0, 1)
+    end
+    if c then
+        ic.c = clamp(ic.c + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.c))
+    else
+        ic.c = clamp(ic.c - inc, 0, 1)
     end
 
 end
@@ -171,6 +229,15 @@ function planeDebug(plane)
     dbw("PLANE plane.speedFac", plane.speedFac)
 
 end
+function planeLandingGear(plane)
+
+    if InputPressed("g") then
+        for index, shape in ipairs(FindShapes("gear", true)) do
+            Delete(shape)
+        end
+    end
+
+end
 
 
 
@@ -197,8 +264,13 @@ function planeShoot(plane)
 
             if plane.model == 'a10' then
                 PlayLoop(sounds.emg, GetBodyTransform(plane.body).pos, 10)
+                plane.timers.weap.primary.rpm = 600
+            elseif plane.model == "spitfire" then
+                PlayLoop(sounds.mg2, GetBodyTransform(plane.body).pos, 10)
+                plane.timers.weap.primary.rpm = 900
             else
                 PlayLoop(sounds.mg, GetBodyTransform(plane.body).pos, 10)
+                plane.timers.weap.primary.rpm = 1200
             end
 
             if plane.timers.weap.primary.time <= 0 then
@@ -212,49 +284,37 @@ function planeShoot(plane)
                     -- Aim adjust. The shoot location is slightly higher than the weapon body.
                     -- Moves the aim pos just above where the crosshair (weapon body aligned) hits the world.
                     local shootTr = TransformCopy(weapTr)
-                    -- local shootDir = QuatToDir(shootTr.rot)
 
-                    -- local trueAimRot = QuatLookAt(shootTr.pos, crosshairPos)
-                    -- local trueAimDir = QuatToDir(trueAimRot)
-                    -- local shootRotAligned =  DirToQuat(Vec(shootDir[1], trueAimDir[2], shootDir[3]))
-                    -- shootTr.rot = shootRotAligned
 
                     local projPreset = ProjectilePresets.bullets.standard
                     if plane.model == 'a10' then
                         projPreset = ProjectilePresets.bullets.emg
                     end
 
+                    local spread = 0.025
 
-                    -- shootTr.rot = QuatLookAt(plTr.pos, TransformToParentPoint(plTr, Vec(0,0,-200)))
-                    -- shootTr.rot = QuatLookAt(weapTr.pos, crosshairPos)
-
-
+                    shootTr.rot = QuatRotateQuat(shootTr.rot, QuatEuler(
+                        math.deg((math.random() - 0.5) * spread),
+                        math.deg((math.random() - 0.5) * spread),
+                        math.deg((math.random() - 0.5) * spread)))
 
                     -- Shoot projectile.
                     createProjectile(shootTr, Projectiles, projPreset, {plane.body})
 
 
-                    -- Apply recoil,
-                    -- local vel_impulse = VecScale(QuatToDir(weapTr.rot), -4500)
-                    -- ApplyBodyImpulse(robot.body, AabbGetBodyCenterPos(robot.body), vel_impulse)
 
-                    -- Shoot particles,
-                    -- SpawnParticle_aeon_weap_primary(shootTr)
+                    ParticleReset()
+                    ParticleType("smoke")
+                    ParticleRadius(1/2, math.random() + 2)
+                    ParticleAlpha(0.5, 0)
+                    ParticleColor(0.5, 0.5, 0.5, 0.9, 0.9, 0.9)
+                    ParticleCollide(1)
+                    local vel = QuatToDir(shootTr.rot)
+                    SpawnParticle(shootTr.pos, vel, 3)
 
-                    -- Exhaust particles.
-                    -- local exhaustTr = TransformCopy(weapTr)
-                    -- exhaustTr.pos = TransformToParentPoint(weapTr, Vec(0,0,1.5))
-                    -- exhaustTr.rot = QuatTrLookBack(weapTr)
-
-                    -- SpawnParticle_aeon_weap_primary_exhaust(exhaustTr, 0)
-                    -- SpawnParticle_aeon_weap_primary_exhaust(exhaustTr, 3)
-                    -- SpawnParticle_aeon_weap_primary_exhaust(exhaustTr, 5)
+                    PointLight(shootTr.pos, 1, 0.5, 0, 1)
 
                 end
-
-                -- local index = GetRandomIndex(Sounds.weap_primary.shoot)
-                -- PlayRandomSound(Sounds.weap_primary.shoot, bodyTr.pos, 2, index)
-                -- PlayRandomSound(Sounds.weap_primary.shoot, GetCameraTransform().pos, 0.5, index)
 
             end
 

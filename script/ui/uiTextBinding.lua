@@ -147,7 +147,7 @@ function Ui_Option_Keybind(w, h, marginX, title, label, tb, key)
 
             margin(w_key + 10, 0)
 
-            UiButtonImageBox("MOD/img/icon_deleteAll.png")
+            UiButtonImageBox("ui/terminal/map_x.png")
             UiButtonHoverColor(0.5,0.5,1,1)
             if UiTextButton(' ', h,h) then
                 activeAssignment = false
@@ -200,6 +200,9 @@ end
 --- Manage keybinds and textfields.
 function ManageUiBinding()
 
+    local bindTriggered = false
+
+
     lastKeyPressed = string.lower(InputLastPressedKey())
 
 
@@ -210,6 +213,8 @@ function ManageUiBinding()
 
         resetActiveTable()
         activeAssignment = false
+
+        bindTriggered = true
 
     end
 
@@ -228,6 +233,7 @@ function ManageUiBinding()
             end
 
             activeTable.tb[activeTable.key] = activeTable.tb[activeTable.key] .. text
+
         end
 
         backspaceTimer = backspaceTimer - GetTimeStep()
@@ -249,6 +255,9 @@ function ManageUiBinding()
         end
 
     end
+
+
+    return bindTriggered
 
 end
 

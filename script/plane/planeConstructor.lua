@@ -86,11 +86,11 @@ function createPlaneObject(_vehicle)
             camPitch = -7,
     }
 
-    plane.dirs = {Quat(),Quat(),Quat()}
-
 
     plane_update(plane)
 
+
+    plane.dirs = {Quat(),Quat(),Quat()}
 
     plane.weap = {
         weaponObjects = GetWeaponLocations(plane),
@@ -201,20 +201,12 @@ function createPlaneObject(_vehicle)
     end
 
     --- Returns the ideal turn speed, which is closest to plane.topSpeed/2. Exponential approach to ideal val.
-    plane.getIdealSpeedFactor = function(x, upperLim)
-        local s = x or plane.speed
-        local m = plane.topSpeed*0.5
-        local a = 2
-        local lowOffset = 1.4 -- transform function right
-        -- Plug this into desmos
-        --[[ -1\cdot\left(\frac{\left(\left(\left(x-\frac{150}{1.5}\right)\cdot2\right)^{\ 2\ }\right)}{\left(40\right)}\right)+100]]
-        local isf =
-        (-1*((((s-(m/lowOffset))*a)^2)/((m/10)^2))+101)/100
+    plane.getIdealSpeedFactor = function()
 
-        return isf
     end
 
     plane.applyTurbulence = function()
+
     end
 
     -- forces
@@ -222,30 +214,32 @@ function createPlaneObject(_vehicle)
 
         if VecLength(plane.vel) >= 1 or VecLength(plane.vel) <= -1 then
 
-            local lvel = TransformToLocalVec(plane.tr, plane.vel)
-            local fac = plane.topSpeed / math.abs(lvel[3]) * 1.5
+            -- local lvel = TransformToLocalVec(plane.tr, plane.vel)
+            -- local fac = plane.topSpeed / math.abs(lvel[3])
+            local fac = 1
 
             local x = 0
             local y = 0
             local z = 0
 
-            local x = math.deg(GetRollAoA(plane.tr, plane.vel)) / fac / 1.5
-            local y = math.deg(GetPitchAoA(plane.tr, plane.vel)) / fac
-            local z = math.deg(GetYawAoA(plane.tr, plane.vel)) / fac / 1.5
+            x = math.deg(GetRollAoA(plane.tr, plane.vel)) / fac
+            y = math.deg(GetPitchAoA(plane.tr, plane.vel)) / fac
+            -- z = math.deg(GetYawAoA(plane.tr, plane.vel)) / fac
 
-            -- print(plane.topSpeed / math.abs(lvel[3]))
-
-
+            dbw("LVEL", lvel)
+            dbw("SPEED FAC", speedFac)
             dbw("AERO FORCE X", sfn(x))
             dbw("AERO FORCE Y", sfn(y))
             dbw("AERO FORCE Z", sfn(z))
-            dbw("SPEED FAC", speedFac)
 
 
-            local forces = Vec(x,y,0)
-            local imp = GetBodyMass(plane.body)/15 * plane.speedFac
+            local forces = Vec(x,y,z)
+            local imp = GetBodyMass(plane.body)/5 * plane.speedFac
 
-            dbw("imp", imp)
+            plane.forces = forces
+
+            dbw("AERO FORCE IMP", imp)
+            dbw("plane.idealSpeedFactor ", plane.idealSpeedFactor)
 
 
             ApplyBodyImpulse(plane.body, plane.tr.pos, TransformToParentPoint(plane.tr, VecScale(forces, imp)))
@@ -335,6 +329,7 @@ function createPlaneObject(_vehicle)
 
     SetTag(plane.vehicle, 'planeActive')
 
+
     return plane
 end
 
@@ -346,7 +341,8 @@ function plane_update(plane)
 
     -- Velocity
     plane.vel = GetBodyVelocity(plane.body)
-    plane.speed = TransformToLocalVec(plane.tr, plane.vel)[3] * -1
+    plane.lvel = TransformToLocalVec(plane.tr, plane.vel)
+    plane.speed = plane.lvel[3] * -1
     plane.angVel = GetBodyAngularVelocity(plane.body)
     plane.totalVel = math.abs(plane.vel[1]) + math.abs(plane.vel[2]) + math.abs(plane.vel[3])
 
@@ -358,23 +354,10 @@ function plane_update(plane)
     plane.playerInUnbrokenPlane = plane.playerInPlane and plane.isAlive
 
 
-    plane.dirs[#plane.dirs+1] = GetBodyTransform(plane.body).rot
+    plane.speedFac = plane.speed / plane.topSpeed
+    plane.idealSpeedFactor = math.sin(math.pi * (plane.speed / plane.topSpeed))
 
-
-    -- plane.angleChange = QuatAngle(
-    --     plane.dirs[#plane.dirs],
-    --     plane.dirs[#plane.dirs-1])
-
-
-    -- print(sfn(plane.angleChange))
-
-
-    -- if plane.angleChange ~= plane.angleChange then
-    --     plane.angleChange = 0
-    -- end
-
-    plane.speedFac = clamp(plane.speed, 0.00000001, plane.speed) / plane.topSpeed
-
+    plane.forces = plane.forces or Vec(0,0,0)
 
 end
 
@@ -430,38 +413,3 @@ function GetRollAoA(tr, vel)
     return aoa
 
 end
-
-
-
-
-    -- if aoa >= -90 and aoa <= -45 then -- -z to y
-
-    --     print("7", sfn(aoa))
-    --     aoa = -(aoa % 45)
-
-    -- elseif aoa >= 45 and aoa <= 90 then -- y to z
-
-    --     print("", sfn(aoa))
-    --     aoa = -(aoa % -45)
-
-    -- elseif aoa >= 90 and aoa <= 135 then
-
-    --     print("", sfn(aoa))
-    --     aoa = -(aoa % 45)
-
-    -- elseif aoa >= 135 and aoa <= 180 then
-
-    --     print("", sfn(aoa))
-    --     aoa = -(45 - (aoa - 135))
-
-    -- elseif aoa >= -135 and aoa <= -90 then
-
-    --     print("", sfn(aoa))
-    --     aoa = -(aoa + 90)
-
-    -- elseif aoa >= -180 and aoa <= -135 then
-
-    --     print("", sfn(aoa))
-    --     aoa = (aoa + 180)
-
-    -- end

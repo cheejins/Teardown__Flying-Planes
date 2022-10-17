@@ -1,113 +1,112 @@
 #include "script.lua"
+#include "script/input/keybinds.lua"
 
 
 function init()
 
     OPTIONS = true
 
-    InitKeys()
-    initUiControlPanel()
+    if not GetBool("savegame.mod.bindsSet") then
 
-    TB = {name = 'text'}
+        InitKeys()
+        SetBool("savegame.mod.bindsSet", true)
+
+        print("Binds initialized")
+
+    else
+
+        KEYS = util.shared_table("savegame.mod.keys", Keys)
+
+        print("Binds loaded")
+
+    end
+
+    FS = 24
 
 end
 
 function tick()
-
+    if ManageUiBinding() then
+        -- InitKeys()
+    end
 end
 
 function draw()
 
-    uiSetFont(24)
+    uiSetFont(FS)
     UiButtonHoverColor(0.5,0.5,1, 1)
 
+    UiHeader(50)
+    UIResetBinds(75)
 
-    local itemH = 35
-    local col = {
-        {'',            itemH + 20},
-        {'',            180},
-        {'Combo Key',   180},
-        {'Main Key',    180},
-    }
-    local function colVal(index)
-        return col[index][2]
-    end
+    -- UIDrawKeybinds()
 
-    local keybindsW = 0
-    for index, value in ipairs(col) do
-        keybindsW = keybindsW + value[2]
-    end
+    UICloseButton()
+
+end
 
 
+function UIDrawKeybinds()
+    do UiPush()
+
+        margin(UiCenter(), 150)
+
+        for key, category in pairs(Keys) do
+
+            do UiPush()
+                uiSetFont(FS * 1.25)
+                UiAlign("center middle")
+                UiText(key)
+            UiPop() end
+
+            margin(0, FS * 1.75)
+
+            for bindKey, bindData in ipairs(category) do
+
+                UiAlign("right middle")
+                UiText(bindData.title)
+
+                UiAlign("left middle")
+
+                do UiPush()
+                    margin(FS, -15)
+                    Ui_Option_Keybind(180, 30, 0, "",  Keys[key][bindKey].key, KEYS[key][bindKey], "key")
+                    print(KEYS[key][bindKey]["key"])
+                UiPop() end
+
+                margin(0, FS + 4)
+
+            end
+
+            margin(0, FS)
+
+        end
+
+        margin(0, FS * 1.75)
+
+
+    UiPop() end
+end
+
+
+function UiHeader(marginY)
+    margin(0, marginY)
     do UiPush()
 
         -- Title.
         UiAlign('left top')
         uiSetFont(50)
 
-        margin(0, 50)
         do UiPush()
             margin(UiCenter(), 0)
             UiAlign('center middle')
-            UiText('Advanced Camera - Options')
+            UiText('Flying Planes - Options')
         UiPop() end
-
-
-        -- Table headers.
-        uiSetFont(24)
-        margin(UiCenter() - keybindsW/2, 100)
-        do UiPush()
-            for index, value in ipairs(col) do
-                UiText(string.upper(value[1]))
-                margin(value[2], 0)
-            end
-        UiPop() end
-
-
-        -- Draw keybind list.
-        margin(0, 50)
-        for index, value in ipairs(UiControls) do
-
-            local key = UiControls[index].name
-
-            for k, v in pairs(KEYS) do
-                if k == key then
-                    do UiPush()
-
-                        UiImageBox(UiControls[index].icon, itemH, itemH, 0,0) -- Icon
-                        margin(colVal(1), 0)
-
-                        UiText(v.title)
-                        margin(colVal(2), 0)
-
-                        Ui_Option_Keybind_Combo(180, itemH, 200, v.title, convertKeyTitle(v.key1), v, 'key1') -- Combo key
-                        margin(colVal(3), 0)
-
-                        Ui_Option_Keybind(180, itemH, 200, ' ', convertKeyTitle(v.key2), v, 'key2') -- Key
-                        margin(colVal(4), 0)
-
-                    UiPop() end
-
-                    margin(0, itemH * 1.5)
-                end
-            end
-
-        end
-
-        UiAlign('center middle')
-        margin(keybindsW/2, 50)
-
-        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 1,1,1, 1)
-        if UiTextButton('Reset Keybinds', 300, 40) then
-
-            ClearKey("savegame.mod.keys")
-            InitKeys()
-
-        end
 
     UiPop() end
+end
 
-
+function UICloseButton()
     -- Close button.
     do UiPush()
 
@@ -121,5 +120,23 @@ function draw()
         end
 
     UiPop() end
+end
 
+function UIResetBinds(marginY)
+    do UiPush()
+
+        -- Draw keybind list.
+        margin(UiCenter(), marginY)
+        UiAlign('center middle')
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 1,1,1, 1)
+        if UiTextButton('Reset Keybinds', 300, 40) then
+
+            ClearKey("savegame.mod.bindsSet")
+            ClearKey("savegame.mod.keys")
+
+            print("reset binds")
+
+        end
+
+    UiPop() end
 end

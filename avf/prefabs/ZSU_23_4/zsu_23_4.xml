@@ -1,0 +1,180 @@
+<prefab version="1.1.0">
+	<group name="instance=MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml" pos="101.50001 2.1 -179.89999" rot="0.0 0.0 0.0">
+		<script pos="0.1 0.3 0.0" file="MOD/avf/scripts/Immersive_Tank.lua">
+			<script pos="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.lua">
+				<vehicle name=" ZSU-23-4  shilka" tags="cfg=vehicle name=shilka" pos="-0.1 -0.3 0.0" rot="0.0 -90.0 0.0" driven="false" sound="tank2" spring="1" damping="0.8" topspeed="50" acceleration=".25" strength="50" antispin="0.9" antiroll="0.2" difflock="1" steerassist="1" friction="1.3">
+					<body tags="component=body" pos="-0.05 0.6 -0.25" rot="0.0 0.0 0.0" dynamic="true">
+						<vox tags="component=chassis" pos="0.0 0.2 0.25" rot="0 180 0" texture="8 .4" density="20" strength="10" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="body">
+							<light pos="-1.35 0.95 2.6" rot="0.0 0.0 0.0" type="cone" color="1 .9 .8" scale="30" angle="90" penumbra="30" size="0.2" unshadowed="0.4" glare="0.35"/>
+							<light pos="1.35 0.95 2.6" rot="0.0 0.0 0.0" type="cone" color="1 .9 .8" scale="30" angle="90" penumbra="30" size="0.2" unshadowed="0.4" glare="0.35"/>
+							<light pos="1.35 1.05 -2.9" rot="0.0 -180.0 0.0" type="area" color="1 .1 .1" size="0.1 0.1" unshadowed="0.2" glare="0.1"/>
+							<light pos="-1.35 1.05 -2.9" rot="0.0 -180.0 0.0" type="area" color="1 .1 .1" size="0.1 0.1" unshadowed="0.2" glare="0.1"/>
+							<location name="exhaust" tags="exhaust" pos="0.0 0.5 -3.0" rot="90 0 0 "/>
+							<location name="exhaust" tags="exhaust" pos="0.2 0.5 -3.0" rot="100 0 0 "/>
+							<location name="exhaust" tags="exhaust" pos="-0.2 0.5 -3.0" rot="100 0 0 "/>
+							<location name="vital" tags="vital" pos="0.05 0.35 -1.8" rot="-180.0 360.0 -180.0"/>
+							<location name="player" tags="player" pos="0.45 0.77 2.1" rot="0.0 0.0 0.0"/>
+							<vox pos="0.0 0.28 3.01" rot="-45.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="glacis">
+								<vox pos="0.4 0.3 -0.1" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="driver_hatch">
+									<joint pos="-0.2 0.8 0.1" rot="0 90 0" type="hinge" rotstrength="1" rotspring="0" collide="true" limits="-110 -2.5"/>
+									<joint pos="0.3 0.8 0.1" rotspring="0" collide="true"/>
+								</vox>
+								<vox pos="0.4 0.4 0.1" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="driver_hatch_front">
+									<joint pos="-0.1 0.6 -0.1" rot="0 90 0" type="hinge" rotstrength="1" rotspring="0" collide="true" limits="-92 0"/>
+									<joint pos="0.3 0.6 -0.0" rotspring="0" collide="false"/>
+								</vox>
+								<vox name="engine_hatch" tags="nocull" pos="-0.5 0.2 0.0" rot="0.0 0.0 0.0" prop="true" file="MOD/avf/Prefabs/ZSU_23_4/ZSU-23-4.vox" object="front_fuel_hatch">
+									<group name="pop joints" pos="0.0 -0.1 0.0" prop0="tags=break_joint=0.75" prop1="collide=true">
+										<joint pos="0.30001 0.1 -0.00001"/>
+										<joint pos="-0.19999 0.1 0.00003"/>
+										<joint pos="-0.2 0.9 0.0"/>
+										<joint pos="0.30005 0.9 -0.00001"/>
+									</group>
+								</vox>
+							</vox>
+							<group name="upper" pos="0.0 0.0 0.2">
+								<vox pos="0.0 1.0 -0.2" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="roof">
+									<group name="pop_hatchs" pos="-0.1 0.0 1.6" prop0="tags=break_joint=0.75" prop1="collide=true">
+										<vox name="engine_hatch" tags="nocull" pos="0.66 0.1 -3.2" rot="0.0 0.0 0.0" prop="true" file="MOD/avf/Prefabs/ZSU_23_4/ZSU-23-4.vox" object="engine_hatch">
+											<joint pos="-0.2 0.02 0.2" rotspring="0"/>
+											<joint pos="0.38 0.02 0.18" rotspring="0"/>
+										</vox>
+									</group>
+								</vox>
+								<vox tags="component=turret turretGroup=mainTurret" pos="0.05 0.3 -0.1" rot="0.0  0" texture="7 0.4" density="1.2" strength="10" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="turret_empty">
+									<joint tags="component=turretJoint " pos="-0.05 0.0 0.25" rot="90 0 0" type="hinge" size=".2" rotspring="0" sound="true"/>
+									<vox tags="mainCannon component=gun weaponType=customcannon group=primary ZSU-23-shilkaGun  commander interact=mountedGun avf_barrel_coords_true" pos="-0.1 0.98 1.85" rot="0.0 0 0" texture="7 .5" density="1.2" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="gun">
+										<joint tags="component=gunJoint" pos="0.5 0.34 -0.7" rot="0 90 0" type="hinge" size=".1" rotspring="0" collide="true" limits="-85 2" sound="true"/>
+										<joint pos="-0.4 0.34 -0.7" rot="0 90 0" type="hinge" size=".1" rotspring="0" limits="-85 2" sound="true"/>
+									</vox>
+									<group name="ammo_rack">
+										<vox name="ammo_rack=0.1" tags="ammo_rack=0.1" pos="0.8 1.2 0.9" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_rack_l"/>
+										<vox name="ammo_rack=0.1" tags="ammo_rack=0.1" pos="-1.0 1.2 0.9" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_rack_r"/>
+									</group>
+									<group name="hatches">
+										<vox pos="-1.0 1.6 1.0" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_r">
+											<vox pos="-0.31 0.0 -0.12" rot="0.0 27.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<vox pos="-0.19 0.0 0.15" rot="0.0 24.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<vox pos="-0.1 0.0 0.41" rot="0.0 18.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<vox pos="0.12 0.0 0.58" rot="0.0 76.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<joint pos="0.5 0.1 -0.37" rotstrength="0" rotspring="0" collide="true"/>
+											<joint pos="0.5 0.1 0.38" rotstrength="0.01" rotspring="0" collide="true"/>
+										</vox>
+										<vox pos="-0.3 1.7 -0.4" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="roof_hatch-L">
+											<joint pos="0.01 0.0 -0.3" rot="0.0 90.0 0.0" rotstrength="0" rotspring="0" collide="true"/>
+											<joint pos="0.44 0.0 -0.3" rot="0.0 90.0 0.0" type="hinge" rotstrength="0.01" rotspring="0" collide="false" limits="0 110"/>
+											<voxbox pos="-0.06 0.0 -0.21" rot="0.0 -153.0 0.0" size="3 1 1" brush="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="light_outer_weak_metal_el"/>
+											<voxbox pos="-0.28 0.0 -0.16" rot="0.0 -96.0 0.0" size="2 1 1" brush="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="light_outer_weak_metal_el"/>
+										</vox>
+										<vox pos="0.7 1.8 -0.5" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="commander_hatch">
+											<joint pos="0.05 0.09 -0.3" rot="0.0 90.0 0.0" type="hinge" rotstrength="0.01" rotspring="0" collide="false" limits="0 110"/>
+										</vox>
+										<vox pos="0.9 1.7 1.0" rot="180.0 180.0 0" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_r">
+											<vox pos="-0.31 0.0 -0.12" rot="0.0 27.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<vox pos="-0.19 0.0 0.15" rot="0.0 24.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<vox pos="-0.1 0.0 0.41" rot="0.0 18.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<vox pos="0.12 0.0 0.58" rot="0.0 76.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="ammo_hatch_corner"/>
+											<joint pos="0.5 0.0 0.48" rotstrength="0.01" rotspring="0" collide="true"/>
+											<joint pos="0.5 -0.0 -0.53" rotstrength="0" rotspring="0"/>
+										</vox>
+										<vox pos="-0.1 1.7 1.2" density="0.1" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="gun_flap">
+											<joint pos="-0.2 0.05 -0.6" rot="0 90 0" type="hinge" size=".1" rotstrength="0" rotspring="0" collide="true"/>
+											<joint pos="0.3 0.05 -0.6" size=".1" rotstrength="0" rotspring="00" collide="true"/>
+										</vox>
+									</group>
+									<vox pos="-0.1 1.6 -0.5" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="turret_roof"/>
+								</vox>
+							</group>
+							<group name="tracks" pos="-0.1 0.9 -0.1">
+								<vox name="tracks" tags="tracks" pos="-1.2 -1.4 0.0" collide="false" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="tracks_r"/>
+								<vox name="tracks" tags="tracks" pos="1.2 -1.4 0.0" collide="false" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="tracks_l"/>
+							</group>
+							<vox pos="0.3 0.1 2.1" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="drivers_compartment"/>
+							<vox name="fuel_tank_enclosure" pos="-0.6 0.1 2.1" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="fuel_tank_encolusure_compartment">
+								<vox name="fuel_tank" tags="fuel_tank" pos="0.0 0.2 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="fuel_tank_front"/>
+							</vox>
+							<group name="power_compartment">
+								<vox name="engine" pos="0.0 0.0 -1.7" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="v6_engine"/>
+								<vox name="oil tank" tags="fuel_tank" pos="0.0 0.2 -1.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="oil_tank"/>
+								<vox name="engine" tags="engine" pos="0.0 0.2 -2.4" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="gearbox"/>
+								<vox name="engine" tags="engine" pos="0.0 0.6 -2.5" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="radiator"/>
+								<vox name="engine" tags="engine" pos="-1.2 0.7 -1.9" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="power_packs"/>
+								<group name="hatches">
+									<vox pos="0.6 0.1 -3.1" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="engine_hatch_l">
+										<joint pos="0.4 0.4 0.0" rotstrength="0" rotspring="0" collide="true"/>
+										<joint pos="0.4 0.1 -0.02" rotstrength="0" rotspring="0" collide="true"/>
+										<joint tags="break_joint=0.75" pos="-0.4 0.2 -0.0"/>
+									</vox>
+									<vox pos="-0.6 0.1 -3.1" prop="true" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="engine_hatch_r">
+										<joint pos="-0.4 0.4 -0.0" rotstrength="0" rotspring="0" collide="true"/>
+										<joint pos="-0.4 0.1 -0.02" rotstrength="0" rotspring="0" collide="true"/>
+										<joint tags="break_joint=0.75" pos="0.4 0.2 0.0"/>
+									</vox>
+								</group>
+							</group>
+						</vox>
+						<wheel name="whrSprocketF" pos=".5 0.45 -2.15" drive="1" steer="0.33" travel="-0.1 0">
+							<vox pos="0.7 -0.3 0.025" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whrSprocketF"/>
+						</wheel>
+						<wheel name="whr1" pos="0.7 0.15 -1.5" drive="1" steer="0.66" travel="-0.1 0.1">
+							<vox pos=".6 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whr1"/>
+						</wheel>
+						<wheel name="whr2" pos="0.7 0.15 -0.7" drive="1" steer="0.44" travel="-0.1 0">
+							<vox pos="0.6 -0.325 0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whr2"/>
+						</wheel>
+						<wheel name="whr3" pos="0.7 0.15 0.1" drive="1" steer="0.33" travel="-0.1 0">
+							<vox pos=".6 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whr3"/>
+						</wheel>
+						<wheel name="whr4" pos="0.7 0.15 0.9" drive="1" steer="-0.33" travel="-0.1 0">
+							<vox pos=".6 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whr4"/>
+						</wheel>
+						<wheel name="whr5" pos="0.7 0.15 1.7" drive="1" steer="-0.33" travel="-0.1 0">
+							<vox pos=".6 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whr5"/>
+						</wheel>
+						<wheel name="whr6" pos="0.7 0.15 2.4" drive="1" steer="-0.33" travel="-0.1 0">
+							<vox pos=".6 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whr6"/>
+						</wheel>
+						<wheel name="whlSprocketR" pos=".7 0.45 2.95" drive="1" steer="0.33" travel="-0.1 0">
+							<vox pos=".7 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whlSprocketR"/>
+						</wheel>
+						<wheel name="whlSprocketF" pos="-.7 0.45 -2.15" drive="1" steer="0.33" travel="-0.1 0">
+							<vox pos="-0.5 -0.3 0.025" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whlSprocketF"/>
+						</wheel>
+						<wheel name="whl1" pos="-0.7 0.15 -1.5" drive="1" steer="0.66" travel="-0.1 0.1">
+							<vox pos="-.4 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whl1"/>
+						</wheel>
+						<wheel name="whl2" pos="-0.7 0.15 -0.7" drive="1" steer="0.44" travel="-0.1 0">
+							<vox pos="-0.4 -0.325 0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whl2"/>
+						</wheel>
+						<wheel name="whl3" pos="-0.7 0.15 0.1" drive="1" steer="0.33" travel="-0.1 0">
+							<vox pos="-.4 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whl3"/>
+						</wheel>
+						<wheel name="whl4" pos="-0.7 0.15 0.9" drive="1" steer="-0.33" travel="-0.1 0">
+							<vox pos="-.4 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whl4"/>
+						</wheel>
+						<wheel name="whl5" pos="-0.7 0.15 1.7" drive="1" steer="-0.33" travel="-0.1 0">
+							<vox pos="-.4 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whl5"/>
+						</wheel>
+						<wheel name="whl6" pos="-0.7 0.15 2.4" drive="1" steer="-0.33" travel="-0.1 0">
+							<vox pos="-.4 -0.325 -0.025" rot="0.0 180.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whl6"/>
+						</wheel>
+						<wheel name="whlSprocketR" pos="-.7 0.45 2.95" drive="1" steer="0.33" travel="-0.1 0">
+							<vox pos="-.5 -0.325 -0.025" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="whlSprocketR"/>
+						</wheel>
+					</body>
+				</vehicle>
+				<location name="mainCannon_emitter" tags="mainCannon_emitter flip_y_z" pos="3.445 1.97 0.131" rot="0.0 90.0 0.0"/>
+				<location name="mainCannon_emitter" tags="mainCannon_emitter flip_y_z" pos="3.445 1.97 -0.249" rot="0.0 90.0 0.0"/>
+				<location name="mainCannon_emitter" tags="mainCannon_emitter flip_y_z" pos="3.445 2.39 -0.219" rot="0.0 90.0 0.0"/>
+				<location name="mainCannon_emitter" tags="mainCannon_emitter flip_y_z" pos="3.445 2.39 0.161" rot="0.0 90.0 0.0"/>
+				<location name="mainCannon_sight" tags="mainCannon_sight" pos="1.09073 2.93 -0.55491" rot="0.0 -90.0 0.0"/>
+				<location name="mainCannon_shell_ejector" tags="mainCannon_shell_ejector" pos="2.211 2.08 0.445" rot="130.0 -90.0 0.0"/>
+				<location name="mainCannon_shell_ejector_dir" tags="mainCannon_shell_ejector_dir" pos="2.721 2.35 2.035" rot="130.0 -90.0 0.0"/>
+				<location name="cook_off" tags="cook_off" pos="0.2 0.9 -0.0" rot="0 90  0"/>
+				<location name="mainCannon_shell_ejector_dir" tags="mainCannon_shell_ejector_dir" pos="2.721 2.35 -2.035" rot="130.0 -90.0 0.0"/>
+				<location name="mainCannon_shell_ejector" tags="mainCannon_shell_ejector" pos="2.211 2.08 -0.445" rot="130.0 -90.0 0.0"/>
+			</script>
+		</script>
+	</group>
+</prefab>
+

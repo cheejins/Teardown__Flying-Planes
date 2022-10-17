@@ -21,7 +21,6 @@ function planesUpdate()
         if GetPlayerVehicle() == plane.vehicle  then
         -- if GetPlayerVehicle() == plane.vehicle and plane.playerInUnbrokenPlane then
 
-
             planeCamera(plane)
             plane_update(plane)
 
@@ -36,9 +35,7 @@ function planesUpdate()
             curPlane = plane
             plane.status = '-'
 
-            if camPos ~= 'vehicle' then
-                planeSteer(plane)
-            end
+            planeSteer(plane)
             planeMove(plane)
             plane.applyForces()
 
@@ -47,6 +44,7 @@ function planesUpdate()
             planeShoot(plane)
             planeSound(plane)
             runEffects(plane)
+            planeLandingGear(plane)
 
             if GetBool('savegame.mod.debugMode') then
                 planeDebug(plane)
