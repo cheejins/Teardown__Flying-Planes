@@ -461,9 +461,8 @@ do
         return value
     end
     function oscillate(time)
-        local a = (GetTime() / (time or 1)) % 1
-        a = a * math.pi
-        return math.sin(a)
+        local a = ((-1/2) * math.cos(2 * math.pi * GetTime()/(time or 1))) + 0.5
+        return a
     end
 
     ---Returns a convex parabola starting at x=0, ending at x=1 and its center vertex at y=1.

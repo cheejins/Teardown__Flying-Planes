@@ -6,6 +6,48 @@ function initProjectiles()
 
         bullets = {
 
+            aa = {
+
+                isActive = true, -- Active when firing, inactive after hit.
+                hit = false,
+                hitInitial = false,
+                lifeLength = 3, --Seconds
+
+                category = 'bullet',
+
+                speed = 3,
+                spread = 0.015,
+                drop = 0,
+                dropIncrement = 0,
+                explosionSize = 0,
+                rcRad = 0.1,
+                force = 1,
+                penetrate = false,
+                holeSize = 0.3,
+
+                effects = {
+                    -- particle = 'aeon_secondary',
+                    color = Vec(1,0.5,0.3),
+                    sprite = 'MOD/script/img/bullet_aa.png',
+                    sprite_dimensions = {10, 1},
+                    sprite_facePlayer = false,
+                },
+
+                sounds = {
+                    -- hit = Sounds.weap_secondary.hit,
+                    hit_vol = 5,
+                },
+
+                homing = {
+                    force = 0,
+                    gain = 0,
+                    max = 0,
+                    targetShape = nil,
+                    targetPos = Vec(),
+                    targetPosRadius = 0,
+                }
+            },
+
             standard = {
 
                 isActive = true, -- Active when firing, inactive after hit.
@@ -19,7 +61,7 @@ function initProjectiles()
                 spread = 0.005,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 0.5,
+                explosionSize = 0.6,
                 rcRad = 0.2,
                 force = 0,
                 penetrate = false,
@@ -58,10 +100,10 @@ function initProjectiles()
                 category = 'bullet',
 
                 speed = 6,
-                spread = 0.01,
+                spread = 0.0075,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 2.5,
+                explosionSize = 2,
                 rcRad = 0.1,
                 force = 0,
                 penetrate = false,
@@ -244,17 +286,19 @@ function propelProjectile(proj)
 
     --+ Raycast
     local rcHit, hitPos, hitShape = RaycastFromTransform(proj.transform, proj.speed, proj.rcRad, proj.ignoreBodies, nil, true)
-    if rcHit and not proj.hitInitial then
+    if rcHit then
 
         proj.hitInitial = true
         proj.hit = true
 
         --+ Hit Action
-        -- ApplyBodyImpulse(GetShapeBody(hitShape), hitPos, VecScale(QuatToDir(proj.transform.rot), proj.force))
+        ApplyBodyImpulse(GetShapeBody(hitShape), hitPos, VecScale(QuatToDir(proj.transform.rot), proj.force))
 
-        if proj.explosionSize > 0 then
+        if proj.explosionSize > 0.1 then
             Explosion(hitPos, proj.explosionSize)
         end
+
+        MakeHole(hitPos, proj.holeSize)
 
         --+ Sounds
         -- local index = proj.sounds.hit[math.random(1, #proj.sounds.hit)]
@@ -264,13 +308,10 @@ function propelProjectile(proj)
     end
 
     -- if proj.penetrate then
-
-    --     proj.hit = false
-
-    --     if VecDist(robot.transform.pos, proj.transform.pos) > proj.holeSize * 2 then
-    --         MakeHole(proj.transform.pos, proj.holeSize,proj.holeSize,proj.holeSize,proj.holeSize)
-    --     end
-
+        -- proj.hit = false
+        -- if VecDist(robot.transform.pos, proj.transform.pos) > proj.holeSize * 2 then
+        --     MakeHole(proj.transform.pos, proj.holeSize,proj.holeSize,proj.holeSize,proj.holeSize)
+        -- end
     -- end
 
     --+ Proj hit water.

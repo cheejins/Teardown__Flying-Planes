@@ -20,5 +20,13 @@ function initSounds()
         mg = LoadLoop("MOD/snd/weapon_mg.ogg"),
         mg2 = LoadLoop("MOD/snd/weapon_mg2.ogg"),
         mg3 = LoadLoop("MOD/snd/weapon_mg3.ogg"),
+
+        engine_deaths = {
+            LoadSound("MOD/snd/engine_die1.ogg"),
+            LoadSound("MOD/snd/engine_die2.ogg"),
+            LoadSound("MOD/snd/engine_die3.ogg"),
+            LoadSound("MOD/snd/engine_die4.ogg"),
+        }
+
     }
 end

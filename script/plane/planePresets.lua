@@ -99,10 +99,10 @@ function convertPlaneToAC130(plane)
     plane.isArmed = false
 
     plane.topSpeed = 130
-    plane.thrustImpulseAmount = 440
+    plane.thrustImpulseAmount = 600
     plane.engineVol = 1
 
-    plane.brakeImpulseAmt = 300
+    plane.brakeImpulseAmt = 500
 
     plane.pitchVal = 1.5
     plane.rollVal = 3

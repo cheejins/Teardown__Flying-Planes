@@ -32,10 +32,10 @@
 								<light name="Ground level" tags="ground" scale="0"/>
 							</vox>
 						</wheel>
-						<wheel name="wl_r" pos="-2.5 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+						<wheel name="wl_r" pos="-2.5 -1.7 2.3" drive="0" steer="0" travel="-0.2 0.2">
 							<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
 						</wheel>
-						<wheel name="wl_c" pos="2.6 -1.7 2.3" drive="1" steer="0" travel="-0.2 0.2">
+						<wheel name="wl_c" pos="2.6 -1.7 2.3" drive="0" steer="0" travel="-0.2 0.2">
 							<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel"/>
 						</wheel>
 					</group>

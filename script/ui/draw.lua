@@ -345,6 +345,40 @@ function planeDrawHud(plane, uiW, uiH)
 
     UiPop() end
 
+    -- Health
+    do UiPush()
+
+        UiAlign("center middle")
+        UiTranslate(UiCenter() - uiW/2, 400)
+
+
+        local colorVecs = {
+            Vec(1, 0, 0),
+            Vec(c[1], c[2], c[3]),
+        }
+
+        local min = 0.5
+        local max = 1
+        local frac =  ((plane.health-min) / (max-min))
+
+        local a = 1
+        if plane.health <= 0.75 and plane.health > 0.5 then
+            a = oscillate(1) + 1/2
+        end
+
+        local healthColor = VecLerp(colorVecs[1], colorVecs[2], frac)
+
+        UiColor(healthColor[1], healthColor[2], healthColor[3], a)
+        UiImageBox("MOD/img/hud/hud_plane.png", 150, 150, 0,0)
+        UiTranslate(0, 150/1.5)
+
+        UiColor(1,1,1, 1)
+        UiText(math.ceil(frac*100) .. "%")
+
+    UiPop() end
+
+
+
 end
 
 function drawRespawnText()

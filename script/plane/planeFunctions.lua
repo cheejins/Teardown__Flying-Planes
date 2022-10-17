@@ -38,7 +38,7 @@ function planeMove(plane)
         local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
-            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 2
+            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 2 * plane.health
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
@@ -52,7 +52,7 @@ function planeSteer(plane)
 
     local angDim = plane.speedFac / (plane.topSpeed) * 100 * plane.getForwardVelAngle()
 
-    local imp = 1000 * angDim * GetBodyMass(plane.body)/10000
+    local imp = 1000 * angDim * GetBodyMass(plane.body)/10000 * plane.health
     dbw("steer angDim", angDim)
 
 
@@ -189,8 +189,12 @@ function runEffects(plane)
         local tr = GetLightTransform(exhaust)
 
         local enginePower = plane.getThrustFac()/100 + 0.2
+        local damageAlpha = 1 - plane.health
 
-        local rad = 0.5
+        local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5))
+        particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2)
+
+        local rad = 0.5 - damageAlpha
         local vel = 1.5*enginePower^2
         local alpha = enginePower + 0.1
         local emmissive = enginePower + 2
@@ -201,8 +205,8 @@ function runEffects(plane)
             exhaustTr.pos = TransformToParentPoint(tr, Vec(0,0,1*i))
             exhaust_particle_afterburner(exhaustTr, rad, vel, alpha, emmissive)
         end
-
         PointLight(tr.pos, 1,0.5,0, 3 * enginePower * math.random())
+
 
     end
 
@@ -291,7 +295,7 @@ function planeShoot(plane)
                         projPreset = ProjectilePresets.bullets.emg
                     end
 
-                    local spread = 0.025
+                    local spread = projPreset.spread
 
                     shootTr.rot = QuatRotateQuat(shootTr.rot, QuatEuler(
                         math.deg((math.random() - 0.5) * spread),

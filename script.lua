@@ -66,7 +66,7 @@ function init()
         SetString('savegame.mod.options.keys.smallMapMode', 'o')
     end
     if GetString('savegame.mod.options.keys.toggleMissileLock') == '' then
-        SetString('savegame.mod.options.keys.toggleMissileLock', 'c')
+        SetString('savegame.mod.options.keys.toggleMissileLock', 'x')
     end
     if GetString('savegame.mod.options.keys.changeTarget') == '' then
         SetString('savegame.mod.options.keys.changeTarget', 't')

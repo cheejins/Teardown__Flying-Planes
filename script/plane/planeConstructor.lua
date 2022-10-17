@@ -86,6 +86,7 @@ function createPlaneObject(_vehicle)
             camPitch = -7,
     }
 
+    plane.turbVec = Vec(0,0,0)
 
     plane_update(plane)
 
@@ -214,9 +215,8 @@ function createPlaneObject(_vehicle)
 
         if VecLength(plane.vel) >= 1 or VecLength(plane.vel) <= -1 then
 
-            -- local lvel = TransformToLocalVec(plane.tr, plane.vel)
-            -- local fac = plane.topSpeed / math.abs(lvel[3])
-            local fac = 1
+            local lvel = TransformToLocalVec(plane.tr, plane.vel)
+            local fac = plane.topSpeed / (math.abs(lvel[3]) / gtZero(plane.health))
 
             local x = 0
             local y = 0
@@ -236,7 +236,7 @@ function createPlaneObject(_vehicle)
             local forces = Vec(x,y,z)
             local imp = GetBodyMass(plane.body)/5 * plane.speedFac
 
-            plane.forces = forces
+            plane.forces = VecScale(forces, plane.health)
 
             dbw("AERO FORCE IMP", imp)
             dbw("plane.idealSpeedFactor ", plane.idealSpeedFactor)
@@ -307,12 +307,12 @@ function createPlaneObject(_vehicle)
 
 
     function plane.respawnPlayer ()
-        if plane.health <= 0.5 then
-            if InputPressed("y") then
-                SetPlayerVehicle(0)
-                RespawnPlayer()
-            end
-        end
+        -- if plane.health <= 0.5 then
+        --     if InputPressed("y") then
+        --         SetPlayerVehicle(0)
+        --         RespawnPlayer()
+        --     end
+        -- end
     end
 
     convertPlaneToPreset(plane)
@@ -338,7 +338,6 @@ function plane_update(plane)
 
     plane.tr = GetBodyTransform(plane.body)
 
-
     -- Velocity
     plane.vel = GetBodyVelocity(plane.body)
     plane.lvel = TransformToLocalVec(plane.tr, plane.vel)
@@ -347,17 +346,13 @@ function plane_update(plane)
     plane.totalVel = math.abs(plane.vel[1]) + math.abs(plane.vel[2]) + math.abs(plane.vel[3])
 
 
-    -- Health
-    plane.health = GetVehicleHealth(plane.vehicle)
-    plane.isAlive = plane.health > 0.5
     plane.playerInPlane = GetPlayerVehicle() == plane.vehicle
     plane.playerInUnbrokenPlane = plane.playerInPlane and plane.isAlive
 
 
+    plane.forces = plane.forces or Vec(0,0,0)
     plane.speedFac = plane.speed / plane.topSpeed
     plane.idealSpeedFactor = math.sin(math.pi * (plane.speed / plane.topSpeed))
-
-    plane.forces = plane.forces or Vec(0,0,0)
 
 end
 

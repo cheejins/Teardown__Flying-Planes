@@ -15,21 +15,21 @@
 					<vox tags="planeShape_elevators" pos="5.3 5.4 19.6" rot="0.0 0.0 0.0" texture="9" density="2" strength="3" file="MOD/prefab/AC130.vox" object="elevator_r"/>
 					<vox tags="planeShape_rudder" pos="0.1 6.6 17.49999" rot="0.0 0.0 0.0" texture="9" density="2" strength="3" file="MOD/prefab/AC130.vox" object="rudder"/>
 					<group name="Wheels" pos="0.1 0.0 0.2">
-						<wheel name="wl_c" pos="0.0 0.5 -5.8" rot="0.0 0.0 0.0" drive="1" steer="1" travel="-0.4 0.4">
+						<wheel name="wl_c" pos="0.0 0.5 -5.8" rot="0.0 0.0 0.0" drive="0" steer="1" travel="-0.4 0.4">
 							<vox pos="0.00001 -0.45 -0.05" rot="0 180 0" file="MOD/prefab/AC130.vox" object="wheel">
 								<light name="Ground level" tags="ground" scale="0"/>
 							</vox>
 						</wheel>
-						<wheel name="wl_l" pos="-2.5 0.5 4.6" rot="0.0 0.0 0.0" drive="1" steer="-1" travel="-0.4 0.4">
+						<wheel name="wl_l" pos="-2.5 0.5 4.6" rot="0.0 0.0 0.0" drive="0" steer="-1" travel="-0.4 0.4">
 							<vox pos="0.00001 -0.45 -0.05" rot="0 180 0" file="MOD/prefab/AC130.vox" object="wheel"/>
 						</wheel>
-						<wheel name="wl_r" pos="2.5 0.5 4.6" rot="0.0 0.0 0.0" drive="1" steer="-1" travel="-0.4 0.4">
+						<wheel name="wl_r" pos="2.5 0.5 4.6" rot="0.0 0.0 0.0" drive="0" steer="-1" travel="-0.4 0.4">
 							<vox pos="0.00001 -0.45 -0.05" rot="0 180 0" file="MOD/prefab/AC130.vox" object="wheel"/>
 						</wheel>
-						<wheel name="wl_r" pos="2.5 0.5 5.8" rot="0.0 0.0 0.0" drive="1" steer="-1" travel="-0.4 0.4">
+						<wheel name="wl_r" pos="2.5 0.5 5.8" rot="0.0 0.0 0.0" drive="0" steer="-1" travel="-0.4 0.4">
 							<vox pos="0.00001 -0.45 -0.05" rot="0 180 0" file="MOD/prefab/AC130.vox" object="wheel"/>
 						</wheel>
-						<wheel name="wl_l" pos="-2.5 0.5 5.8" rot="0.0 0.0 0.0" drive="1" steer="-1" travel="-0.4 0.4">
+						<wheel name="wl_l" pos="-2.5 0.5 5.8" rot="0.0 0.0 0.0" drive="0" steer="-1" travel="-0.4 0.4">
 							<vox pos="0.00001 -0.45 -0.05" rot="0 180 0" file="MOD/prefab/AC130.vox" object="wheel"/>
 						</wheel>
 					</group>

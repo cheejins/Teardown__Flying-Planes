@@ -19,13 +19,13 @@
 					<vox tags="planeShape_rudder explosive=0.5" pos="2.6 2.6 14.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="engine_r">
 						<light tags="exhaust" pos="-0.05 1.0 2.2" type="cone" color="0.0 0.0 0.0" scale="0"/>
 					</vox>
-					<wheel name="wl_r" pos="2.1 0.2 7.3" drive="1" steer="-1" travel="-0.4 0.4">
+					<wheel name="wl_r" pos="2.1 0.2 7.3" drive="0" steer="-1" travel="-0.4 0.4">
 						<vox pos="0 -0.6 0" rot="0.0 -180.0 0.0" file="MOD/prefab/Jet.vox" object="wheel_right"/>
 					</wheel>
-					<wheel name="wl_l" pos="-2.0 0.2 7.2" drive="1" steer="-1" travel="-0.4 0.4">
+					<wheel name="wl_l" pos="-2.0 0.2 7.2" drive="0" steer="-1" travel="-0.4 0.4">
 						<vox pos="0.0 -0.6 0" rot="0 180 0" file="MOD/prefab/Jet.vox" object="wheel_left"/>
 					</wheel>
-					<wheel name="wl_c" pos="0.0 -0.0 -4.4" drive="1" steer="1" travel="-0.4 0.4">
+					<wheel name="wl_c" pos="0.0 -0.0 -4.4" drive="0" steer="1" travel="-0.4 0.4">
 						<vox pos="0.0 -0.4 0" rot="0 180 0" file="MOD/prefab/Jet.vox" object="wheel_center">
 							<light name="Ground level" tags="ground" scale="0"/>
 						</vox>

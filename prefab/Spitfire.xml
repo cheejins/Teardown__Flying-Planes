@@ -17,13 +17,13 @@
 					<vox tags="planeShape_tail explosive=0.5" pos="0.0 0.4 2.7" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="tail"/>
 					<vox tags="planeShape_elevators" pos="0.0 1.5 3.7" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="elevators"/>
 					<vox tags="planeShape_rudder" pos="0.0 1.5 3.8" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="rudder"/>
-					<wheel name="wl_r" pos="1.9 -0.3 -1.2" drive="1" steer="0" travel="-0.4 0.4">
+					<wheel name="wl_r" pos="1.9 -0.3 -1.2" drive="0" steer="0" travel="-0.4 0.4">
 						<vox pos="0.0 -0.25 -0.05" rot="0.0 -180.0 0.0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
 					</wheel>
-					<wheel name="wl_l" pos="-1.9 -0.3 -1.2" drive="1" steer="0" travel="-0.4 0.4">
+					<wheel name="wl_l" pos="-1.9 -0.3 -1.2" drive="0" steer="0" travel="-0.4 0.4">
 						<vox pos="0.0 -0.25 -0.05" rot="0 180 0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
 					</wheel>
-					<wheel name="wl_c" pos="0.05 0.8 4.1" drive="1" steer="-1" travel="-0.4 0.4">
+					<wheel name="wl_c" pos="0.05 0.8 4.1" drive="0" steer="-1" travel="-0.4 0.4">
 						<vox pos="0.0 -0.25 -0.05" rot="0 180 0" file="MOD/prefab/Spitfire.vox" object="wheel_left"/>
 					</wheel>
 					<vox tags="planeShape_rudder" pos="0.0 -0.3 -3.2" rot="0 0 0" texture="14" density="0.001" collide="true" prop="true" file="MOD/prefab/Spitfire.vox" object="propeller">
