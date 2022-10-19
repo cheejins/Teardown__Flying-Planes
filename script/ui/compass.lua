@@ -87,7 +87,7 @@ function drawUiGyro(plane, width, height)
     -- local camTr = plane.tr
     local camDir = QuatToDir(camTr.rot)
     local camDirY = math.deg(camDir[2]) * math.pi / 2
-    dbw('camDirY', camDirY)
+    -- dbw('camDirY', camDirY)
 
 
     local s = 1

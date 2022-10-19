@@ -87,7 +87,7 @@ function manageTargetting(plane)
 
     end
 
-    dbw('#targetVehicles', #plane.targetting.targetVehicles)
+    -- dbw('#targetVehicles', #plane.targetting.targetVehicles)
 
     if #plane.targetting.targetVehicles >= 1 then
 

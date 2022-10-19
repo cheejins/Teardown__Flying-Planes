@@ -1,7 +1,7 @@
-name = Flying Planes 3.0 TEST (New Aerodynamics)
+name = Flying Planes + New Aerodynamics
 author = Cheejins
-description =[noupload] Testing new aerodynamics
-tags=Map,Vehicle
+description =[noupload] The new "simulation" flight mode calculates realistic aerodynamics (work in progress).
+tags=Map,Vehicle,Gameplay
 
 # If description contains [noupload] the description on Steam workshop will not be overwritten.
 # Available tags (comma-separated):

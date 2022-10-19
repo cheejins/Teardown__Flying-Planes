@@ -1,3 +1,4 @@
+#include "script/ai_SAMS.lua"
 #include "script/config_smallMapMode.lua"
 #include "script/debug.lua"
 #include "script/input/controlPanel.lua"
@@ -10,6 +11,7 @@
 #include "script/plane/planeFunctions.lua"
 #include "script/plane/planeHud.lua"
 #include "script/plane/planePresets.lua"
+#include "script/plane/plane_physics.lua"
 #include "script/registry.lua"
 #include "script/sounds.lua"
 #include "script/ui/compass.lua"
@@ -18,6 +20,7 @@
 #include "script/ui/ui.lua"
 #include "script/ui/uiDebug.lua"
 #include "script/ui/uiModItem.lua"
+#include "script/ui/uiOptions.lua"
 #include "script/ui/uiPanes.lua"
 #include "script/ui/uiPresetSystem.lua"
 #include "script/ui/uiTextBinding.lua"
@@ -26,7 +29,6 @@
 #include "script/utility.lua"
 #include "script/weapons/projectiles.lua"
 #include "script/weapons/weapons.lua"
-#include "script/ai_SAMS.lua"
 
 
 
@@ -44,13 +46,8 @@ hintsOff = false
 isDemoMap = false
 curPlane = nil
 
-enemiesKey = "t"
 
--- Global mod config.
-cfg = {
-
-}
-
+ShouldDrawIngameOptions = false
 
 
 function init()
@@ -81,7 +78,6 @@ function init()
     initSounds()
     initPlanes()
     initProjectiles()
-    -- InitKeys()
 
     SmallMapMode = false
     config_setSmallMapMode(SmallMapMode)
@@ -90,6 +86,19 @@ function init()
 
 end
 function tick()
+
+    if GetString('savegame.mod.options.flightmode') == "" then
+        SetString("savegame.mod.options.flightmode", FlightModes.simulation)
+    end
+
+    Config = {
+        flightMode = GetString('savegame.mod.options.flightmode')
+    }
+
+    if InputPressed(smallMapModeKey) then
+        ShouldDrawIngameOptions = not ShouldDrawIngameOptions
+        SetBool("level.showedOptions", true)
+    end
 
     -- respawnKey = GetString('savegame.mod.options.keys.respawn')
     respawnKey = "-asd"
@@ -154,3 +163,8 @@ function getCurrentPlane()
     return curPlane
 end
 
+
+
+function CompressRange(val, lower, upper)
+    return (val-lower) / (upper-lower)
+end

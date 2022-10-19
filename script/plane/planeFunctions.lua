@@ -13,22 +13,6 @@ function planeMove(plane)
 
     local speed = plane.speed
 
-    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
-        plane.thrust = plane.thrust + 1
-    end
-    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
-        plane.thrust = plane.thrust - 1
-    end
-
-    if InputDown("alt") then
-        ApplyBodyImpulse(
-            plane.body,
-            TransformToParentPoint(
-                plane.tr, Vec(0,0,-5)),
-            plane.getFwdPos(speed*plane.brakeImpulseAmt))
-        plane.status = 'Air Braking'
-    end
-
     -- stall speed
     if speed < plane.topSpeed then
 
@@ -38,7 +22,7 @@ function planeMove(plane)
         local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
-            local thrustImpulseAmt = plane.getThrustFac(-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 2 * plane.health
+            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 2 * plane.health
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
@@ -53,7 +37,7 @@ function planeSteer(plane)
     local angDim = plane.speedFac / (plane.topSpeed) * 100 * plane.getForwardVelAngle()
 
     local imp = 1000 * angDim * GetBodyMass(plane.body)/10000 * plane.health
-    dbw("steer angDim", angDim)
+    dbw("steer angDim", sfn(angDim))
 
 
     local nose = TransformToParentPoint(plane.tr, Vec(0,0,-10))
@@ -137,38 +121,170 @@ function planeSteer(plane)
         ic.c = clamp(ic.c - inc, 0, 1)
     end
 
+    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
+        plane.thrust = plane.thrust + 1
+    end
+    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
+        plane.thrust = plane.thrust - 1
+    end
+
+    if InputDown("alt") then
+        ApplyBodyImpulse(
+            plane.body,
+            TransformToParentPoint(
+                plane.tr, Vec(0,0,-5)),
+            plane.getFwdPos(plane.speed*plane.brakeImpulseAmt))
+        plane.status = 'Air Braking'
+    end
+
 end
 
+function planeSteer_simple(plane)
+
+    local pTr = plane.tr
+
+    local ang = plane.getForwardVelAngle()/10
+
+    local speed = plane.speed
+    local speedClamped = (clamp(speed, 0.01, speed+0.01))
+
+    local divSpeed = speedClamped / plane.topSpeed
+    local turnDiv = 80
+
+    if GetBool("savegame.mod.options.smallMapMode") then
+        turnDiv = 60
+    end
+
+    local turnAmt = math.abs(getQuadtratic(divSpeed) / turnDiv)
+
+    if speedClamped > plane.topSpeed /2 then
+        turnAmt = math.abs(1 / turnDiv)
+    end
+
+
+
+    -- -- Roll
+    -- if InputDown("a") or InputDown("d") then
+
+    --     local yawSign = 1
+    --     if InputDown("d") then yawSign = -1 end -- Determine yaw direction
+
+    --     local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 2
+
+    --     -- local yawLowerLim = plane.topSpeed/3
+    --     -- local yawUpperLim = plane.topSpeed - (plane.topSpeed/3)
+    --     -- if plane.speed < yawLowerLim then
+    --     --     yawAmt = yawAmt * (plane.speed/yawLowerLim)
+    --     -- elseif plane.speed > plane.topSpeed/5 then
+    --     --     yawAmt = yawAmt * (yawUpperLim/plane.speed)
+    --     -- end
+
+    --     pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, yawAmt))
+
+    -- end
+
+    if InputDown("z") then
+
+        local yawSign = 1
+        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal* CONFIG.smallMapMode.turnMult
+        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
+
+    end
+    if InputDown("c") then
+
+        local yawSign = -1
+        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal* CONFIG.smallMapMode.turnMult
+        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
+
+    end
+
+
+
+    local crosshairRot = QuatLookAt(plane.tr.pos, crosshairPos)
+
+    -- Roll plane based on crosshair
+    local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
+    rollAmt[1] = rollAmt[1] * turnAmt * -350 / plane.rollVal
+
+    pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
+
+
+    -- local crosshairRot = QuatLookAt(plane.tr.pos, crosshairPos)
+
+    -- local camDir = QuatToDir(QuatEuler(plane.camera.cameraY, plane.camera.cameraX, 0))
+    -- local planeDir = QuatToDir(plane.tr.rot)
+
+    -- -- Roll plane based on crosshair
+    -- local rollAmt = VecNormalize(TransformToLocalPoint(planeDir, camDir))
+    -- rollAmt[1] = rollAmt[1] * -5
+    -- dbw('rollAmt[1]', rollAmt[1])
+    -- pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
+
+
+    -- Align with crosshair pos
+    pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
+    pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / plane.yawFac)
+
+    SetBodyTransform(plane.body, pTr)
+
+
+
+
+    local speed = plane.speed
+
+    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
+        plane.thrust = plane.thrust + 1
+    end
+    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
+        plane.thrust = plane.thrust - 1
+    end
+
+    if InputDown("space") then
+        ApplyBodyImpulse(
+            plane.body,
+            TransformToParentPoint(
+                plane.tr, Vec(0,0,-5)),
+            plane.getFwdPos(speed*plane.brakeImpulseAmt))
+        plane.status = 'Air Braking'
+    end
+
+    plane.setThrustOutput()
+
+end
 
 
 --[[Misc]]
 function planeSound(plane)
 
+    PlayLoop(sounds.fire_large, plane.tr.pos, 1 - plane.health + 0.25)
+
     if plane.engineType == "jet" then
+
         PlayLoop(sounds.jet_engine_loop, plane.tr.pos, 2)
         PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
-        PlayLoop(sounds.jet_engine_loop, GetCameraTransform().pos, 0.1)
+        -- PlayLoop(sounds.jet_engine_loop, GetCameraTransform().pos, 0.1)
 
     elseif plane.engineType == "propeller" then
 
         if plane.thrust < 20 then
             PlayLoop(sounds.prop_5, plane.tr.pos, plane.engineVol * 3)
-            PlayLoop(sounds.prop_5, GetCameraTransform().pos, 0.1)
+            -- PlayLoop(sounds.prop_5, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 40 then
             PlayLoop(sounds.prop_4, plane.tr.pos, plane.engineVol * 3)
-            PlayLoop(sounds.prop_4, GetCameraTransform().pos, 0.1)
+            -- PlayLoop(sounds.prop_4, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 60 then
             PlayLoop(sounds.prop_3, plane.tr.pos, plane.engineVol * 3)
-            PlayLoop(sounds.prop_3, GetCameraTransform().pos, 0.1)
+            -- PlayLoop(sounds.prop_3, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 80 then
             PlayLoop(sounds.prop_2, plane.tr.pos, plane.engineVol * 3)
-            PlayLoop(sounds.prop_2, GetCameraTransform().pos, 0.1)
+            -- PlayLoop(sounds.prop_2, GetCameraTransform().pos, 0.1)
         elseif plane.thrust <= 100 then
             PlayLoop(sounds.prop_1, plane.tr.pos, plane.engineVol * 3)
-            PlayLoop(sounds.prop_1, GetCameraTransform().pos, 0.1)
+            -- PlayLoop(sounds.prop_1, GetCameraTransform().pos, 0.1)
         end
 
     end
+
 end
 function planeStateText(plane)
     plane.status = "-"
@@ -188,7 +304,7 @@ function runEffects(plane)
 
         local tr = GetLightTransform(exhaust)
 
-        local enginePower = plane.getThrustFac()/100 + 0.2
+        local enginePower = plane.thrust/100 + 0.2
         local damageAlpha = 1 - plane.health
 
         local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5))
@@ -210,6 +326,35 @@ function runEffects(plane)
 
     end
 
+
+    -- Spawn fire for a specified duration after death is triggered.
+    if not plane.isAlive then
+
+        local endPlaneDeathTime = plane.timeOfDeath + 20
+
+        if endPlaneDeathTime >= GetTime() then
+
+            local fireVolumeScale = 10
+
+            local fireLarge = clamp(((endPlaneDeathTime - GetTime()) / endPlaneDeathTime), 0, 1)
+            local fireSmall = clamp(1 - fireLarge, 0, 1)
+
+            PlayLoop(sounds.fire_small, plane.tr.pos, fireSmall * fireVolumeScale)
+            PlayLoop(sounds.fire_large, plane.tr.pos, fireLarge * fireVolumeScale)
+
+
+            local amount = 1 - ((GetTime()/(endPlaneDeathTime)))
+
+            local fireRdmVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(5,7) * amount)
+            particle_fire(VecAdd(plane.tr.pos, fireRdmVec), math.random()*4 * amount)
+
+            local damageAlpha = 1 - plane.health
+            local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5) * amount)
+            particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2 * amount)
+
+        end
+    end
+
 end
 function handlePlayerInWater()
 
@@ -226,11 +371,9 @@ function handlePlayerInWater()
 end
 function planeDebug(plane)
 
-    dbw('CAM', camPos)
-    dbw('PLANE Speed', sfn(plane.speed))
-    dbw("PLANE IdealSpeedFactor", plane.getIdealSpeedFactor())
-    dbw("PLANE ForwardVelAngle", plane.getForwardVelAngle())
-    dbw("PLANE plane.speedFac", plane.speedFac)
+    dbw('plane.speed', sfn(plane.speed))
+    dbw("plane.idealSpeedFactor", sfn(plane.idealSpeedFactor))
+    dbw("plane.speedFac", sfn(plane.speedFac))
 
 end
 function planeLandingGear(plane)
@@ -248,14 +391,14 @@ end
 
 --[[Weapons]]
 function planeChangeWeapon(plane)
-    if InputPressed("f") then
-        PlaySound(sounds.click, GetCameraTransform().pos, 1)
-        if plane.weapon ~= plane.weapons[#plane.weapons] then
-            -- plane.weapon = plane.weapons[]
-        else
-            plane.weapon = plane.weapons[1] -- loop to start
-        end
-    end
+    -- if InputPressed("f") then
+    --     PlaySound(sounds.click, GetCameraTransform().pos, 1)
+    --     if plane.weapon ~= plane.weapons[#plane.weapons] then
+    --         -- plane.weapon = plane.weapons[]
+    --     else
+    --         plane.weapon = plane.weapons[1] -- loop to start
+    --     end
+    -- end
 end
 function planeShoot(plane)
 

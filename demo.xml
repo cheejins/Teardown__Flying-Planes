@@ -1,4 +1,4 @@
-<scene version="1.1.0" shadowVolume="100 100 100">
+<scene version="1.1.0" shadowVolume="0 0 0">
 	<group name="Map Static" pos="-70.2 0.0 -101.0">
 		<script file="sandbox.lua"/>
 		<script file="main.lua"/>
@@ -77,9 +77,6 @@
 				<vox tags="nocull" pos="-53.50011 0.1 -9.19995" rot="0.0 60.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
 				<vox tags="nocull" pos="-28.40017 0.1 14.0" rot="0.0 90.0 0.0" texture="6" file="MOD/demo/ground/runways/runway_main_curve.vox"/>
 			</group>
-			<instance pos="-6.89998 -0.1 27.30005" rot="0.0 0.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
-			<instance pos="-6.90002 -0.1 491.20004" rot="0.0 0.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
-			<instance pos="-6.9 -0.1 253.00005" rot="0.0 0.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
 			<instance pos="-67.20001 -0.1 254.79993" rot="0.0 0.0 0.0" file="MOD/demo/prefab/runway_straight.xml"/>
 			<instance pos="-67.20001 -0.1 357.19983" rot="0.0 0.0 0.0" file="MOD/demo/prefab/runway_straight.xml"/>
 			<instance pos="-67.20003 -0.1 459.60001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/runway_straight.xml"/>
@@ -92,31 +89,33 @@
 			<instance pos="53.30003 -0.1 562.29974" rot="0.0 180.0 0.0" file="MOD/demo/prefab/runway_straight.xml"/>
 			<instance pos="-67.2 -0.1 152.3999" rot="0.0 0.0 0.0" file="MOD/demo/prefab/runway_straight.xml"/>
 		</group>
-		<group name="Grass" pos="0.0 0.0 0.0" rot="0.0 0.0 0.0">
-			<instance pos="88.50001 0.0 23.60001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+		<group pos="-24.5 0.0 93.4">
+			<instance pos="-67.30001 0.0 -19.60006" rot="0.0 -180.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
+			<instance pos="-67.30002 0.0 206.09995" rot="0.0 180.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
+			<instance pos="-67.30001 0.0 -257.80005" rot="0.0 180.0 0.0" file="MOD/demo/prefab/funnel.xml"/>
+			<vox tags="nocull" pos="90.59996 -0.1 70.70005" rot="0.0 -180.0 0.0" texture="9" file="MOD/demo/airstrip_atc_tower.vox"/>
+			<voxbox pos="5.49998 0.2 163.50003" rot="0.0 0.0 0.0" texture="9" size="1100 1 1330" color="0.43 0.43 0.43"/>
+			<voxbox pos="5.49998 0.2 30.50002" rot="0.0 0.0 0.0" texture="9" size="1100 1 1330" color="0.43 0.43 0.43"/>
+		</group>
+		<group name="Grass" pos="0.0 -0.0 0.0" rot="0.0 0.0 0.0">
+			<instance pos="88.50001 0.0 23.60002" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 			<instance pos="88.50001 0.0 -176.40013" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 			<instance pos="88.50001 0.0 -576.39984" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 			<instance pos="88.50001 0.0 -376.39996" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="88.50001 0.0 223.60007" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="88.50001 0.0 223.60008" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 			<instance pos="88.50001 0.0 423.6001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 23.60001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 -176.40013" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 -576.39984" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 -376.39996" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 223.60007" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 423.6001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 -776.39972" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 23.60002" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 -176.40013" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 -576.39984" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 -376.39996" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 223.60008" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 423.6001" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 -776.39972" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 			<instance pos="88.50001 0.0 -776.39972" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 			<instance pos="88.50001 0.0 -890.29974" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 -890.29974" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
+			<instance pos="-111.50002 0.0 -890.29974" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 			<instance pos="88.50001 0.0 -690.29987" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-			<instance pos="-111.50001 0.0 -690.29987" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
-		</group>
-		<group name="Concrete" pos="109.29999 -0.3 314.70001" rot="0.0 0.0 0.0">
-			<vox tags="nocull" pos="-43.20003 0.1 -150.59996" rot="0.0 180.0 0.0" texture="9" file="MOD/demo/airstrip_atc_tower.vox"/>
-			<voxbox pos="-128.3 0.4 -57.8" texture="9" size="1100 1 1330" color="0.43 0.43 0.43"/>
-			<voxbox pos="-128.3 0.4 -190.8" texture="9" size="1100 1 1330" color="0.43 0.43 0.43"/>
-			<voxbox pos="-249.3 0.4 -24.8" texture="9" size="1500 1 1000" color="0.43 0.43 0.43"/>
+			<instance pos="-111.50002 0.0 -690.29987" rot="0.0 0.0 0.0" file="MOD/demo/prefab/grass.xml"/>
 		</group>
 	</group>
 	<group name="Hummers" pos="-70.2 0.0 -101.0">

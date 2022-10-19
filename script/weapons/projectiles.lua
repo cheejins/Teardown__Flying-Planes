@@ -20,7 +20,7 @@ function initProjectiles()
                 drop = 0,
                 dropIncrement = 0,
                 explosionSize = 0,
-                rcRad = 0.1,
+                rcRad = 0,
                 force = 1,
                 penetrate = false,
                 holeSize = 0.3,
@@ -62,7 +62,7 @@ function initProjectiles()
                 drop = 0,
                 dropIncrement = 0,
                 explosionSize = 0.6,
-                rcRad = 0.2,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 0.2,
@@ -104,7 +104,7 @@ function initProjectiles()
                 drop = 0,
                 dropIncrement = 0,
                 explosionSize = 2,
-                rcRad = 0.1,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 1,
@@ -150,7 +150,7 @@ function initProjectiles()
                 drop = 0,
                 dropIncrement = 0,
                 explosionSize = 3.5,
-                rcRad = 0.3,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 0,
@@ -196,7 +196,7 @@ function initProjectiles()
                 drop = 0.25,
                 dropIncrement = 0,
                 explosionSize = 4,
-                rcRad = 0.3,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 0,
@@ -231,9 +231,6 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
     proj.ignoreBodies = DeepCopy(ignoreBodies)
 
     proj.transform = transform
-    -- local trDir = QuatToDir(proj.transform.rot)
-    -- trDir = VecNormalize(VecAdd(trDir, VecRdm(proj.spread)))
-    -- proj.transform.rot = DirToQuat(trDir)
 
     if proj.homing.max > 0 and homingShape then
         proj.homing.targetShape = homingShape
@@ -269,9 +266,6 @@ end
 
 function propelProjectile(proj)
 
-    --+ Move proj forward.
-    proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
-
     proj.lifeLength = proj.lifeLength - GetTimeStep()
     if proj.lifeLength <= 0 then
         proj.hit = true
@@ -285,7 +279,7 @@ function propelProjectile(proj)
     end
 
     --+ Raycast
-    local rcHit, hitPos, hitShape = RaycastFromTransform(proj.transform, proj.speed, proj.rcRad, proj.ignoreBodies, nil, true)
+    local rcHit, hitPos, hitShape = RaycastFromTransform(proj.transform, proj.speed, proj.rcRad or 0, proj.ignoreBodies, nil, true)
     if rcHit then
 
         proj.hitInitial = true
@@ -294,16 +288,11 @@ function propelProjectile(proj)
         --+ Hit Action
         ApplyBodyImpulse(GetShapeBody(hitShape), hitPos, VecScale(QuatToDir(proj.transform.rot), proj.force))
 
-        if proj.explosionSize > 0.1 then
+        if proj.explosionSize > 0 then
             Explosion(hitPos, proj.explosionSize)
         end
 
-        MakeHole(hitPos, proj.holeSize)
-
-        --+ Sounds
-        -- local index = proj.sounds.hit[math.random(1, #proj.sounds.hit)]
-        -- PlayRandomSound(proj.sounds.hit, proj.transform.pos, 2, index)
-        -- PlayRandomSound(proj.sounds.hit, GetCameraTransform().pos, 0.2 + math.random()/10, index)
+        MakeHole(hitPos, proj.holeSize, proj.holeSize, proj.holeSize, proj.holeSize)
 
     end
 
@@ -366,6 +355,9 @@ function propelProjectile(proj)
 
     local c = proj.effects.color
     PointLight(proj.transform.pos, c[1], c[2], c[3], 2)
+
+    --+ Move proj forward.
+    proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
 
 end
 

@@ -86,12 +86,9 @@ function createPlaneObject(_vehicle)
             camPitch = -7,
     }
 
-    plane.turbVec = Vec(0,0,0)
 
     plane_update(plane)
 
-
-    plane.dirs = {Quat(),Quat(),Quat()}
 
     plane.weap = {
         weaponObjects = GetWeaponLocations(plane),
@@ -142,34 +139,11 @@ function createPlaneObject(_vehicle)
     end
 
 
-
-    -- fwd vel
-    plane.getFwdVel = function()
-        if plane.totalVel == 0 then return 0.00001 end
-        local fwdVel = plane.speed / plane.totalVel
-        if fwdVel < 0.2 then return 0.2 end
-        return fwdVel
-    end
-
     -- fwd pos
     plane.getFwdPos = function(distance)
         return TransformToParentPoint(GetBodyTransform(plane.body), Vec(0,0,distance or -500))
     end
 
-    -- Returns normalized direction vector. fwd distance is -z
-    plane.getDirection = function(distance)
-        return VecNormalize(VecSub(GetBodyTransform(plane.body).pos, TransformToParentPoint(GetBodyTransform(plane.body), Vec(0,0,distance or -500))))
-    end
-
-    -- Get direction with offset. Can be used for lift.
-    plane.getDirectionOffset = function(v1,v2,v3)
-        return VecNormalize(VecSub(
-            plane.tr.pos,
-            TransformToParentPoint(
-                GetBodyTransform(
-                    plane.body),
-                    Vec(v1 or 0, v2 or 0, v3 or 0))))
-    end
 
     -- Returns the angle between the plane's direction and velocity
     plane.getForwardVelAngle = function()
@@ -182,17 +156,12 @@ function createPlaneObject(_vehicle)
 
     end
 
-
-    -- - plane.thrust*amt. amt+ = larger output.
-    plane.getThrustFac = function(amt)
-        return plane.thrust * (amt or 1)
-    end
-    --- 0 <= thrust <= 100
+    --- Sets thrust between 0 and 1
     plane.setThrust = function(sign)
         plane.thrust = plane.thrust + plane.thrustIncrement * sign
     end
 
-    --- acc/decc until plane.thrustOutput = plane.thrust
+    --- Accelerates towards the set thrust (simulates gradual engine wind up/down)
     plane.setThrustOutput = function()
         if plane.thrustOutput <= plane.thrust -1 then
             plane.thrustOutput = plane.thrustOutput + plane.thrustAcc
@@ -201,122 +170,9 @@ function createPlaneObject(_vehicle)
         end
     end
 
-    --- Returns the ideal turn speed, which is closest to plane.topSpeed/2. Exponential approach to ideal val.
-    plane.getIdealSpeedFactor = function()
-
-    end
-
-    plane.applyTurbulence = function()
-
-    end
-
-    -- forces
-    plane.applyForces = function()
-
-        if VecLength(plane.vel) >= 1 or VecLength(plane.vel) <= -1 then
-
-            local lvel = TransformToLocalVec(plane.tr, plane.vel)
-            local fac = plane.topSpeed / (math.abs(lvel[3]) / gtZero(plane.health))
-
-            local x = 0
-            local y = 0
-            local z = 0
-
-            x = math.deg(GetRollAoA(plane.tr, plane.vel)) / fac
-            y = math.deg(GetPitchAoA(plane.tr, plane.vel)) / fac
-            -- z = math.deg(GetYawAoA(plane.tr, plane.vel)) / fac
-
-            dbw("LVEL", lvel)
-            dbw("SPEED FAC", speedFac)
-            dbw("AERO FORCE X", sfn(x))
-            dbw("AERO FORCE Y", sfn(y))
-            dbw("AERO FORCE Z", sfn(z))
-
-
-            local forces = Vec(x,y,z)
-            local imp = GetBodyMass(plane.body)/5 * plane.speedFac
-
-            plane.forces = VecScale(forces, plane.health)
-
-            dbw("AERO FORCE IMP", imp)
-            dbw("plane.idealSpeedFactor ", plane.idealSpeedFactor)
-
-
-            ApplyBodyImpulse(plane.body, plane.tr.pos, TransformToParentPoint(plane.tr, VecScale(forces, imp)))
-
-
-            local lp = 5
-            local sc = 10
-
-            DebugLine(
-                TransformToParentPoint(plane.tr, Vec(0, 0, -lp)),
-                TransformToParentPoint(plane.tr, Vec(x, 0, -lp)),
-                0, 0, 1, 1)
-            DebugLine(
-                TransformToParentPoint(plane.tr, Vec(0, 0, lp)),
-                TransformToParentPoint(plane.tr, Vec(-x, 0, lp)),
-                0, 0, 1, 1)
-
-            DebugLine(
-                TransformToParentPoint(plane.tr, Vec(0, 0, -lp)),
-                TransformToParentPoint(plane.tr, Vec(0, y, -lp)),
-                0, 1, 0, 1)
-            DebugLine(
-                TransformToParentPoint(plane.tr, Vec(0, 0, lp)),
-                TransformToParentPoint(plane.tr, Vec(0, -y, lp)),
-                0, 1, 0, 1)
-
-            DebugLine(
-                TransformToParentPoint(plane.tr, Vec(lp, 0, 0)),
-                TransformToParentPoint(plane.tr, Vec(lp, z / sc, 0)),
-                1, 0, 0, 1)
-            DebugLine(
-                TransformToParentPoint(plane.tr, Vec(-lp, 0, 0)),
-                TransformToParentPoint(plane.tr, Vec(-lp, -z / sc, 0)),
-                1, 0, 0, 1)
-
-            -- DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, forces) , 1,1,0, 1)
-            DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel) , 1,1,0, 1)
-            DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0,0,-20)) , 1,1,1, 1)
-
-        end
-
-        local angDim = 1 - (plane.speedFac / plane.topSpeed * 5)
-        angDim = clamp(angDim, 0, 1)
-        -- print(sfn(angDim))
-
-        -- Diminish ang vel
-        SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), angDim))
-
-    end
-
-
-    plane.getFwdDragAmt = function()
-        return plane.fwdDragAmt
-    end
-
-    plane.getLiftSpeedFac = function()
-        local x = plane.speed
-        local b = plane.speed/3
-        local result = (1/b)*(x^2)
-        if x >= b then
-            result = x
-        end
-        return result
-    end
-
-
-    function plane.respawnPlayer ()
-        -- if plane.health <= 0.5 then
-        --     if InputPressed("y") then
-        --         SetPlayerVehicle(0)
-        --         RespawnPlayer()
-        --     end
-        -- end
-    end
-
     convertPlaneToPreset(plane)
 
+    -- Lowest point ooint of the plane (light entity on the wheel)
     for index, light in ipairs(FindLights('ground', true)) do
         if GetBodyVehicle(GetShapeBody(GetLightShape(light))) == plane.vehicle then
             plane.groundDist = VecSub(
@@ -328,7 +184,6 @@ function createPlaneObject(_vehicle)
 
 
     SetTag(plane.vehicle, 'planeActive')
-
 
     return plane
 end
@@ -351,8 +206,9 @@ function plane_update(plane)
 
 
     plane.forces = plane.forces or Vec(0,0,0)
-    plane.speedFac = plane.speed / plane.topSpeed
-    plane.idealSpeedFactor = math.sin(math.pi * (plane.speed / plane.topSpeed))
+    plane.speedFac = clamp(plane.speed, 1, plane.speed) / plane.topSpeed
+
+    plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), 0, 1)
 
 end
 
@@ -366,11 +222,11 @@ function GetPitchAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
-    if aoa <= -0.999 then
-        aoa = 0
-    elseif aoa >= 0.999 then
-        aoa = 0
-    end
+    -- if aoa <= -0.999 then
+    --     aoa = 0
+    -- elseif aoa >= 0.999 then
+    --     aoa = 0
+    -- end
     return aoa
 
 end
@@ -383,11 +239,11 @@ function GetYawAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
-    if aoa <= -0.999 then
-        aoa = 0
-    elseif aoa >= 0.999 then
-        aoa = 0
-    end
+    -- if aoa <= -0.999 then
+    --     aoa = 0
+    -- elseif aoa >= 0.999 then
+    --     aoa = 0
+    -- end
     return aoa
 
 end
@@ -400,11 +256,11 @@ function GetRollAoA(tr, vel)
     aoa = math.rad(aoa)
     aoa = math.sin(aoa)
 
-    if aoa <= -0.999 then
-        aoa = 0
-    elseif aoa >= 0.999 then
-        aoa = 0
-    end
+    -- if aoa <= -0.999 then
+    --     aoa = 0
+    -- elseif aoa >= 0.999 then
+    --     aoa = 0
+    -- end
     return aoa
 
 end

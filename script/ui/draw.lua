@@ -1,9 +1,134 @@
-local message = "The drag calculation for roll seems to work now, and the plane doesn't hover at low speeds anymore. "
-message = message .. "At the moment the plane is one large 'air foil'. After parting it out, each aero component like a wing, aileron and so on, will have their own aerodynamics act on the plane as a whole. "
-message = message .. "The goal is to have moving components that contribute to the combined forces instead of applying an impulse directly to the plane's central body."
+function draw()
+
+    UiColor(1,1,1, 1)
+    UiTextShadow(0,0,0, 1, 0.3, 0)
+    UiFont("bold.ttf", 24)
 
 
-function DrawControls()
+    local uiW = 600
+    local uiH = 650
+
+    if GetBool("savegame.mod.options.showControls") then
+        if Config.flightMode == FlightModes.simple then
+            DrawControlsSimple()
+        elseif Config.flightMode == FlightModes.simulation then
+            DrawControlsSimulation()
+        end
+    end
+
+    if ShouldDrawIngameOptions then
+
+        DrawIngameOptions()
+
+    else
+
+        do UiPush()
+
+            CAMERA = {}
+            CAMERA.xy = {UiCenter(), UiMiddle()}
+            local vehicle = GetPlayerVehicle()
+            for i = 1, #planeObjectList do
+                if vehicle == planeObjectList[i].vehicle then
+
+                    local plane = planeObjectList[i]
+
+                    do UiPush()
+                        planeDrawHud(plane, uiW + 200, uiH)
+                    UiPop() end
+
+
+                    if plane.playerInUnbrokenPlane then
+
+                        do UiPush()
+                            drawUiGyro(plane, uiW, uiH)
+                        UiPop() end
+
+                        do UiPush()
+                            drawCompass(plane, uiW, uiH)
+                        UiPop() end
+
+                        do UiPush()
+                            drawTargets(plane)
+                        UiPop() end
+
+                    end
+
+
+                    do UiPush()
+
+                        local pos = Vec(0,0,0)
+                        local dist = VecDist(plane.tr.pos, pos)
+                        local a = (dist / 800) - 0.6
+
+                        UiColor(0.7,0.7,0.7, a)
+                        UiTextShadow(0,0,0, a)
+                        UiFont("bold.ttf", 20)
+
+
+                        if GetBool("savegame.mod.options.smallMapMode") then
+
+                            local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
+                            if isInfront then
+
+                                local x,y = UiWorldToPixel(pos)
+
+                                UiTranslate(x,y)
+                                UiAlign("center middle")
+                                UiImageBox("MOD/script/img/dot.png", 10, 10, 0,0)
+
+                                do UiPush()
+                                    UiTranslate(-15, 0)
+                                    UiAlign("right middle")
+                                    UiText('Map Center')
+                                UiPop() end
+
+                                do UiPush()
+                                    UiTranslate(15, 0)
+                                    UiAlign("left middle")
+                                    UiText(sfn(dist, 0) .. ' m')
+                                UiPop() end
+
+                            end
+
+                        end
+
+                    UiPop() end
+
+                end
+            end
+
+        UiPop() end
+
+    end
+
+end
+
+
+
+function drawRespawnText()
+
+    if showRespawnText then
+
+        local v = GetPlayerVehicle()
+        local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
+
+        local drawText = vIsDeadPlane or IsPointInWater(GetPlayerTransform().pos)
+
+        if drawText then
+            UiPush()
+            UiTranslate(UiCenter(), 200)
+            UiAlign("center middle")
+            UiFont("bold.ttf", 40)
+            UiColor(1,1,1)
+            UiText("Press \"".. respawnKey .."\" to respawn")
+            UiPop()
+        end
+
+    end
+
+end
+
+function DrawControlsSimulation()
     UiPush()
 
         local fs = 28
@@ -24,11 +149,12 @@ function DrawControls()
         UiTranslate(0, -fs)
         UiTranslate(0, -fs)
 
+
+        UiText('Yaw = Z/C')
+        UiTranslate(0, -fs)
         UiText('Pitch = W/S')
         UiTranslate(0, -fs)
         UiText('Roll = A/D')
-        UiTranslate(0, -fs)
-        UiText('Yaw = Z/C')
         UiTranslate(0, -fs)
         UiTranslate(0, -fs)
 
@@ -38,154 +164,78 @@ function DrawControls()
         UiTranslate(0, -fs)
 
         UiTranslate(0, -fs)
+        UiText('(FLIGHT MODE: SIMULATION)')
+        UiTranslate(0, -fs)
+        UiFont("regular.ttf", fs*1.5)
         UiText('CONTROLS')
+
+    UiPop()
+end
+
+function DrawControlsSimple()
+    UiPush()
+
+        local fs = 28
+
+        UiTranslate(50, UiHeight()-50)
+        UiTextShadow(0,0,0, 1, 0.2)
+        UiColor(1,1,1, 1)
+        UiFont("regular.ttf", fs)
+        UiAlign("left bottom")
+
+
+
+        UiText('Change camera = R')
+        UiTranslate(0, -fs)
+        UiText('Change zoom = Mouse wheel')
+        UiTranslate(0, -fs)
+        UiText('Shoot = LMB/RMB')
+        UiTranslate(0, -fs)
+        UiTranslate(0, -fs)
+
+        UiText('Yaw = Z/C')
+        UiTranslate(0, -fs)
+        UiText('Pitch/Roll = Mouse Aim')
+        UiTranslate(0, -fs)
+        UiTranslate(0, -fs)
+
+        UiText('Air brakes = ALT')
+        UiTranslate(0, -fs)
+        UiText('Thrust = SHIFT/CTRL')
+        UiTranslate(0, -fs)
+
+        UiTranslate(0, -fs)
+        UiText('(FLIGHT MODE: SIMPLE)')
+        UiTranslate(0, -fs)
+        UiFont("regular.ttf", fs*1.5)
+        UiText('CONTROLS')
+
 
     UiPop()
 end
 
 
 
-function draw()
-
-    UiColor(1,1,1, 1)
-    UiTextShadow(0,0,0, 1, 0.3, 0)
-    UiFont("bold.ttf", 24)
-
-    -- WriteMessage(message)
-
-    DrawControls()
-
-
-    local uiW = 600
-    local uiH = 650
-
-    do UiPush()
-
-        CAMERA = {}
-        CAMERA.xy = {UiCenter(), UiMiddle()}
-        local vehicle = GetPlayerVehicle()
-        for i = 1, #planeObjectList do
-            if vehicle == planeObjectList[i].vehicle then
-
-                local plane = planeObjectList[i]
-
-                do UiPush()
-                    planeDrawHud(plane, uiW + 200, uiH)
-                UiPop() end
-
-
-                if plane.playerInUnbrokenPlane then
-
-                    do UiPush()
-                        drawUiGyro(plane, uiW, uiH)
-                    UiPop() end
-
-                    do UiPush()
-                        drawCompass(plane, uiW, uiH)
-                    UiPop() end
-
-                    do UiPush()
-                        drawTargets(plane)
-                    UiPop() end
-
-                end
-
-
-                do UiPush()
-
-                    local pos = Vec(0,0,0)
-                    local dist = VecDist(plane.tr.pos, pos)
-                    local a = (dist / 800) - 0.6
-
-                    UiColor(0.7,0.7,0.7, a)
-                    UiTextShadow(0,0,0, a)
-                    UiFont("bold.ttf", 20)
-
-
-                    if SmallMapMode then
-
-                        local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
-                        if isInfront then
-
-                            local x,y = UiWorldToPixel(pos)
-
-                            UiTranslate(x,y)
-                            UiAlign("center middle")
-                            UiImageBox("MOD/script/img/dot.png", 10, 10, 0,0)
-
-                            do UiPush()
-                                UiTranslate(-15, 0)
-                                UiAlign("right middle")
-                                UiText('Map Center')
-                            UiPop() end
-
-                            do UiPush()
-                                UiTranslate(15, 0)
-                                UiAlign("left middle")
-                                UiText(sfn(dist, 0) .. ' m')
-                            UiPop() end
-
-                        end
-
-                    end
-
-                UiPop() end
-
-            end
-        end
-
-    UiPop() end
-
-    -- drawRespawnText()
-
-end
-
-function drawThrust(plane)
-
-	local display = plane.thrust
-    UiAlign("center middle")
-
-    UiColor(0.75,0.75,0.75,0.75)
-    UiImageBox("MOD/img/mph.png", 200,200, 0,0)
-    UiRotate(-display*1.8)
-
-    UiColor(1,0.5,0,1)
-    UiImageBox("MOD/img/needle.png", 200,200, 0,0)
-
-end
-
-function drawSpeed(plane)
-
-	local display = plane.speed / gtZero(plane.topSpeed) * 100
-    UiAlign("center middle")
-
-    UiColor(0.75,0.75,0.75,0.75)
-    UiImageBox("MOD/img/mph.png", 200,200, 0,0)
-    UiRotate(-display*1.8)
-
-    UiColor(1,0,0,1)
-    UiImageBox("MOD/img/needle.png", 200,200, 0,0)
-
-end
-
 function planeDrawHud(plane, uiW, uiH)
 
     local c = Vec(0.5,1,0.5)
-    if plane.health <= 0.5 then c = Vec(1,0,0) end
+    if plane.health <= 0 then c = Vec(1,0,0) end
 
     UiColor(1,1,1,1)
     UiFont("bold.ttf", 40)
     UiAlign("center middle")
 
     do UiPush()
-        UiTranslate(UiCenter(), UiHeight()-50)
+        UiTranslate(UiCenter(), 50)
         UiColor(1,1,1, 1)
-        UiFont("bold.ttf", 24)
+        UiFont("regular.ttf", 32)
 
-        local smallMapModeEnabled = ternary(SmallMapMode, 'ON', 'OFF')
-        UiText('Press '..smallMapModeKey..' to enable small-map mode. Small Map Mode: ' .. smallMapModeEnabled)
+        if GetTime() < 30 or not GetBool("level.showedOptions") then
+            UiText('Press "' .. smallMapModeKey.. '" to show in-game options menu.')
+        end
 
     UiPop() end
+
 
     do UiPush()
 
@@ -215,6 +265,7 @@ function planeDrawHud(plane, uiW, uiH)
 
     UiPop() end
 
+
     if plane.playerInUnbrokenPlane then
 
         do UiPush()
@@ -239,7 +290,7 @@ function planeDrawHud(plane, uiW, uiH)
             -- hud STALL
             do UiPush()
                 UiTranslate(0, 280)
-                if plane.speed*1.8 < plane.totalVel then
+                if plane.speed*1.8 < plane.totalVel and (plane.speed > 1 or plane.speed < -1) then
                     UiColor(0.1, 0.1, 0.1, 0.15)
                     UiRect(w,h)
                     UiColor(1,1,1, oscillate(0.75))
@@ -339,8 +390,12 @@ function planeDrawHud(plane, uiW, uiH)
 
         do UiPush()
             UiTranslate(0, 770)
-            UiColor(1,1,1)
+
+            local a = 500/alt
+
+            UiColor(1,1-a,1-a)
             UiText(alt .. " ft")
+
         UiPop() end
 
     UiPop() end
@@ -357,14 +412,13 @@ function planeDrawHud(plane, uiW, uiH)
             Vec(c[1], c[2], c[3]),
         }
 
-        local min = 0.5
-        local max = 1
-        local frac =  ((plane.health-min) / (max-min))
+
+        local frac = plane.health
 
         local a = 1
-        if plane.health <= 0.75 and plane.health > 0.5 then
-            a = oscillate(1) + 1/2
-        end
+        -- if plane.health <= 0.5 and plane.health > 0 then
+        --     a = oscillate(1) + 1/2
+        -- end
 
         local healthColor = VecLerp(colorVecs[1], colorVecs[2], frac)
 
@@ -373,7 +427,8 @@ function planeDrawHud(plane, uiW, uiH)
         UiTranslate(0, 150/1.5)
 
         UiColor(1,1,1, 1)
-        UiText(math.ceil(frac*100) .. "%")
+        UiText(sfn(frac * 100, 0) .. "%")
+
 
     UiPop() end
 
@@ -381,28 +436,35 @@ function planeDrawHud(plane, uiW, uiH)
 
 end
 
-function drawRespawnText()
+function drawThrust(plane)
 
-    if showRespawnText then
+	local display = plane.thrust
+    UiAlign("center middle")
 
-        local v = GetPlayerVehicle()
-        local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
+    UiColor(0.75,0.75,0.75,0.75)
+    UiImageBox("MOD/img/mph.png", 200,200, 0,0)
+    UiRotate(-display*1.8)
 
-        local drawText = vIsDeadPlane or IsPointInWater(GetPlayerTransform().pos)
-
-        if drawText then
-            UiPush()
-            UiTranslate(UiCenter(), 200)
-            UiAlign("center middle")
-            UiFont("bold.ttf", 40)
-            UiColor(1,1,1)
-            UiText("Press \"".. respawnKey .."\" to respawn")
-            UiPop()
-        end
-
-    end
+    UiColor(1,0.5,0,1)
+    UiImageBox("MOD/img/needle.png", 200,200, 0,0)
 
 end
+
+function drawSpeed(plane)
+
+	local display = plane.speed / gtZero(plane.topSpeed) * 100
+    UiAlign("center middle")
+
+    UiColor(0.75,0.75,0.75,0.75)
+    UiImageBox("MOD/img/mph.png", 200,200, 0,0)
+    UiRotate(-display*1.8)
+
+    UiColor(1,0,0,1)
+    UiImageBox("MOD/img/needle.png", 200,200, 0,0)
+
+end
+
+
 
 function WriteMessage(message, fontSize)
     UiPush()

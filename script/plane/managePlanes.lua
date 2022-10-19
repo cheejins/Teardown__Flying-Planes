@@ -14,20 +14,25 @@ end
 
 function planesUpdate()
 
-    -- if curPlane == nil then curPlane = planeObjectList[1] end
-
     for key, plane in pairs(planeObjectList) do
 
         plane_update(plane)
-        plane_ProcessHealth(plane)
 
-        planeMove(plane)
-        planeSound(plane)
+        if plane.isAlive then
+
+            plane_ProcessHealth(plane)
+            planeMove(plane)
+            planeSound(plane)
+
+        end
+
         runEffects(plane)
 
         if GetPlayerVehicle() == plane.vehicle then
 
-            planeCamera(plane)
+            if not ShouldDrawIngameOptions then
+                planeCamera(plane)
+            end
 
             if plane.isAlive then
 
@@ -44,13 +49,25 @@ function planesUpdate()
                 curPlane = plane
                 plane.status = '-'
 
-                planeSteer(plane)
-                plane.applyForces()
 
+                if not ShouldDrawIngameOptions then
+
+                    if Config.flightMode == FlightModes.simple then
+                        planeSteer_simple(plane)
+                    elseif Config.flightMode == FlightModes.simulation then
+                        planeSteer(plane)
+                    end
+
+                end
+
+                plane_applyForces(plane)
 
                 manageTargetting(plane)
 
-                planeShoot(plane)
+                if not ShouldDrawIngameOptions then
+                    planeShoot(plane)
+                end
+
                 planeLandingGear(plane)
 
                 if GetBool('savegame.mod.debugMode') then
@@ -59,22 +76,6 @@ function planesUpdate()
 
             end
 
-        end
-
-        -- Spawn fire for a specified duration after death is triggered.
-        if not plane.isAlive then
-            if plane.timeOfDeath + 30 >= GetTime() then
-
-                local amount = 1 - ((GetTime()/(plane.timeOfDeath + 30)))
-
-                local fireRdmVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(3,6) * amount)
-                particle_fire(VecAdd(plane.tr.pos, fireRdmVec), math.random()*4 * amount)
-
-                local damageAlpha = 1 - plane.health
-                local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5) * amount)
-                particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2 * amount)
-
-            end
         end
 
     end
@@ -99,9 +100,10 @@ end
 
 function plane_ProcessHealth(plane)
 
-    plane.health = GetVehicleHealth(plane.vehicle)
+    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)
 
-    if plane.isAlive and plane.health < 0.5 and not plane.justDied then
+    if plane.isAlive and plane.health <= 0 and not plane.justDied then
+
         plane.justDied = true
         plane.isAlive = false
         plane.timeOfDeath = GetTime()

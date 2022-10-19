@@ -9,7 +9,7 @@ function InitEnemies()
         local SAM = {
             vehicle = SAM,
             body = GetVehicleBody(SAM),
-            timer = TimerCreate(0, 600),
+            timer = TimerCreate(0, 1600),
             pauseTimer = TimerCreate(0, 60/2),
             shootTimer = TimerCreate(0, 60/2),
             shooting = true,
@@ -30,12 +30,13 @@ function TickEnemies()
 
         if GetVehicleHealth(SAM.vehicle) > 0 then
 
-            local shootPos = VecAdd(AabbGetBodyCenterTopPos(SAM.body), Vec(0,10,0))
+            local shootPos = VecAdd(AabbGetBodyCenterTopPos(SAM.body), Vec(0,4,0))
 
 
             local proj = DeepCopy(ProjectilePresets.bullets.standard)
-            proj.speed = 3.5
-            -- proj.holeSize = clamp(math.random(), 0.5, math.random())
+            proj.speed = 2.5
+            proj.rcRad = 0.2
+            proj.holeSize = clamp(math.random(), 0.5, math.random())
             proj.explosionSize = 0.5
 
             -- Set target
@@ -48,11 +49,13 @@ function TickEnemies()
                 local targetVel = GetBodyVelocity(GetVehicleBody(playerVehicle))
                 local targetDist = gtZero(VecDist(SAM.targetPos, shootPos))/10
                 -- local velScale = 1 / proj.speed * targetDist / 10
-                local velScale = 1
+                -- local velScale = targetDist/10*proj.speed/10
 
-                SAM.targetPos = VecAdd(
-                    GetBodyTransform(GetVehicleBody(playerVehicle)).pos,
-                    VecScale(targetVel, velScale))
+                -- SAM.targetPos = VecAdd(
+                --     GetBodyTransform(GetVehicleBody(playerVehicle)).pos,
+                --     VecScale(targetVel, velScale))
+
+                SAM.targetPos = GetBodyTransform(GetVehicleBody(playerVehicle)).pos
 
             end
 

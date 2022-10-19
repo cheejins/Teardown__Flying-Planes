@@ -45,10 +45,18 @@ function particle_blackSmoke(pos, rad, a)
     ParticleType("smoke")
     ParticleRadius(rad, rad*2)
     ParticleAlpha(a, 0, "constant", 0.1, 0.5)
-    ParticleGravity(0 * math.random(0.5, 1.5))
+    ParticleGravity(0 * math.random(0.5, 5))
     ParticleDrag(2)
-    ParticleColor(0, 0, 0, 0.1, 0.1, 0.1)
 
-    SpawnParticle(pos, Vec(2 * math.random(), 10 * math.random(), 2 * math.random()), 10)
+    local offset = math.random()/8
+    ParticleColor(
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset))
+
+    SpawnParticle(pos, Vec(2 * math.random(), 10 * math.random(), 2 * math.random()), math.random(3,5))
 
 end
