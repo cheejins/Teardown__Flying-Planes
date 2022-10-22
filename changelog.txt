@@ -1,0 +1,55 @@
+2022.05.08
+> Added B2 Stealth Bomber and carpet bombing.
+> Mod no longer needs to be enabled.
+> Changed altitude from meters to feet.
+
+
+2022.03.04
+> Added "Map center" indicator for small map mode.
+
+
+2022.03.03
+> Added option to enable/disable "press y to respawn" text when in water.
+
+
+2022.03.02.1
+> Added homing missiles.
+> Added key binds for targer changing and enabling/disabling missile homing.
+> Added runway lights.
+> Fixed plane engine sound.
+
+
+2022.03.02
+> Added keybinds for respawn and small map mode toggling.
+> Tuned plane camera.
+> Slightly improved weapon firing positions and accuracy.
+
+
+2022.03.01
+> Added manual and auto target selection.
+> Added small-map mode for smaller maps. It makes the plane alot more agile.
+
+
+2022.02.27
+> Tuned planes slightly.
+> Fixed weapon hit detection.
+> Fixed plane responsive glitch (occrred when vsync was off)
+> Added vehicle target indicator.
+
+
+2022.02.25
+> Merged the map with the main mod.
+
+
+2022.02.24
+> Added AC-130 plane
+> Added Thrust and Speed hud meters
+> Tuned the planes a bit
+
+
+2022.02.24
+> Added new flight system
+> Added plane spawning.
+> Added Cessna 172 plane
+> Optimized map.
+> Reduced map mod size from 220MB to 40MB

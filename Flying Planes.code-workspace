@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"name": "Flying Planes",
+			"path": "."
+		},
+		{
+			"name": "Flying Planes Test Map",
+			"path": "..\\Flying Planes Test Map"
+		},
+		{
+			"name": "Flying Planes (Demo)",
+			"path": "..\\Flying Planes (Demo)"
+		},
+		{
+			"name": "mods",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}

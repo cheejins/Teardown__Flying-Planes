@@ -1,0 +1,41 @@
+<prefab version="0.9.5">
+	<group id_="1339244416" open_="true" pos="-67.2 -0.1 50.0">
+		<vox id_="553288704" open_="true" tags="nocull" pos="0.00001 0.1 0.3" texture="6" file="LEVEL/ground/runways/runway_main_straight.vox">
+			<group id_="1787144704" open_="true" pos="-0.1 0.3 -6.6">
+				<group id_="689415232" pos="0.1 0.0 -44.19999">
+					<instance id_="701867840" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="448883456" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+				<group id_="2096362496" pos="0.1 0.0 -31.99999">
+					<instance id_="433284928" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="453864512" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+				<group id_="1626440704" pos="0.1 0.0 -19.19999">
+					<instance id_="1742512000" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="1662684288" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+				<group id_="1999494272" pos="0.1 0.0 -6.39999">
+					<instance id_="1790749440" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="803585920" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+				<group id_="13239080" pos="0.1 0.0 44.20001">
+					<instance id_="855886848" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="774420672" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+				<group id_="1529965824" pos="0.1 0.0 6.40001">
+					<instance id_="2089153024" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="2060905344" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+				<group id_="1342455808" pos="0.1 0.0 18.60001">
+					<instance id_="1045428544" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="1931725952" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+				<group id_="1697158272" pos="0.1 0.0 31.40001">
+					<instance id_="985000640" pos="-25.3 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+					<instance id_="75764240" pos="0.0 0.0 0.0" rot="0.0 0.0 0" file="LEVEL/prefab/runway_lights/white.xml"/>
+				</group>
+			</group>
+		</vox>
+	</group>
+</prefab>
+

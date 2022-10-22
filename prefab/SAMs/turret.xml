@@ -1,0 +1,22 @@
+<prefab version="0.9.2">
+	<group id_="1691128576" open_="true" name="instance=MOD/prefabs/turrets/turret.xml" pos="21.6 0.1 -38.2" rot="0.0 0.0 0.0">
+		<script id_="462056992" open_="true" pos="0.2 -0.2 -0.1" rot="0.0 0.0 0.0" file="MOD/scripts/turret_init.lua">
+			<body id_="848874112" open_="true" tags="turretBase" pos="-0.2 0.1 0.1" dynamic="false">
+				<vox id_="103356576" density="20" file="MOD/prefabs/turrets/turret.vox" object="turret_base"/>
+			</body>
+			<body id_="825607360" open_="true" tags="turretArm" pos="0.0 0.2 0.1" dynamic="true">
+				<vox id_="789036032" open_="true" density="10" file="MOD/prefabs/turrets/turret.vox" object="turret_arm">
+					<joint id_="673292416" tags="gunH" pos="0.05 0.0 -0.05" rot="-90.0 0.0 0.0" type="hinge" rotstrength="0" rotspring="0.5"/>
+				</vox>
+			</body>
+			<body id_="1456626560" open_="true" tags="interact turretGun model=light" pos="0.1 1.1 0.1" rot="0.0 90.0 0.0" dynamic="true" desc="Turret">
+				<vox id_="1740218112" open_="true" pos="0.0 0.0 0.0" rot="0.0 -90.0 0.0" file="MOD/prefabs/turrets/turret.vox" object="turret_gun">
+					<joint id_="1565750656" tags="gunV" pos="-0.05 0.0 -0.05" type="hinge" rotspring="0.5" limits="-220 220"/>
+					<location id_="1175132160" name="shootLocation" tags="shootLocation" pos="-1.3 0.35 -0.05" rot="0.0 90.0 0.0"/>
+					<location id_="767866624" name="headLocation" tags="headLocation" pos="1.4 0.5 -0.05" rot="0.0 90.0 0.0"/>
+				</vox>
+			</body>
+		</script>
+	</group>
+</prefab>
+

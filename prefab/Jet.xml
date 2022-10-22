@@ -1,0 +1,38 @@
+<prefab version="1.0.0">
+	<group name="instance=MOD/prefab/Jet.xml" pos="150.00002 0.7 167.00002" rot="0.0 50.0 0.0">
+		<vehicle name="BombardierJet" tags="planeVehicle planeModel=bombardierJet planeType=jet weaponPreset=none" pos="0.1 1.5 11.1" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="1" damping="4" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
+			<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+				<body tags="planeBody" pos="0.0 -1.0 -19.7" rot="0.0 0.0 0.0" dynamic="true">
+					<vox tags="planeShape_engine explosive=1.4" pos="0.0 0.0 -1.6" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="body_nose">
+						<location tags="vital" pos="0.0 0.5 0.1" rot="-180.0 360.0 -180.0"/>
+						<location tags="player" pos="0.15 3.25 -1.75" rot="0.0 0.0 0.0"/>
+					</vox>
+					<vox tags="planeShape_wing_right" pos="6.3 0.0 7.5" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="wing_r"/>
+					<vox tags="planeShape_wing_left" pos="-6.3 0.0 7.4" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="wing_l"/>
+					<vox tags="planeShape_tail" pos="-0.0 1.3 16.8" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="body_tail"/>
+					<vox tags="planeShape_tail" pos="0.0 0.8 7.8" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="body_middle"/>
+					<vox tags="planeShape_elevators" pos="-0.0 6.1 21.90001" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="elevators"/>
+					<vox tags="planeShape_rudder" pos="-0.0 3.4 18.9" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="rudder"/>
+					<vox tags="planeShape_rudder explosive=0.5" pos="-2.6 2.6 14.2" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="engine_l">
+						<light tags="exhaust" pos="-0.05 1.0 2.2" type="cone" color="0.0 0.0 0.0" scale="0"/>
+					</vox>
+					<vox tags="planeShape_rudder explosive=0.5" pos="2.6 2.6 14.3" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="engine_r">
+						<light tags="exhaust" pos="-0.05 1.0 2.2" type="cone" color="0.0 0.0 0.0" scale="0"/>
+					</vox>
+					<wheel name="wl_r" pos="2.1 0.2 7.3" drive="0" steer="-1" travel="-0.4 0.4">
+						<vox pos="0 -0.6 0" rot="0.0 -180.0 0.0" file="MOD/prefab/Jet.vox" object="wheel_right"/>
+					</wheel>
+					<wheel name="wl_l" pos="-2.0 0.2 7.2" drive="0" steer="-1" travel="-0.4 0.4">
+						<vox pos="0.0 -0.6 0" rot="0 180 0" file="MOD/prefab/Jet.vox" object="wheel_left"/>
+					</wheel>
+					<wheel name="wl_c" pos="0.0 -0.0 -4.4" drive="0" steer="1" travel="-0.4 0.4">
+						<vox pos="0.0 -0.4 0" rot="0 180 0" file="MOD/prefab/Jet.vox" object="wheel_center">
+							<light name="Ground level" tags="ground" scale="0"/>
+						</vox>
+					</wheel>
+				</body>
+			</script>
+		</vehicle>
+	</group>
+</prefab>
+
