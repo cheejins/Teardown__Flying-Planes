@@ -8,7 +8,11 @@ function draw()
     local uiW = 600
     local uiH = 650
 
+<<<<<<< HEAD
     if Config.showOptions then
+=======
+    if GetBool("savegame.mod.options.showControls") then
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         if Config.flightMode == FlightModes.simple then
             DrawControlsSimple()
         elseif Config.flightMode == FlightModes.simulation then
@@ -65,7 +69,11 @@ function draw()
                         UiFont("bold.ttf", 20)
 
 
+<<<<<<< HEAD
                         if Config.smallMapMode then
+=======
+                        if GetBool("savegame.mod.options.smallMapMode") then
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
                             local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
                             if isInfront then
@@ -107,6 +115,7 @@ end
 
 function drawRespawnText()
 
+<<<<<<< HEAD
     -- if showRespawnText then
 
     --     local v = GetPlayerVehicle()
@@ -125,6 +134,26 @@ function drawRespawnText()
     --     end
 
     -- end
+=======
+    if showRespawnText then
+
+        local v = GetPlayerVehicle()
+        local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
+
+        local drawText = vIsDeadPlane or IsPointInWater(GetPlayerTransform().pos)
+
+        if drawText then
+            UiPush()
+            UiTranslate(UiCenter(), 200)
+            UiAlign("center middle")
+            UiFont("bold.ttf", 40)
+            UiColor(1,1,1)
+            UiText("Press \"".. respawnKey .."\" to respawn")
+            UiPop()
+        end
+
+    end
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
 end
 
@@ -191,8 +220,11 @@ function DrawControlsSimple()
         UiTranslate(0, -fs)
         UiText('Change zoom = Mouse wheel')
         UiTranslate(0, -fs)
+<<<<<<< HEAD
         UiText('Change Target = ' .. string.upper(Config.changeTarget))
         UiTranslate(0, -fs)
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         UiText('Shoot = LMB/RMB')
         UiTranslate(0, -fs)
         UiTranslate(0, -fs)
@@ -232,11 +264,18 @@ function planeDrawHud(plane, uiW, uiH)
     do UiPush()
         UiTranslate(UiCenter(), 50)
         UiColor(1,1,1, 1)
+<<<<<<< HEAD
         UiTextShadow(0,0,0, 1, 0.2, 0.1)
         UiFont("regular.ttf", 32)
 
         if GetTime() < 30 or not GetBool("level.showedOptions") then
             UiText('Press "' .. Config.toggleOptions .. '" to show in-game options menu.')
+=======
+        UiFont("regular.ttf", 32)
+
+        if GetTime() < 30 or not GetBool("level.showedOptions") then
+            UiText('Press "' .. smallMapModeKey.. '" to show in-game options menu.')
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         end
 
     UiPop() end
@@ -423,9 +462,17 @@ function planeDrawHud(plane, uiW, uiH)
 
         do UiPush()
             UiTranslate(0, 770)
+<<<<<<< HEAD
             local gb = 1/(500/alt)
             UiColor(1, gb, gb, 1)
+=======
+
+            local a = 500/alt
+
+            UiColor(1,1-a,1-a)
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
             UiText(alt .. " ft")
+
         UiPop() end
 
     UiPop() end

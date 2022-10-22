@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <scene version="1.2.0" shadowVolume="0 0 0">
+=======
+<scene version="1.1.0" shadowVolume="0 0 0">
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 	<group name="Map Static" pos="-70.2 0.0 -101.0">
 		<script file="sandbox.lua"/>
 		<script file="main.lua"/>

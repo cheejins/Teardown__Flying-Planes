@@ -4,6 +4,13 @@ end
 -- forces
 function plane_applyForces(plane)
 
+<<<<<<< HEAD
+=======
+    if plane.totalVel < 1 then
+        return
+    end
+
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
     local localVel = TransformToLocalVec(plane.tr, plane.vel)
     local FwdVel = (plane.topSpeed / clamp(math.abs(-localVel[3]), 1, plane.topSpeed)) * 3
 
@@ -15,6 +22,7 @@ function plane_applyForces(plane)
     y = GetPitchAoA(plane.tr, plane.vel)
     z = GetYawAoA(plane.tr, plane.vel)
 
+<<<<<<< HEAD
     force_x = GetRollAoA(plane.tr, plane.vel) / FwdVel / 2
     force_y = GetPitchAoA(plane.tr, plane.vel) / FwdVel
     force_z = GetYawAoA(plane.tr, plane.vel) / FwdVel / 4
@@ -25,6 +33,18 @@ function plane_applyForces(plane)
         impMult = 4
         if Config.smallMapMode then
             impMult = 6
+=======
+    force_x = GetRollAoA(plane.tr, plane.vel) / FwdVel / 5
+    force_y = GetPitchAoA(plane.tr, plane.vel) / FwdVel
+    force_z = GetYawAoA(plane.tr, plane.vel) / FwdVel / 5
+
+
+    local impMult = 1
+    if GetString("savegame.mod.options.flightmode") == FlightModes.simple then
+        impMult = 2
+        if GetBool("savegame.mod.options.smallMapMode") then
+            impMult = 4
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         end
     end
 
@@ -63,12 +83,20 @@ function plane_applyForces(plane)
         TransformToParentPoint(plane.tr, VecScale(Vec(force_z,0,0), imp)))
 
 
+<<<<<<< HEAD
     local angDim = 1 - (plane.speedFac / plane.topSpeed * 6)
+=======
+    local angDim = 1 - (plane.speedFac / plane.topSpeed * 5)
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
     angDim = clamp(angDim, 0, 1)
     SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), angDim)) -- Diminish ang vel
 
 
+<<<<<<< HEAD
     if Config.showOptions and plane.totalVel > 1 then
+=======
+    if GetBool("savegame.mod.options.showControls") and plane.totalVel > 1 then
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         DrawForces(plane, x,y,z, 5, 20)
     end
 

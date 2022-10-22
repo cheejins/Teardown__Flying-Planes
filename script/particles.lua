@@ -58,6 +58,7 @@ function particle_blackSmoke(pos, rad, a)
         1-(a/2) + (offset))
 
     SpawnParticle(pos, Vec(2 * math.random(), 10 * math.random(), 2 * math.random()), math.random(3,5))
+<<<<<<< HEAD
 
 end
 
@@ -85,5 +86,7 @@ function particle_missileSmoke(tr, speed)
     local pos = VecAdd(tr.pos, VecRdm(0.1))
     SpawnParticle(pos, vel, 1000)
     SpawnParticle(pos, vel, 1000)
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
 end

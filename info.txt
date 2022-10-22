@@ -1,7 +1,12 @@
 name = Flying Planes + New Aerodynamics
 author = Cheejins
+<<<<<<< HEAD
 description =[noupload] The new "simualtion" flight mode calculates realistic aerodynamics (work in progress).
 tags=Map,Vehicle
+=======
+description =[noupload] The new "simulation" flight mode calculates realistic aerodynamics (work in progress).
+tags=Map,Vehicle,Gameplay
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
 # If description contains [noupload] the description on Steam workshop will not be overwritten.
 # Available tags (comma-separated):

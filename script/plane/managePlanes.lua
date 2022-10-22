@@ -21,6 +21,7 @@ function planesUpdate()
         if plane.isAlive then
 
             plane_ProcessHealth(plane)
+<<<<<<< HEAD
 
             if Config.flightMode == FlightModes.simple then
                 -- planeMove_simple(plane)
@@ -29,6 +30,9 @@ function planesUpdate()
             end
 
 
+=======
+            planeMove(plane)
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
             planeSound(plane)
 
         end
@@ -57,6 +61,7 @@ function planesUpdate()
                 curPlane = plane
                 plane.status = '-'
 
+<<<<<<< HEAD
 
                 if not ShouldDrawIngameOptions then
 
@@ -74,7 +79,20 @@ function planesUpdate()
                 elseif Config.flightMode == FlightModes.simulation then
                     plane_applyForces(plane)
                 end
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
+                if not ShouldDrawIngameOptions then
+
+                    if Config.flightMode == FlightModes.simple then
+                        planeSteer_simple(plane)
+                    elseif Config.flightMode == FlightModes.simulation then
+                        planeSteer(plane)
+                    end
+
+                end
+
+                plane_applyForces(plane)
 
                 manageTargetting(plane)
 

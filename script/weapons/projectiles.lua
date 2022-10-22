@@ -19,7 +19,11 @@ function initProjectiles()
                 spread = 0.05,
                 drop = 0,
                 dropIncrement = 0,
+<<<<<<< HEAD
                 explosionSize = 0.5,
+=======
+                explosionSize = 0,
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
                 rcRad = 0,
                 force = 1,
                 penetrate = false,
@@ -61,7 +65,11 @@ function initProjectiles()
                 spread = 0.015,
                 drop = 0,
                 dropIncrement = 0,
+<<<<<<< HEAD
                 explosionSize = 0.8,
+=======
+                explosionSize = 0.6,
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
                 rcRad = 0,
                 force = 0,
                 penetrate = false,
@@ -103,7 +111,11 @@ function initProjectiles()
                 spread = 0.025,
                 drop = 0,
                 dropIncrement = 0,
+<<<<<<< HEAD
                 explosionSize = 2.5,
+=======
+                explosionSize = 2,
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
                 rcRad = 0,
                 force = 0,
                 penetrate = false,
@@ -273,6 +285,7 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
     proj.ignoreBodies = DeepCopy(ignoreBodies)
 
     proj.transform = transform
+<<<<<<< HEAD
 
     proj.transform.rot = QuatRotateQuat(
         proj.transform.rot,
@@ -281,6 +294,8 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
             math.deg((math.random()-0.5) * proj.spread),
             math.deg((math.random()-0.5) * proj.spread)
         ))
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
     if proj.homing.max > 0 and homingShape then
         proj.homing.targetShape = homingShape
@@ -316,10 +331,13 @@ end
 
 function propelProjectile(proj)
 
+<<<<<<< HEAD
     --+ Move proj forward.
     proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
 
 
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
     proj.lifeLength = proj.lifeLength - GetTimeStep()
     if proj.lifeLength <= 0 then
         proj.hit = true
@@ -333,7 +351,11 @@ function propelProjectile(proj)
     -- end
 
     --+ Raycast
+<<<<<<< HEAD
     local rcHit, hitPos = RaycastFromTransform(proj.transform, proj.speed, 0, proj.ignoreBodies, nil, true)
+=======
+    local rcHit, hitPos, hitShape = RaycastFromTransform(proj.transform, proj.speed, proj.rcRad or 0, proj.ignoreBodies, nil, true)
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
     if rcHit then
 
         proj.hitInitial = true
@@ -408,6 +430,9 @@ function propelProjectile(proj)
 
     local c = proj.effects.color
     PointLight(proj.transform.pos, c[1], c[2], c[3], 2)
+
+    --+ Move proj forward.
+    proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
 
 end
 

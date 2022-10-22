@@ -87,6 +87,7 @@ function createPlaneObject(_vehicle)
             camPitch = -7,
     }
 
+<<<<<<< HEAD
     plane.getLiftSpeedFac = function()
         local x = plane.speed
         local b = plane.speed/3
@@ -97,6 +98,8 @@ function createPlaneObject(_vehicle)
         return result
     end
 
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
     plane_update(plane)
 
@@ -167,6 +170,7 @@ function createPlaneObject(_vehicle)
 
     end
 
+<<<<<<< HEAD
 
         --- Returns the angle of attack of the chord line (used to calculate airfoil lift and drag)
     plane.getAoA = function()
@@ -205,6 +209,8 @@ function createPlaneObject(_vehicle)
 
 
 
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
     --- Sets thrust between 0 and 1
     plane.setThrust = function(sign)
         plane.thrust = plane.thrust + plane.thrustIncrement * sign
@@ -258,7 +264,10 @@ function plane_update(plane)
     plane.speedFac = clamp(plane.speed, 1, plane.speed) / plane.topSpeed
 
     plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), 0, 1)
+<<<<<<< HEAD
     plane.liftSpeedFac = plane.getLiftSpeedFac()
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
 end
 

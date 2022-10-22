@@ -12,6 +12,7 @@ function InitEnemies()
 
     for _, v in ipairs(FindVehicles("AA", true)) do
 
+<<<<<<< HEAD
         local AA_Type = GetTagValue(v, "AA_Type")
 
         local AA = {
@@ -20,6 +21,12 @@ function InitEnemies()
             type = GetTagValue(v, "AA_Type"),
 
             timer = TimerCreate(0, AA_Types[AA_Type].rpm),
+=======
+        local SAM = {
+            vehicle = SAM,
+            body = GetVehicleBody(SAM),
+            timer = TimerCreate(0, 1600),
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
             pauseTimer = TimerCreate(0, 60/2),
             shootTimer = TimerCreate(0, 60/5),
             shooting = true,
@@ -41,9 +48,20 @@ function TickEnemies()
 
         if GetVehicleHealth(AA.vehicle) > 0 then
 
+<<<<<<< HEAD
             local proj = DeepCopy(ProjectilePresets.bullets.aa)
 
             local shootPos = VecAdd(AabbGetBodyCenterTopPos(AA.body), Vec(0,4,0))
+=======
+            local shootPos = VecAdd(AabbGetBodyCenterTopPos(SAM.body), Vec(0,4,0))
+
+
+            local proj = DeepCopy(ProjectilePresets.bullets.standard)
+            proj.speed = 2.5
+            proj.rcRad = 0.2
+            proj.holeSize = clamp(math.random(), 0.5, math.random())
+            proj.explosionSize = 0.5
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
             -- Set target
             AA.targetPos = GetPlayerTransform().pos
@@ -55,11 +73,21 @@ function TickEnemies()
                 local targetVel = GetBodyVelocity(GetVehicleBody(playerVehicle))
                 local targetDist = gtZero(VecDist(AA.targetPos, shootPos))/10
                 -- local velScale = 1 / proj.speed * targetDist / 10
+<<<<<<< HEAD
                 local velScale = proj.speed/targetDist
 
                 AA.targetPos = VecAdd(
                     GetBodyTransform(GetVehicleBody(playerVehicle)).pos,
                     VecScale(targetVel, velScale))
+=======
+                -- local velScale = targetDist/10*proj.speed/10
+
+                -- SAM.targetPos = VecAdd(
+                --     GetBodyTransform(GetVehicleBody(playerVehicle)).pos,
+                --     VecScale(targetVel, velScale))
+
+                SAM.targetPos = GetBodyTransform(GetVehicleBody(playerVehicle)).pos
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
             end
 

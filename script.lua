@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #include "Automatic.lua"
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 #include "script/ai_SAMS.lua"
 #include "script/config_smallMapMode.lua"
 #include "script/debug.lua"
@@ -13,7 +16,10 @@
 #include "script/plane/planeHud.lua"
 #include "script/plane/planePresets.lua"
 #include "script/plane/plane_physics.lua"
+<<<<<<< HEAD
 #include "script/plane/plane_physics_simple.lua"
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 #include "script/registry.lua"
 #include "script/sounds.lua"
 #include "script/ui/compass.lua"
@@ -48,9 +54,13 @@ hintsOff = false
 isDemoMap = false
 curPlane = nil
 
+<<<<<<< HEAD
 
 ShouldDrawIngameOptions = false
+=======
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
+ShouldDrawIngameOptions = false
 
 function Init_Config()
 
@@ -94,10 +104,31 @@ function init()
 end
 function tick()
 
+<<<<<<< HEAD
     if InputPressed(Config.toggleOptions) then
         ShouldDrawIngameOptions = not ShouldDrawIngameOptions
         SetBool("level.showedOptions", true)
     end
+=======
+    if GetString('savegame.mod.options.flightmode') == "" then
+        SetString("savegame.mod.options.flightmode", FlightModes.simulation)
+    end
+
+    Config = {
+        flightMode = GetString('savegame.mod.options.flightmode')
+    }
+
+    if InputPressed(smallMapModeKey) then
+        ShouldDrawIngameOptions = not ShouldDrawIngameOptions
+        SetBool("level.showedOptions", true)
+    end
+
+    -- respawnKey = GetString('savegame.mod.options.keys.respawn')
+    respawnKey = "-asd"
+    smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
+    toggleMissileLockKey = GetString('savegame.mod.options.keys.toggleMissileLock')
+    changeTargetKey = GetString('savegame.mod.options.keys.changeTarget')
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
     manageConfig()
     manageSpawning()

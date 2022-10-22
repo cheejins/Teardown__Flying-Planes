@@ -22,7 +22,11 @@ function planeMove(plane)
         local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
+<<<<<<< HEAD
             local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) * plane.health
+=======
+            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) / 2 * plane.health
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
@@ -34,7 +38,14 @@ function planeMove(plane)
 end
 function planeSteer(plane)
 
+<<<<<<< HEAD
     local angDim = plane.getForwardVelAngle()
+=======
+    local angDim = plane.speedFac / (plane.topSpeed) * 100 * plane.getForwardVelAngle()
+
+    local imp = 1000 * angDim * GetBodyMass(plane.body)/10000 * plane.health
+    dbw("steer angDim", sfn(angDim))
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
     local imp = 500 * angDim * GetBodyMass(plane.body)/10000 * plane.health
     dbw("steer angDim", sfn(angDim))
@@ -150,7 +161,11 @@ function planeSteer_simple(plane)
     local divSpeed = speedClamped / plane.topSpeed
     local turnDiv = 80
 
+<<<<<<< HEAD
     if Config.smallMapMode then
+=======
+    if GetBool("savegame.mod.options.smallMapMode") then
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         turnDiv = 60
     end
 

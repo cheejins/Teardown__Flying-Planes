@@ -73,9 +73,21 @@ do
     function QuatTrLookRight(tr) return QuatLookAt(tr.pos, TransformToParentPoint(tr, Vec(1,0,0))) end
     function QuatTrLookBack(tr) return QuatLookAt(tr.pos, TransformToParentPoint(tr, Vec(0,0,1))) end
 
+<<<<<<< HEAD
     function QuatToDir(quat) return VecNormalize(TransformToParentPoint(Transform(Vec, quat), Vec(0,0,-1))) end -- Quat to normalized dir.
     function DirToQuat(dir) return QuatLookAt(Vec(0, 0, 0), dir) end -- Normalized dir to quat.
 
+=======
+
+    -- Quat to normalized dir.
+    function QuatToDir(quat)
+        local x,y,z = GetQuatEuler(quat)
+        return Vec(math.rad(x/math.pi),math.rad(y/math.pi),math.rad(z/math.pi))
+    end
+
+
+    function DirToQuat(dir) return QuatEuler(math.deg(dir[1]),math.deg(dir[2]),math.deg(dir[3])) end -- Normalized dir to quat.
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
     function DirLookAt(eye, target) return VecNormalize(VecSub(eye, target)) end -- Normalized dir of two positions.
 
     function VecAngle(a,b) -- Angle between two vectors.
@@ -303,22 +315,22 @@ end
 
 --[[QUERY]]
 do
-    ---Raycast from a transform.
+    ---comment
     ---@param tr table -- Source transform.
-    ---@param dist number -- Max raycast distance. Default is 300.
-    ---@param rad number -- Raycast radius/thickness.
-    ---@param rejectBodies table -- Table of bodies to query reject.
-    ---@param rejectShapes table -- Table of shapes to query reject.
-    ---@param returnNil bool -- If true, return nil if no raycast hit. If false, return the end point of the raycast based on the transfom and distance.
-    ---@return h boolean hit
-    ---@return p table hit position
-    ---@return d number hit dist
-    ---@return s number hit shape
-    ---@return b number hit body
-    ---@return n table normal
-    function RaycastFromTransform(tr, dist, rad, rejectBodies, rejectShapes, returnNil)
+    ---@param distance number -- Max raycast distance. Default is 300.
+    ---@param rad number -- Raycst radius.
+    ---@param rejectBodies table -- Table of bodies to reject.
+    ---@param rejectShapes table -- Table of shapes to reject.
+    ---@param returnNil boolean -- If true, return nil if no raycast hit. If false, return the end point of the raycast based on the transfom and distance.
+    ---@return boolean h
+    ---@return table p
+    ---@return table s
+    ---@return table b
+    ---@return number d
+    ---@return number n
+    function RaycastFromTransform(tr, distance, rad, rejectBodies, rejectShapes, returnNil)
 
-        dist = dist or 300
+        if distance == nil then distance = 300 end
 
         if rejectBodies ~= nil then for i = 1, #rejectBodies do QueryRejectBody(rejectBodies[i]) end end
         if rejectShapes ~= nil then for i = 1, #rejectShapes do QueryRejectShape(rejectShapes[i]) end end
@@ -326,6 +338,7 @@ do
         returnNil = returnNil or false
 
         local direction = QuatToDir(tr.rot)
+<<<<<<< HEAD
         local h, d, n, s = QueryRaycast(tr.pos, direction, dist, rad)
         if h then
 
@@ -339,6 +352,12 @@ do
             return nil
         end
 
+=======
+        local h, d, n, s = QueryRaycast(tr.pos, direction, distance, rad)
+        local p = TransformToParentPoint(tr, Vec(0, 0, d * -1))
+        local b = GetShapeBody(s)
+        return h, p, s, b, d, n
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
     end
 
 end

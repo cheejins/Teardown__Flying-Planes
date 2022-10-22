@@ -50,12 +50,21 @@ function DrawIngameOptions()
             ShouldDrawIngameOptions = false
         end
 
+<<<<<<< HEAD
         margin(0, marginY2)
         margin(0, marginY2)
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 1, 1, 1, 1)
         if UiTextButton('Reset', btn_w, marginY2*1.5) then
             ClearKey("savegame.mod")
         end
+=======
+        -- margin(0, marginY2)
+        -- margin(0, marginY2)
+        -- UiButtonImageBox('ui/common/box-outline-6.png', 10,10, 1, 1, 1, 1)
+        -- if UiTextButton('Reset', btn_w, marginY2*1.5) then
+        --     ClearKey("savegame.mod")
+        -- end
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
 
     UiPop()
 
@@ -76,7 +85,11 @@ function DrawIngameOptions()
         UiAlign('center middle')
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
         if UiTextButton('Simulation', btn_w, marginY2*1.5) then
+<<<<<<< HEAD
             Config.flightMode = FlightModes.simulation
+=======
+            SetString("savegame.mod.options.flightmode", FlightModes.simulation)
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         end
     UiPop()
 
@@ -87,7 +100,11 @@ function DrawIngameOptions()
         UiAlign('center middle')
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
         if UiTextButton('Simple', btn_w, marginY2*1.5) then
+<<<<<<< HEAD
             Config.flightMode = FlightModes.simple
+=======
+            SetString("savegame.mod.options.flightmode", FlightModes.simple)
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         end
     UiPop()
 
@@ -117,12 +134,20 @@ function DrawIngameOptions()
     margin(0, marginY2*2)
 
     UiPush()
+<<<<<<< HEAD
         local c = boolColor(Config.showOptions)
+=======
+        local c = boolColor(GetBool("savegame.mod.options.showControls"))
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         UiColor(c[1], c[2], c[3])
         UiAlign('center middle')
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
         if UiTextButton('Show Controls', btn_w, marginY2*1.5) then
+<<<<<<< HEAD
             Config.showOptions = not Config.showOptions
+=======
+            SetBool("savegame.mod.options.showControls", not GetBool("savegame.mod.options.showControls"))
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
         end
     UiPop()
 
@@ -130,12 +155,20 @@ function DrawIngameOptions()
 
     if Config.flightMode == FlightModes.simple then
         UiPush()
+<<<<<<< HEAD
             local c = boolColor(Config.smallMapMode)
+=======
+            local c = boolColor(GetBool("savegame.mod.options.smallMapMode"))
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
             UiColor(c[1], c[2], c[3])
             UiAlign('center middle')
             UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
             if UiTextButton('Small Map Mode', btn_w, marginY2*1.5) then
+<<<<<<< HEAD
                 Config.smallMapMode = not Config.smallMapMode
+=======
+                SetBool("savegame.mod.options.smallMapMode", not GetBool("savegame.mod.options.smallMapMode"))
+>>>>>>> 7e5f2714410abadea29ee7d309c01f0a44f63bc4
             end
         UiPop()
     end
