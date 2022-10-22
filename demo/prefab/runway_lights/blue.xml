@@ -1,8 +1,0 @@
-<prefab version="0.9.5">
-	<group id_="1478320256" open_="true" name="instance=LEVEL/prefab/runway_lights/blue.xml" pos="0.0 0.0 0.0" rot="0.0 0.0 0.0">
-		<voxbox id_="1031206336" open_="true" tags="emissive=10 nocull" pos="0.0 0.0 0.0" size="2 2 2" material="heavymetal" color="0.0 0.18 1.0">
-			<light id_="146350816" pos="0.1 0.4 0.1" color="0.0 0.12 1.0" scale="0.5"/>
-		</voxbox>
-	</group>
-</prefab>
-

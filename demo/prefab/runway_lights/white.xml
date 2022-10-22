@@ -1,8 +1,0 @@
-<prefab version="0.9.5">
-	<group id_="470511648" open_="true" pos="-0.00001 0.3 12.29999">
-		<voxbox id_="1358644224" open_="true" tags="emissive=10 nocull" pos="12.5 0.0 -0.1" size="2 2 2" material="heavymetal" color="1.0 0.95 0.85">
-			<light id_="497514144" pos="0.1 0.4 0.1" color="1.0 0.96 0.88" scale="0.5"/>
-		</voxbox>
-	</group>
-</prefab>
-
