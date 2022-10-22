@@ -32,17 +32,16 @@ do
     end
 
 
-    getCrosshairWorldPos = function(rejectBodies, pos)
+    getCrosshairWorldPos = function(rejectBodies)
 
         for key, b in pairs(rejectBodies) do QueryRejectBody(b) end
 
         local crosshairTr = getCrosshairTr()
-        crosshairTr.pos = pos
         local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 300)
         if crosshairHit then
             return crosshairHitPos
-        else
-            return TransformToParentPoint(crosshairTr, Vec(0,0,-300))
+        -- else
+        --     return TransformToParentPoint(GetCameraTransform(), Vec(0,0,-1000))
         end
 
     end
@@ -73,9 +72,25 @@ do
     function QuatTrLookRight(tr) return QuatLookAt(tr.pos, TransformToParentPoint(tr, Vec(1,0,0))) end
     function QuatTrLookBack(tr) return QuatLookAt(tr.pos, TransformToParentPoint(tr, Vec(0,0,1))) end
 
-    function QuatToDir(quat) return VecNormalize(TransformToParentPoint(Transform(Vec, quat), Vec(0,0,-1))) end -- Quat to normalized dir.
-    function DirToQuat(dir) return QuatLookAt(Vec(0, 0, 0), dir) end -- Normalized dir to quat.
 
+    -- -- Quat to normalized dir.
+    -- function QuatToDir(quat)
+    --     local x,y,z = GetQuatEuler(quat)
+    --     return Vec(math.rad(x/math.pi),math.rad(y/math.pi),math.rad(z/math.pi))
+    -- end
+
+    -- Quat to normalized dir.
+    -- function QuatToDir(quat)
+    --     local dirPos = TransformToParentPoint(Transform(Vec(), quat), Vec(0,0,-1))
+    --     return VecNormalize()
+
+    -- end
+
+    -- function QuatToDir(quat) return VecNormalize(TransformToParentPoint(Transform(Vec(), quat), Vec(0,0,-1))) end -- Quat to normalized dir.
+
+
+
+    function DirToQuat(dir) return QuatEuler(math.deg(dir[1]),math.deg(dir[2]),math.deg(dir[3])) end -- Normalized dir to quat.
     function DirLookAt(eye, target) return VecNormalize(VecSub(eye, target)) end -- Normalized dir of two positions.
 
     function VecAngle(a,b) -- Angle between two vectors.
@@ -296,6 +311,51 @@ do
     end
 
 
+    ---A helper function to print a table's contents.
+    ---@param tbl table @The table to print.
+    ---@param depth number @The depth of sub-tables to traverse through and print.
+    ---@param n number @Do NOT manually set this. This controls formatting through recursion.
+    function PrintTable(tbl, depth, n)
+        n = n or 0;
+        depth = depth or 10;
+
+        if (depth == 0) then
+            print(string.rep(' ', n).."...");
+            return;
+        end
+
+        if (n == 0) then
+            print(" ");
+        end
+
+        for key, value in pairs(tbl) do
+            if (key and type(key) == "number" or type(key) == "string") then
+                key = string.format("%s", key);
+
+                if (type(value) == "table") then
+                    if (next(value)) then
+                        print(string.rep(' ', n)..key.." = {");
+                        PrintTable(value, depth - 1, n + 4);
+                        print(string.rep(' ', n).."},");
+                    else
+                        print(string.rep(' ', n)..key.." = {},");
+                    end
+                else
+                    if (type(value) == "string") then
+                        value = string.format("\"%s\"", value);
+                    else
+                        value = tostring(value);
+                    end
+
+                    print(string.rep(' ', n)..key.." = "..value..",");
+                end
+            end
+        end
+
+        if (n == 0) then
+            print(" ");
+        end
+    end
 
 
 end
@@ -333,14 +393,13 @@ do
             local b = GetShapeBody(s)
             return h, p, d, s, b, n
 
-        elseif not returnNil then
-            return false, TransformToParentPoint(tr, Vec(0,0,-dist))
-        else
+        elseif returnNil then
             return nil
+        else
+            return TransformToParentPoint(tr, Vec(0,0,-dist))
         end
 
     end
-
 end
 
 
@@ -412,9 +471,8 @@ do
         return value
     end
     function oscillate(time)
-        local a = (GetTime() / (time or 1)) % 1
-        a = a * math.pi
-        return math.sin(a)
+        local a = ((-1/2) * math.cos(2 * math.pi * GetTime()/(time or 1))) + 0.5
+        return a
     end
 
     ---Returns a convex parabola starting at x=0, ending at x=1 and its center vertex at y=1.
@@ -489,7 +547,6 @@ end
 
 
 --[[TIMERS]]
---[[TIMERS]]
 do
 
     function TimerCreate(time, rpm)
@@ -547,4 +604,30 @@ function disableTools(allowTools)
             SetBool("game.tool."..tools[i]..".enabled", false)
         end
     end
+end
+
+
+
+GetCrosshairWorldPos = function(rejectBodies)
+
+    local crosshairTr = getCrosshairTr()
+    local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 200, 0, rejectBodies)
+    if crosshairHit then
+        return crosshairHitPos
+    else
+        return nil
+    end
+
+end
+
+GetCrosshairCameraTr = function(pos, x, y)
+
+    pos = pos or GetCameraTransform()
+
+    local crosshairDir = UiPixelToWorld(x or UiCenter(), y or UiMiddle())
+    local crosshairQuat = DirToQuat(crosshairDir)
+    local crosshairTr = Transform(GetCameraTransform().pos, crosshairQuat)
+
+    return crosshairTr
+
 end

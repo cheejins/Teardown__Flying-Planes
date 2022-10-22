@@ -45,10 +45,45 @@ function particle_blackSmoke(pos, rad, a)
     ParticleType("smoke")
     ParticleRadius(rad, rad*2)
     ParticleAlpha(a, 0, "constant", 0.1, 0.5)
-    ParticleGravity(0 * math.random(0.5, 1.5))
+    ParticleGravity(0 * math.random(0.5, 5))
     ParticleDrag(2)
-    ParticleColor(0, 0, 0, 0.1, 0.1, 0.1)
 
-    SpawnParticle(pos, Vec(2 * math.random(), 10 * math.random(), 2 * math.random()), 10)
+    local offset = math.random()/8
+    ParticleColor(
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset),
+        1-(a/2) + (offset))
+
+    SpawnParticle(pos, Vec(2 * math.random(), 10 * math.random(), 2 * math.random()), math.random(3,5))
+
+end
+
+function particle_missileSmoke(tr, speed)
+
+    ParticleReset()
+
+    ParticleType("smoke")
+    ParticleRadius(1, 5 + math.random() * 4)
+    ParticleAlpha(1, 0.5)
+    ParticleGravity(0)
+    ParticleDrag(1)
+    ParticleStretch(0.5, 1)
+
+    local offset = math.random()/8
+    ParticleColor(
+        1-(1/2) + (offset),
+        1-(1/2) + (offset),
+        1-(1/2) + (offset),
+        1-(1/2) + (offset),
+        1-(1/2) + (offset),
+        1-(1/2) + (offset))
+
+    local vel = VecScale(QuatToDir(tr.rot), -speed)
+    local pos = VecAdd(tr.pos, VecRdm(0.1))
+    SpawnParticle(pos, vel, 1000)
+    SpawnParticle(pos, vel, 1000)
 
 end

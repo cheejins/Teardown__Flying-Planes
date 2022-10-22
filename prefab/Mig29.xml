@@ -1,5 +1,5 @@
-<prefab version="1.1.0">
-	<group name="instance=MOD/prefab/Mig29.xml" pos="82.2 0.5 167.5" rot="0.0 0.0 0.0">
+<prefab version="1.2.0">
+	<group name="instance=MOD/prefab/Mig29.xml" pos="38.7 0.5 92.39999" rot="0.0 -45.0 0.0">
 		<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
 			<vehicle name="mig29" tags="planeVehicle planeModel=mig29 planeType=jet weaponPreset=none" pos="0.0 2.6 10.0" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="0.5" damping="2" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
 				<body tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
@@ -35,7 +35,7 @@
 						<wheel name="wl_l" pos="-1.6 -1.3 0.9" drive="0" steer="0" travel="-0.4 0.4">
 							<vox tags="gear" pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/Mig29.vox" object="wheel_center"/>
 						</wheel>
-						<wheel name="wl_c" pos="0.05 -1.3 -5.1" drive="0" steer="0" travel="-0.4 0.4">
+						<wheel name="wl_c" pos="0.05 -1.3 -5.1" drive="0" steer="1" travel="-0.4 0.4">
 							<vox tags="gear" pos="0.0 -0.3 0.0" rot="0.0 -180.0 0.0" file="MOD/prefab/Mig29.vox" object="wheel_center">
 								<light name="Ground level" tags="ground" scale="0"/>
 							</vox>

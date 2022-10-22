@@ -16,11 +16,11 @@ function initProjectiles()
                 category = 'bullet',
 
                 speed = 3,
-                spread = 0.015,
+                spread = 0.05,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 0,
-                rcRad = 0.1,
+                explosionSize = 0.5,
+                rcRad = 0,
                 force = 1,
                 penetrate = false,
                 holeSize = 0.3,
@@ -29,7 +29,7 @@ function initProjectiles()
                     -- particle = 'aeon_secondary',
                     color = Vec(1,0.5,0.3),
                     sprite = 'MOD/script/img/bullet_aa.png',
-                    sprite_dimensions = {10, 1},
+                    sprite_dimensions = {2, 0.1},
                     sprite_facePlayer = false,
                 },
 
@@ -57,12 +57,12 @@ function initProjectiles()
 
                 category = 'bullet',
 
-                speed = 10,
-                spread = 0.005,
+                speed = 9,
+                spread = 0.015,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 0.6,
-                rcRad = 0.2,
+                explosionSize = 0.8,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 0.2,
@@ -95,16 +95,16 @@ function initProjectiles()
                 isActive = true, -- Active when firing, inactive after hit.
                 hit = false,
                 hitInitial = false,
-                lifeLength = 3, --Seconds
+                lifeLength = 5, --Seconds
 
                 category = 'bullet',
 
                 speed = 6,
-                spread = 0.0075,
+                spread = 0.025,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 2,
-                rcRad = 0.1,
+                explosionSize = 2.5,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 1,
@@ -141,7 +141,7 @@ function initProjectiles()
                 isActive = true, -- Active when firing, inactive after hit.
                 hit = false,
                 hitInitial = false,
-                lifeLength = 3, --Seconds
+                lifeLength = 10, --Seconds
 
                 category = 'missile',
 
@@ -150,7 +150,7 @@ function initProjectiles()
                 drop = 0,
                 dropIncrement = 0,
                 explosionSize = 3.5,
-                rcRad = 0.3,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 0,
@@ -176,6 +176,48 @@ function initProjectiles()
                     targetPos = Vec(),
                     targetPosRadius = 0,
                 }
+            },
+
+            SAM = {
+
+                isActive = true, -- Active when firing, inactive after hit.
+                hit = false,
+                hitInitial = false,
+                lifeLength = 15, --Seconds
+
+                category = 'missile',
+
+                speed = 2,
+                spread = 0,
+                drop = 0,
+                dropIncrement = 0,
+                explosionSize = 1.5,
+                rcRad = 0.2,
+                force = 0,
+                penetrate = false,
+                holeSize = 0,
+
+                effects = {
+                    particle = 'smoke',
+                    color = Vec(1,0.5,0.3),
+                    sprite = 'MOD/script/img/missile1.png',
+                    sprite_dimensions = {5, 2},
+                    sprite_facePlayer = false,
+                },
+
+                sounds = {
+                    -- hit = Sounds.weap_secondary.hit,
+                    hit_vol = 5,
+                },
+
+                homing = {
+                    force = 0.01,
+                    gain = 0,
+                    max = 0.01,
+                    targetShape = nil,
+                    targetPos = Vec(),
+                    targetPosRadius = 0,
+                }
             }
 
         },
@@ -196,7 +238,7 @@ function initProjectiles()
                 drop = 0.25,
                 dropIncrement = 0,
                 explosionSize = 4,
-                rcRad = 0.3,
+                rcRad = 0,
                 force = 0,
                 penetrate = false,
                 holeSize = 0,
@@ -231,9 +273,14 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
     proj.ignoreBodies = DeepCopy(ignoreBodies)
 
     proj.transform = transform
-    -- local trDir = QuatToDir(proj.transform.rot)
-    -- trDir = VecNormalize(VecAdd(trDir, VecRdm(proj.spread)))
-    -- proj.transform.rot = DirToQuat(trDir)
+
+    proj.transform.rot = QuatRotateQuat(
+        proj.transform.rot,
+        QuatEuler(
+            math.deg((math.random()-0.5) * proj.spread),
+            math.deg((math.random()-0.5) * proj.spread),
+            math.deg((math.random()-0.5) * proj.spread)
+        ))
 
     if proj.homing.max > 0 and homingShape then
         proj.homing.targetShape = homingShape
@@ -249,11 +296,11 @@ function manageActiveProjectiles()
     local projectilesToRemove = {} -- projectiles iterations.
     for i, proj in ipairs(Projectiles) do
 
-        if proj.isActive and proj.hit == false then
+        if proj.isActive then
 
             propelProjectile(proj)
 
-        elseif proj.isActive == false or proj.hit then -- if proj is inactive.
+        else-- if proj is inactive.
 
             table.insert(projectilesToRemove, i)
 
@@ -272,38 +319,34 @@ function propelProjectile(proj)
     --+ Move proj forward.
     proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
 
+
     proj.lifeLength = proj.lifeLength - GetTimeStep()
     if proj.lifeLength <= 0 then
         proj.hit = true
     end
 
-    --+ Ignore bodies
-    if proj.ignoreBodies ~= nil then
-        for i = 1, #proj.ignoreBodies do
-            QueryRejectBody(proj.ignoreBodies[i])
-        end
-    end
+    -- --+ Ignore bodies
+    -- if proj.ignoreBodies ~= nil then
+    --     for i = 1, #proj.ignoreBodies do
+    --         QueryRejectBody(proj.ignoreBodies[i])
+    --     end
+    -- end
 
     --+ Raycast
-    local rcHit, hitPos, hitShape = RaycastFromTransform(proj.transform, proj.speed, proj.rcRad, proj.ignoreBodies, nil, true)
+    local rcHit, hitPos = RaycastFromTransform(proj.transform, proj.speed, 0, proj.ignoreBodies, nil, true)
     if rcHit then
 
         proj.hitInitial = true
         proj.hit = true
 
         --+ Hit Action
-        ApplyBodyImpulse(GetShapeBody(hitShape), hitPos, VecScale(QuatToDir(proj.transform.rot), proj.force))
+        -- ApplyBodyImpulse(GetShapeBody(hitShape), hitPos, VecScale(QuatToDir(proj.transform.rot), proj.force))
 
-        if proj.explosionSize > 0.1 then
+        if proj.explosionSize > 0 then
             Explosion(hitPos, proj.explosionSize)
         end
 
-        MakeHole(hitPos, proj.holeSize)
-
-        --+ Sounds
-        -- local index = proj.sounds.hit[math.random(1, #proj.sounds.hit)]
-        -- PlayRandomSound(proj.sounds.hit, proj.transform.pos, 2, index)
-        -- PlayRandomSound(proj.sounds.hit, GetCameraTransform().pos, 0.2 + math.random()/10, index)
+        MakeHole(hitPos, proj.holeSize, proj.holeSize, proj.holeSize, proj.holeSize)
 
     end
 
@@ -359,8 +402,7 @@ function propelProjectile(proj)
 
     --+ Particles
     if proj.category == 'missile' then
-        SpawnParticle("fire", proj.transform.pos, Vec(0,0,0), 1.5, 0.2)
-        SpawnParticle("smoke", proj.transform.pos, Vec(0,0,0), 0.8, 4)
+        particle_missileSmoke(proj.transform, proj.speed)
     end
 
 

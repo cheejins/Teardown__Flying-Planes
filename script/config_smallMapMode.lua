@@ -1,9 +1,6 @@
 function manageConfig()
 
-    if InputPressed(smallMapModeKey) then
-        SmallMapMode = not SmallMapMode
-        config_setSmallMapMode(SmallMapMode)
-    end
+    config_setSmallMapMode(Config.smallMapMode)
 
 end
 
@@ -12,7 +9,7 @@ function config_setSmallMapMode(enabled)
     if enabled then
         CONFIG = {
             smallMapMode = {
-                turnMult = 2,
+                turnMult = 1,
                 liftMult = 0.01,
                 dragMult = 6,
             }

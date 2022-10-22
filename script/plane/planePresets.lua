@@ -104,7 +104,7 @@ function convertPlaneToAC130(plane)
 
     plane.brakeImpulseAmt = 500
 
-    plane.pitchVal = 1.5
+    plane.pitchVal = 2
     plane.rollVal = 3
     plane.yawFac = 3
 
@@ -122,9 +122,9 @@ function convertPlaneToB2(plane)
 
     plane.brakeImpulseAmt = 400
 
-    plane.pitchVal = 1
+    plane.pitchVal = 3
     plane.rollVal = 3
-    plane.yawFac = 2
+    plane.yawFac = 3
 
     plane.camBack = 45
     plane.camUp = 15

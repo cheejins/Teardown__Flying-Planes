@@ -1,3 +1,5 @@
+#include "Automatic.lua"
+#include "script/ai_SAMS.lua"
 #include "script/config_smallMapMode.lua"
 #include "script/debug.lua"
 #include "script/input/controlPanel.lua"
@@ -10,6 +12,8 @@
 #include "script/plane/planeFunctions.lua"
 #include "script/plane/planeHud.lua"
 #include "script/plane/planePresets.lua"
+#include "script/plane/plane_physics.lua"
+#include "script/plane/plane_physics_simple.lua"
 #include "script/registry.lua"
 #include "script/sounds.lua"
 #include "script/ui/compass.lua"
@@ -18,6 +22,7 @@
 #include "script/ui/ui.lua"
 #include "script/ui/uiDebug.lua"
 #include "script/ui/uiModItem.lua"
+#include "script/ui/uiOptions.lua"
 #include "script/ui/uiPanes.lua"
 #include "script/ui/uiPresetSystem.lua"
 #include "script/ui/uiTextBinding.lua"
@@ -26,7 +31,6 @@
 #include "script/utility.lua"
 #include "script/weapons/projectiles.lua"
 #include "script/weapons/weapons.lua"
-#include "script/ai_SAMS.lua"
 
 
 
@@ -44,44 +48,43 @@ hintsOff = false
 isDemoMap = false
 curPlane = nil
 
-enemiesKey = "t"
 
--- Global mod config.
-cfg = {
-
-}
+ShouldDrawIngameOptions = false
 
 
+function Init_Config()
+
+    Config = util.structured_table("savegame.mod.keybinds", {
+
+        flightMode      = { "string", FlightModes.simulation },
+
+        changeTarget    = { "string", "q" },
+        toggleOptions   = { "string", "o" },
+        toggleHoming    = { "string", "h" },
+        toggleSmallMap  = { "string", "m" },
+
+        smallMapMode    = { "boolean", false },
+        showOptions     = { "boolean", false },
+
+
+    })
+
+    print(Config.changeTarget)
+
+end
 
 function init()
 
-    Tick = 1
+    Init_Config()
 
+    Tick = 1
     checkRegInitialized()
 
-    if GetString('savegame.mod.options.keys.respawn') == '' then
-        SetString('savegame.mod.options.keys.respawn', 'y')
-    end
-    if GetString('savegame.mod.options.keys.smallMapMode') == '' then
-        SetString('savegame.mod.options.keys.smallMapMode', 'o')
-    end
-    if GetString('savegame.mod.options.keys.toggleMissileLock') == '' then
-        SetString('savegame.mod.options.keys.toggleMissileLock', 'x')
-    end
-    if GetString('savegame.mod.options.keys.changeTarget') == '' then
-        SetString('savegame.mod.options.keys.changeTarget', 't')
-    end
-    respawnKey = GetString('savegame.mod.options.keys.respawn')
-    smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
-    toggleMissileLockKey = GetString('savegame.mod.options.keys.toggleMissileLock')
-    changeTargetKey = GetString('savegame.mod.options.keys.changeTarget')
-    showRespawnText = GetBool('savegame.mod.options.showRespawnText')
 
     -- Init core functions.
     initSounds()
     initPlanes()
     initProjectiles()
-    -- InitKeys()
 
     SmallMapMode = false
     config_setSmallMapMode(SmallMapMode)
@@ -91,11 +94,10 @@ function init()
 end
 function tick()
 
-    -- respawnKey = GetString('savegame.mod.options.keys.respawn')
-    respawnKey = "-asd"
-    smallMapModeKey = GetString('savegame.mod.options.keys.smallMapMode')
-    toggleMissileLockKey = GetString('savegame.mod.options.keys.toggleMissileLock')
-    changeTargetKey = GetString('savegame.mod.options.keys.changeTarget')
+    if InputPressed(Config.toggleOptions) then
+        ShouldDrawIngameOptions = not ShouldDrawIngameOptions
+        SetBool("level.showedOptions", true)
+    end
 
     manageConfig()
     manageSpawning()
@@ -111,7 +113,7 @@ function tick()
         SetJointMotor(propeller, 15)
     end
 
-    handlePlayerInWater()
+    -- handlePlayerInWater()
     manageDebugMode()
 
     TickEnemies()
@@ -154,3 +156,8 @@ function getCurrentPlane()
     return curPlane
 end
 
+
+
+function CompressRange(val, lower, upper)
+    return (val-lower) / (upper-lower)
+end

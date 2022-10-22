@@ -39,6 +39,16 @@ function drawTarget(plane, vehicle)
             UiColor(0.5,1,0.5, 1)
             if vehicle == plane.targetting.target then
 
+                UiPush()
+                    UiColor(0.75,0.75,0.75, 1)
+                    UiTranslate(-25, 0)
+                    UiTextShadow(0,0,0,1,1,0.1)
+                    UiAlign('right middle')
+                    UiFont('bold.ttf', 21)
+                    local distToTarget = VecDist(plane.tr.pos, vehiclePos)/1000
+                    UiText(sfn(distToTarget) .. ' KM')
+                UiPop()
+
                 local c = oscillate(0.9)
                 if plane.targetting.lock.locked then
 
@@ -87,7 +97,7 @@ function manageTargetting(plane)
 
     end
 
-    dbw('#targetVehicles', #plane.targetting.targetVehicles)
+    -- dbw('#targetVehicles', #plane.targetting.targetVehicles)
 
     if #plane.targetting.targetVehicles >= 1 then
 
@@ -114,7 +124,7 @@ function manageTargetting(plane)
         end
 
         -- Manually change target.
-        if InputPressed(changeTargetKey) then
+        if InputPressed(Config.changeTarget) then
 
             if #planesInfront >= 1 then
                 changeTarget(plane, planesInfront)

@@ -1,7 +1,12 @@
-local __RUNLATER = {} UMF_RUNLATER = function(code) __RUNLATER[#__RUNLATER + 1] = code end
-
+-- UMF Package umf_complete_c v0.9.1 generated with:
+-- build.lua -n "umf_complete_c v0.9.1" dist/umf_complete_c.lua src
+--
+local __RUNLATER = {} local UMF_RUNLATER = function(code) __RUNLATER[#__RUNLATER + 1] = code end
+local __UMFLOADED = {["src/core/hook.lua"]=true,["src/util/detouring.lua"]=true,["src/core/hooks_base.lua"]=true,["src/core/hooks_extra.lua"]=true,["src/util/registry.lua"]=true,["src/util/debug.lua"]=true,["src/core/console_backend.lua"]=true,["src/core/_index.lua"]=true,["src/util/config.lua"]=true,["src/util/meta.lua"]=true,["src/util/constraint.lua"]=true,["src/util/resources.lua"]=true,["src/util/timer.lua"]=true,["src/util/visual.lua"]=true,["src/util/xml.lua"]=true,["src/vector/quat.lua"]=true,["src/vector/transform.lua"]=true,["src/vector/vector.lua"]=true,["src/entities/entity.lua"]=true,["src/entities/body.lua"]=true,["src/entities/joint.lua"]=true,["src/entities/light.lua"]=true,["src/entities/location.lua"]=true,["src/entities/player.lua"]=true,["src/entities/screen.lua"]=true,["src/entities/shape.lua"]=true,["src/entities/trigger.lua"]=true,["src/entities/vehicle.lua"]=true,["src/animation/animation.lua"]=true,["src/animation/armature.lua"]=true,["src/tool/tool.lua"]=true,["src/tdui/base.lua"]=true,["src/tdui/image.lua"]=true,["src/tdui/layout.lua"]=true,["src/tdui/panel.lua"]=true,["src/tdui/window.lua"]=true,["src/_index.lua"]=true,} local UMF_SOFTREQUIRE = function(name) return __UMFLOADED[name] end
 --src/core/hook.lua
-(function() 
+(function() ----------------
+-- Hook library
+-- @script core.hook
 
 if hook then
 	return
@@ -100,9 +105,12 @@ function hook.used( event )
 	return hook_table[event]
 end
 
+
  end)();
 --src/util/detouring.lua
-(function() 
+(function() ----------------
+-- Detour Utilities
+-- @script util.detouring
 local original = {}
 local function call_original( name, ... )
 	local fn = original[name]
@@ -117,7 +125,7 @@ local detoured = {}
 ---@param name string
 ---@param generator fun(original: function): function
 function DETOUR( name, generator )
-	original[name] = _G[name]
+	original[name] = original[name] or rawget( _G, name )
 	detoured[name] = generator( function( ... )
 		return call_original( name, ... )
 	end )
@@ -134,9 +142,12 @@ setmetatable( _G, {
 		end
 	end,
 } )
+
  end)();
 --src/core/hooks_base.lua
-(function() 
+(function() ----------------
+-- Default hooks
+-- @script core.hooks_base
 UMF_RUNLATER "UpdateQuickloadPatch()"
 
 local hook = hook
@@ -254,9 +265,11 @@ hook.add( "base.tick", "api.firsttick", function()
 		firsttick()
 	end
 end )
+
  end)();
 --src/core/hooks_extra.lua
-(function()
+(function() ----------------
+-- @submodule core.hooks_base
 
 --- Checks if the player is in a vehicle.
 ---
@@ -351,9 +364,13 @@ hook.add( "base.tick", "api.default_hooks", function()
 		tool = n_tool
 	end
 end )
+
  end)();
 --src/util/registry.lua
-(function() 
+(function() ----------------
+-- Registry Utilities
+-- @script util.registry
+local coreloaded = UMF_SOFTREQUIRE "src/core/_index.lua"
 
 util = util or {}
 
@@ -483,6 +500,17 @@ function util.shared_buffer( name, max )
 			end
 			return GetString( self._list_name .. (pos + index - len) % max )
 		end,
+		iterator = function( self )
+			local pos = GetInt( self._pos_name )
+			local len = math.min( pos, max )
+			return function( _, i )
+				i = (i or 0) + 1
+				if i >= len then
+					return
+				end
+				return i, GetString( self._list_name .. (pos + i - len) % max )
+			end
+		end,
 		get_g = function( self, index )
 			return GetString( self._list_name .. (index % max) )
 		end,
@@ -493,123 +521,125 @@ function util.shared_buffer( name, max )
 	}
 end
 
---- Creates a channel shared via the registry.
----
----@param name string Name of the channel.
----@param max? number Maximum amount of unread messages in the channel.
----@param local_realm? string Name to use to identify the local recipient.
----@return table
-function util.shared_channel( name, max, local_realm )
-	max = max or 64
-	local channel = {
-		_buffer = util.shared_buffer( name, max ),
-		_offset = 0,
-		_hooks = {},
-		_ready_count = 0,
-		_ready = {},
-		broadcast = function( self, ... )
-			return self:send( "", ... )
-		end,
-		send = function( self, realm, ... )
-			self._buffer:push( string.format( ",%s,;%s",
-			                                  (type( realm ) == "table" and table.concat( realm, "," ) or tostring( realm )),
-			                                  util.serialize( ... ) ) )
-		end,
-		listen = function( self, callback )
-			if self._ready[callback] ~= nil then
-				return
-			end
-			self._hooks[#self._hooks + 1] = callback
-			self:ready( callback )
-			return callback
-		end,
-		unlisten = function( self, callback )
-			self:unready( callback )
-			self._ready[callback] = nil
-			for i = 1, #self._hooks do
-				if self._hooks[i] == callback then
-					table.remove( self._hooks, i )
-					return true
+if coreloaded then
+	--- Creates a channel shared via the registry.
+	---
+	---@param name string Name of the channel.
+	---@param max? number Maximum amount of unread messages in the channel.
+	---@param local_realm? string Name to use to identify the local recipient.
+	---@return table
+	function util.shared_channel( name, max, local_realm )
+		max = max or 64
+		local channel = {
+			_buffer = util.shared_buffer( name, max ),
+			_offset = 0,
+			_hooks = {},
+			_ready_count = 0,
+			_ready = {},
+			broadcast = function( self, ... )
+				return self:send( "", ... )
+			end,
+			send = function( self, realm, ... )
+				self._buffer:push( string.format( ",%s,;%s",
+				                                  (type( realm ) == "table" and table.concat( realm, "," ) or tostring( realm )),
+				                                  util.serialize( ... ) ) )
+			end,
+			listen = function( self, callback )
+				if self._ready[callback] ~= nil then
+					return
 				end
-			end
-		end,
-		ready = function( self, callback )
-			if not self._ready[callback] then
-				self._ready_count = self._ready_count + 1
-				self._ready[callback] = true
-			end
-		end,
-		unready = function( self, callback )
-			if self._ready[callback] then
-				self._ready_count = self._ready_count - 1
-				self._ready[callback] = false
-			end
-		end,
-	}
-	local_realm = "," .. (local_realm or "unknown") .. ","
-	local function receive( ... )
-		for i = 1, #channel._hooks do
-			local f = channel._hooks[i]
-			if channel._ready[f] then
-				f( channel, ... )
-			end
-		end
-	end
-	hook.add( "base.tick", name, function( dt )
-		if channel._ready_count > 0 then
-			local last_pos = channel._buffer:pos()
-			if last_pos > channel._offset then
-				for i = math.max( channel._offset, last_pos - max ), last_pos - 1 do
-					local message = channel._buffer:get_g( i )
-					local start = message:find( ";", 1, true )
-					local realms = message:sub( 1, start - 1 )
-					if realms == ",," or realms:find( local_realm, 1, true ) then
-						receive( util.unserialize( message:sub( start + 1 ) ) )
-						if channel._ready_count <= 0 then
-							channel._offset = i + 1
-							return
-						end
+				self._hooks[#self._hooks + 1] = callback
+				self:ready( callback )
+				return callback
+			end,
+			unlisten = function( self, callback )
+				self:unready( callback )
+				self._ready[callback] = nil
+				for i = 1, #self._hooks do
+					if self._hooks[i] == callback then
+						table.remove( self._hooks, i )
+						return true
 					end
 				end
-				channel._offset = last_pos
+			end,
+			ready = function( self, callback )
+				if not self._ready[callback] then
+					self._ready_count = self._ready_count + 1
+					self._ready[callback] = true
+				end
+			end,
+			unready = function( self, callback )
+				if self._ready[callback] then
+					self._ready_count = self._ready_count - 1
+					self._ready[callback] = false
+				end
+			end,
+		}
+		local_realm = "," .. (local_realm or "unknown") .. ","
+		local function receive( ... )
+			for i = 1, #channel._hooks do
+				local f = channel._hooks[i]
+				if channel._ready[f] then
+					f( channel, ... )
+				end
 			end
 		end
-	end )
-	return channel
-end
+		hook.add( "base.tick", name, function( dt )
+			if channel._ready_count > 0 then
+				local last_pos = channel._buffer:pos()
+				if last_pos > channel._offset then
+					for i = math.max( channel._offset, last_pos - max ), last_pos - 1 do
+						local message = channel._buffer:get_g( i )
+						local start = message:find( ";", 1, true )
+						local realms = message:sub( 1, start - 1 )
+						if realms == ",," or realms:find( local_realm, 1, true ) then
+							receive( util.unserialize( message:sub( start + 1 ) ) )
+							if channel._ready_count <= 0 then
+								channel._offset = i + 1
+								return
+							end
+						end
+					end
+					channel._offset = last_pos
+				end
+			end
+		end )
+		return channel
+	end
 
---- Creates an async reader on a channel for coroutines.
----
----@param channel table Name of the channel.
----@return table
-function util.async_channel( channel )
-	local listener = {
-		_channel = channel,
-		_waiter = nil,
-		read = function( self )
-			self._waiter = coroutine.running()
-			if not self._waiter then
-				error( "async_channel:read() can only be used in a coroutine" )
+	--- Creates an async reader on a channel for coroutines.
+	---
+	---@param channel table Name of the channel.
+	---@return table
+	function util.async_channel( channel )
+		local listener = {
+			_channel = channel,
+			_waiter = nil,
+			read = function( self )
+				self._waiter = coroutine.running()
+				if not self._waiter then
+					error( "async_channel:read() can only be used in a coroutine" )
+				end
+				self._channel:ready( self._handler )
+				return coroutine.yield()
+			end,
+			close = function( self )
+				if self._handler then
+					self._channel:unlisten( self._handler )
+				end
+			end,
+		}
+		listener._handler = listener._channel:listen( function( _, ... )
+			if listener._waiter then
+				local co = listener._waiter
+				listener._waiter = nil
+				listener._channel:unready( listener._handler )
+				return coroutine.resume( co, ... )
 			end
-			self._channel:ready( self._handler )
-			return coroutine.yield()
-		end,
-		close = function( self )
-			if self._handler then
-				self._channel:unlisten( self._handler )
-			end
-		end,
-	}
-	listener._handler = listener._channel:listen( function( _, ... )
-		if listener._waiter then
-			local co = listener._waiter
-			listener._waiter = nil
-			listener._channel:unready( listener._handler )
-			return coroutine.resume( co, ... )
-		end
-	end )
-	listener._channel:unready( listener._handler )
-	return listener
+		end )
+		listener._channel:unready( listener._handler )
+		return listener
+	end
 end
 
 do
@@ -626,14 +656,16 @@ do
 		end
 	end
 
-	hook.add( "api.newmeta", "api.createunserializer", function( name, meta )
-		gets[name] = function( key )
-			return setmetatable( {}, meta ):__unserialize( GetString( key ) )
-		end
-		sets[name] = function( key, value )
-			return SetString( key, meta.__serialize( value ) )
-		end
-	end )
+	if coreloaded then
+		hook.add( "api.newmeta", "api.createunserializer", function( name, meta )
+			gets[name] = function( key )
+				return setmetatable( {}, meta ):__unserialize( GetString( key ) )
+			end
+			sets[name] = function( key, value )
+				return SetString( key, meta.__serialize( value ) )
+			end
+		end )
+	end
 
 	--- Creates a table shared via the registry.
 	---
@@ -684,7 +716,11 @@ do
 			for k, v in pairs( base ) do
 				local key = name .. "." .. tostring( k )
 				if type( v ) == "table" then
-					root[k] = util.structured_table( key, v )
+					if #v == 0 then
+						root[k] = util.structured_table( key, v )
+					else
+						keys[k] = { type = v[1], key = key, default = v[2] }
+					end
 				elseif type( v ) == "string" then
 					keys[k] = { type = v, key = key }
 				else
@@ -695,7 +731,11 @@ do
 				__index = function( self, k )
 					local entry = keys[k]
 					if entry and gets[entry.type] then
-						return gets[entry.type]( entry.key )
+						if HasKey( entry.key ) then
+							return gets[entry.type]( entry.key )
+						else
+							return entry.default
+						end
 					end
 				end,
 				__newindex = function( self, k, v )
@@ -730,9 +770,12 @@ do
 	end
 
 end
+
  end)();
 --src/util/debug.lua
-(function() 
+(function() ----------------
+-- Debug Utilities
+-- @script util.debug
 util = util or {}
 
 --- Gets the current line of code.
@@ -777,9 +820,12 @@ function util.stacktrace( start )
 	end
 	return stack
 end
+
  end)();
 --src/core/console_backend.lua
-(function() 
+(function() ----------------
+-- Console related functions
+-- @script core.console_backend
 
 local console_buffer = util.shared_buffer( "game.console", 128 )
 
@@ -868,14 +914,290 @@ function assert( b, msg, ... )
 	return b, msg, ...
 end
 
+
  end)();
 --src/core/_index.lua
 (function() 
-
 GLOBAL_CHANNEL = util.shared_channel( "game.umf_global_channel", 128 )
+
+ end)();
+--src/util/config.lua
+(function() ----------------
+-- Config Library
+-- @script util.config
+local registryloaded = UMF_SOFTREQUIRE "src/util/registry.lua"
+
+if registryloaded then
+	--- Creates a structured table for the mod config
+	---
+	---@param def table
+	function OptionsKeys( def )
+		return util.structured_table( "savegame.mod", def )
+	end
+end
+
+OptionsMenu = setmetatable( {}, {
+	__call = function( self, def )
+		def.title_size = def.title_size or 50
+		local f = OptionsMenu.Group( def )
+		draw = function()
+			UiTranslate( UiCenter(), 60 )
+			UiPush()
+			local fw, fh = f()
+			UiPop()
+			UiTranslate( 0, fh + 20 )
+			UiFont( "regular.ttf", 30 )
+			UiAlign( "center top" )
+			UiButtonImageBox( "ui/common/box-outline-6.png", 6, 6 )
+			if UiTextButton( "Close" ) then
+				Menu()
+			end
+		end
+		return f
+	end,
+} )
+
+----------------
+-- Organizers --
+----------------
+
+--- Groups multiple options together
+---
+---@param def table
+function OptionsMenu.Group( def )
+	local elements = {}
+	if def.title then
+		elements[#elements + 1] = OptionsMenu.Text( def.title, {
+			size = def.title_size or 40,
+			pad_bottom = def.title_pad or 15,
+			align = def.title_align or "center top",
+		} )
+	end
+	for i = 1, #def do
+		elements[#elements + 1] = def[i]
+	end
+	local condition = def.condition
+	return function()
+		if condition and not condition() then
+			return 0, 0
+		end
+		local mw, mh = 0, 0
+		for i = 1, #elements do
+			UiPush()
+			local w, h = elements[i]()
+			UiPop()
+			UiTranslate( 0, h )
+			mh = mh + h
+			mw = math.max( mw, w )
+		end
+		return mw, mh
+	end
+end
+
+--- Text section
+---
+---@param text string
+---@param options? table
+function OptionsMenu.Text( text, options )
+	options = options or {}
+	local size = options.size or 30
+	local align = options.align or "left top"
+	local offset = options.offset or (align:find( "left" ) and -400) or 0
+	local font = options.font or "regular.ttf"
+	local padt = options.pad_top or 0
+	local padb = options.pad_bottom or 5
+	local condition = options.condition
+	return function()
+		if condition and not condition() then
+			return 0, 0
+		end
+		UiTranslate( offset, padt )
+		UiFont( font, size )
+		UiAlign( align )
+		UiWordWrap( 800 )
+		local tw, th = UiText( text )
+		return tw, th + padt + padb
+	end
+end
+
+--- Spacer
+---
+---@param space number Vertical space
+---@param spacew? number Horizontal space
+---@param condition? function Condition function to enable this spacer
+function OptionsMenu.Spacer( space, spacew, condition )
+	return function()
+		if condition and not condition() then
+			return 0, 0
+		end
+		return spacew or 0, space
+	end
+end
+
+----------------
+---- Values ----
+----------------
+
+local function getvalue( id, def, func )
+	local key = "savegame.mod." .. id
+	if HasKey( key ) then
+		return (func or GetString)( key )
+	else
+		return def
+	end
+end
+
+local function setvalue( id, val, func )
+	local key = "savegame.mod." .. id
+	if val ~= nil then
+		(func or SetString)( key, val )
+	else
+		ClearKey( key )
+	end
+end
+
+--- Keybind value
+---
+---@param def table
+function OptionsMenu.Keybind( def )
+	local text = def.name or def.id
+	local size = def.size or 30
+	local padt = def.pad_top or 0
+	local padb = def.pad_bottom or 5
+	local value = string.upper( getvalue( def.id, def.default ) or "" )
+	if value == "" then
+		value = "<none>"
+	end
+	local pressed = false
+	local condition = def.condition
+	return function()
+		if condition and not condition() then
+			return 0, 0
+		end
+		UiTranslate( -4, padt )
+		UiFont( "regular.ttf", size )
+		local fheight = UiFontHeight()
+		UiAlign( "right top" )
+		local lw, lh = UiText( text )
+		UiTranslate( 8, 0 )
+		UiAlign( "left top" )
+		UiColor( 1, 1, 0 )
+		local tempv = value
+		if pressed then
+			tempv = "<press a key>"
+			local k = InputLastPressedKey()
+			if k == "esc" then
+				pressed = false
+			elseif k ~= "" then
+				value = string.upper( k )
+				tempv = value
+				setvalue( def.id, k )
+				pressed = false
+			end
+		end
+		local rw, rh = UiGetTextSize( tempv )
+		if UiTextButton( tempv ) then
+			pressed = not pressed
+		end
+		UiTranslate( rw, 0 )
+		if value ~= "<none>" then
+			UiColor( 1, 0, 0 )
+			if UiTextButton( "x" ) then
+				value = "<none>"
+				setvalue( def.id, "" )
+			end
+			UiTranslate( size * 0.8, 0 )
+		end
+		if getvalue( def.id ) then
+			UiColor( 0.5, 0.8, 1 )
+			if UiTextButton( "Reset" ) then
+				value = def.default and string.upper( def.default ) or "<none>"
+				setvalue( def.id )
+			end
+		end
+		return lw + 8 + rw, fheight + padt + padb
+	end
+end
+
+--- Slider value
+---
+---@param def table
+function OptionsMenu.Slider( def )
+	local text = def.name or def.id
+	local size = def.size or 30
+	local padt = def.pad_top or 0
+	local padb = def.pad_bottom or 5
+	local min = def.min or 0
+	local max = def.max or 100
+	local range = max - min
+	local value = getvalue( def.id, def.default, GetFloat )
+	local format = string.format( "%%.%df", math.max( 0, math.floor( math.log10( 1000 / range ) ) ) )
+	local step = def.step
+	local condition = def.condition
+	return function()
+		if condition and not condition() then
+			return 0, 0
+		end
+		UiTranslate( -4, padt )
+		UiFont( "regular.ttf", size )
+		local fheight = UiFontHeight()
+		UiAlign( "right top" )
+		local lw, lh = UiText( text )
+		UiTranslate( 16, lh / 2 )
+		UiAlign( "left middle" )
+		UiColor( 1, 1, 0.5 )
+		UiRect( 200, 2 )
+		UiTranslate( -8, 0 )
+		local prev = value
+		value = UiSlider( "ui/common/dot.png", "x", (value - min) * 200 / range, 0, 200 ) * range / 200 + min
+		if value ~= prev then
+			setvalue( def.id, value, SetFloat )
+			if step then
+				value = math.floor( value / step + 0.5 ) * step
+			end
+		end
+		UiTranslate( 216, 0 )
+		UiText( string.format( format, value ) )
+		return lw + 224, fheight + padt + padb
+	end
+end
+
+--- Toggle value
+---
+---@param def table
+function OptionsMenu.Toggle( def )
+	local text = def.name or def.id
+	local size = def.size or 30
+	local padt = def.pad_top or 0
+	local padb = def.pad_bottom or 5
+	local value = getvalue( def.id, def.default, GetBool )
+	local condition = def.condition
+	return function()
+		if condition and not condition() then
+			return 0, 0
+		end
+		UiTranslate( -4, padt )
+		UiFont( "regular.ttf", size )
+		local fheight = UiFontHeight()
+		UiAlign( "right top" )
+		local lw, lh = UiText( text )
+		UiTranslate( 8, 0 )
+		UiAlign( "left top" )
+		UiColor( 1, 1, 0 )
+		if UiTextButton( value and "Enabled" or "Disabled" ) then
+			value = not value
+			setvalue( def.id, value, SetBool )
+		end
+		return lw + 100, fheight + padt + padb
+	end
+end
+
  end)();
 --src/util/meta.lua
-(function() 
+(function() ----------------
+-- Metatable Utilities
+-- @script util.meta
+local coreloaded = UMF_SOFTREQUIRE "src/core/_index.lua"
 
 local registered_meta = {}
 local reverse_meta = {}
@@ -885,7 +1207,7 @@ local reverse_meta = {}
 ---@param name string
 ---@param parent? string
 ---@return table
-function global_metatable( name, parent )
+function global_metatable( name, parent, usecomputed )
 	local meta = registered_meta[name]
 	if meta then
 		if not parent then
@@ -897,10 +1219,38 @@ function global_metatable( name, parent )
 		meta.__type = name
 		registered_meta[name] = meta
 		reverse_meta[meta] = name
-		hook.saferun( "api.newmeta", name, meta )
+		if coreloaded then
+			hook.saferun( "api.newmeta", name, meta )
+		end
+	end
+	local newindex = rawset
+	if usecomputed then
+		local computed = {}
+		meta._C = computed
+		meta.__index = function( self, k )
+			local c = computed[k]
+			if c then
+				return c( self )
+			end
+			return meta[k]
+		end
+		meta.__newindex = function( self, k, v )
+			local c = computed[k]
+			if c then
+				return c( self, v )
+			end
+			return newindex( self, k, v )
+		end
 	end
 	if parent then
-		setmetatable( meta, global_metatable( parent ) )
+		local parent_meta = global_metatable( parent )
+		if parent_meta.__newindex then
+			newindex = parent_meta.__newindex
+			if not meta.__newindex then
+				meta.__newindex = newindex
+			end
+		end
+		setmetatable( meta, { __index = parent_meta.__index } )
 	end
 	return meta
 end
@@ -950,43 +1300,627 @@ local function findmeta( src, found )
 	return res
 end
 
--- I hate this but without a pre-quicksave handler I see no other choice.
-local previous = -2
-hook.add( "base.tick", "api.metatables.save", function( ... )
-	if GetTime() - previous > 2 then
-		previous = GetTime()
-		_G.GLOBAL_META_SAVE = findmeta( _G, {} )
-	end
-end )
+if coreloaded then
+	-- I hate this but without a pre-quicksave handler I see no other choice.
+	local previous = -2
+	hook.add( "base.tick", "api.metatables.save", function( ... )
+		if GetTime() - previous > 2 then
+			previous = GetTime()
+			_G.GLOBAL_META_SAVE = findmeta( _G, {} )
+		end
+	end )
 
-local function restoremeta( dst, src )
-	for k, v in pairs( src ) do
-		local dv = dst[k]
-		if type( dv ) == "table" then
-			if v[1] then
-				setmetatable( dv, global_metatable( v[1] ) )
+	local function restoremeta( dst, src )
+		for k, v in pairs( src ) do
+			local dv = dst[k]
+			if type( dv ) == "table" then
+				if v[1] then
+					setmetatable( dv, global_metatable( v[1] ) )
+				end
+				if v[2] then
+					restoremeta( dv, v[2] )
+				end
 			end
-			if v[2] then
-				restoremeta( dv, v[2] )
+		end
+	end
+
+	hook.add( "base.command.quickload", "api.metatables.restore", function( ... )
+		if GLOBAL_META_SAVE then
+			restoremeta( _G, GLOBAL_META_SAVE )
+		end
+	end )
+end
+ end)();
+--src/util/constraint.lua
+(function() ----------------
+-- Constraint Utilities
+-- @script util.constraint
+
+if not GetEntityHandle then
+	GetEntityHandle = function( handle )
+		return handle
+	end
+end
+
+constraint = {}
+_UMFConstraints = {}
+local solvers = {}
+
+function constraint.RunUpdate( dt )
+	local offset = 0
+	for i = 1, #_UMFConstraints do
+		local v = _UMFConstraints[i + offset]
+		if v.joint and IsJointBroken( v.joint ) then
+			table.remove( _UMFConstraints, i + offset )
+			offset = offset - 1
+		else
+			local result = { c = v }
+			for j = 1, #v.solvers do
+				local s = v.solvers[j]
+				solvers[s.type]( s, result )
+			end
+			if result.angvel then
+				local l = VecLength( result.angvel )
+				ConstrainAngularVelocity( v.parent, v.child, VecScale( result.angvel, 1 / l ), l * 10, 0, v.max_aimp )
 			end
 		end
 	end
 end
 
-hook.add( "base.command.quickload", "api.metatables.restore", function( ... )
-	if GLOBAL_META_SAVE then
-		restoremeta( _G, GLOBAL_META_SAVE )
+local coreloaded = UMF_SOFTREQUIRE "src/core/_index.lua"
+if coreloaded then
+	hook.add( "base.update", "umf.constraint", constraint.RunUpdate )
+end
+
+local function find_index( t, v )
+	for i = 1, #t do
+		if t[i] == v then
+			return i
+		end
 	end
-end )
+end
+
+function constraint.Relative( val, body )
+	if type( val ) == "table" and val.handle or type( val ) == "number" then
+		body = val
+		val = nil
+	end
+	if type( val ) == "table" and val.body then
+		body = val.body
+		val = val.val
+	end
+	return { body = GetEntityHandle( body or 0 ), val = val }
+end
+
+local function resolve_point( relative_val )
+	return TransformToParentPoint( GetBodyTransform( relative_val.body ), relative_val.val )
+end
+
+local function resolve_axis( relative_val )
+	return TransformToParentVec( GetBodyTransform( relative_val.body ), relative_val.val )
+end
+
+local function resolve_orientation( relative_val )
+	return TransformToParentTransform( GetBodyTransform( relative_val.body ),
+	                                   Transform( Vec(), relative_val.val or Quat() ) )
+end
+
+local function resolve_transform( relative_val )
+	return TransformToParentTransform( GetBodyTransform( relative_val.body ), relative_val.val )
+end
+
+local constraint_meta = global_metatable( "constraint" )
+
+function constraint.New( parent, child, joint )
+	return setmetatable( {
+		parent = GetEntityHandle( parent ),
+		child = GetEntityHandle( child ),
+		joint = GetEntityHandle( joint ),
+		solvers = {},
+		tmp = {},
+		active = false,
+	}, constraint_meta )
+end
+
+function constraint_meta:Rebuild()
+	if not self.active then
+		return
+	end
+	local index = self.lastbuild and find_index( _UMFConstraints, self.lastbuild ) or (#_UMFConstraints + 1)
+	local c = {
+		parent = self.parent,
+		child = self.child,
+		joint = self.joint,
+		solvers = {},
+		max_aimp = self.max_aimp or math.huge,
+		max_vimp = self.max_vimp or math.huge,
+	}
+	for i = 1, #self.solvers do
+		c.solvers[i] = self.solvers[i]:Build() or { type = "none" }
+	end
+	self.lastbuild = c
+	_UMFConstraints[index] = c
+end
+
+function constraint_meta:Activate()
+	self.active = true
+	self:Rebuild()
+	return self
+end
+
+local colors = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 1, 1 }, { 1, 0, 1 }, { 1, 1, 0 }, { 1, 1, 1 } }
+function constraint_meta:DrawDebug( c )
+	c = c or GetBodyTransform( self.child ).pos
+	for i = 1, #self.solvers do
+		local col = colors[(i - 1) % #colors + 1]
+		self.solvers[i]:DrawDebug( c, col[1], col[2], col[3] )
+	end
+end
+
+function constraint_meta:LimitAngularVelocity( maxangvel )
+	if self.tmp.asolver then
+		self.tmp.asolver.max_avel = maxangvel
+	else
+		self.tmp.max_avel = maxangvel
+	end
+	return self
+end
+
+function constraint_meta:LimitAngularImpulse( maxangimpulse )
+	self.max_aimp = maxangimpulse
+	return self
+end
+
+function constraint_meta:LimitVelocity( maxvel )
+	if self.tmp.vsolver then
+		self.tmp.vsolver.max_vel = maxvel
+	else
+		self.tmp.max_vel = maxvel
+	end
+	return self
+end
+
+function constraint_meta:LimitImpulse( maximpulse )
+	self.max_vimp = maximpulse
+	return self
+end
+
+--------------------------------
+--         Solver Base        --
+--------------------------------
+
+local solver_meta = global_metatable( "constraint_solver" )
+
+function solver_meta:Build()
+end
+function solver_meta:DrawDebug()
+end
+
+function solvers:none()
+end
+
+--------------------------------
+--    Rotation Axis Solvers   --
+--------------------------------
+
+function constraint_meta:ConstrainRotationAxis( axis, body )
+	self.tmp.vsolver = nil
+	self.tmp.asolver = nil
+	self.tmp.axis = constraint.Relative( axis, body )
+	return self
+end
+
+local solver_ra_sphere_meta = global_metatable( "constraint_ra_sphere_solver", "constraint_solver" )
+
+function constraint_meta:OnSphere( quat, body )
+	local s = setmetatable( {}, solver_ra_sphere_meta )
+	s.axis = self.tmp.axis
+	s.quat = constraint.Relative( quat, body )
+	s.max_avel = self.tmp.max_avel
+	self.tmp.vsolver = nil
+	self.tmp.asolver = s
+	self.solvers[#self.solvers + 1] = s
+	return self
+end
+
+function constraint_meta:AboveLatitude( min )
+	self.tmp.asolver.min_lat = min
+	return self
+end
+
+function constraint_meta:BelowLatitude( max )
+	self.tmp.asolver.max_lat = max
+	return self
+end
+
+function constraint_meta:WithinLatitudes( min, max )
+	return self:AboveLatitude( min ):BelowLatitude( max )
+end
+
+function constraint_meta:WithinLongitudes( min, max )
+	self.tmp.asolver.min_lng = min
+	self.tmp.asolver.max_lng = max
+	return self
+end
+
+function solver_ra_sphere_meta:DrawDebug( c, r, g, b )
+	local tr = resolve_orientation( self.quat )
+	tr.pos = c
+	local axis = VecNormalize( resolve_axis( self.axis ) )
+
+	local start_lng = self.min_lng or 0
+	local len_lng = self.max_lng and (start_lng - self.max_lng) % 360
+	if self.min_lat then
+		visual.drawpolygon( TransformToParentTransform( tr, Transform( Vec( 0, math.sin( math.rad( self.min_lat ) ), 0 ) ) ),
+		                    math.cos( math.rad( self.min_lat ) ), -start_lng, 40, { arc = len_lng, r = r, g = g, b = b } )
+	end
+	if self.max_lat then
+		visual.drawpolygon( TransformToParentTransform( tr, Transform( Vec( 0, math.sin( math.rad( self.max_lat ) ), 0 ) ) ),
+		                    math.cos( math.rad( self.max_lat ) ), -start_lng, 40, { arc = len_lng, r = r, g = g, b = b } )
+	end
+	if self.min_lng then
+		local start_lat = self.min_lat or 360
+		local len_lat = start_lat - (self.max_lat or 0)
+		visual.drawpolygon( TransformToParentTransform( tr, Transform( Vec(), QuatEuler( 0, 180 - self.min_lng, 90 ) ) ), 1,
+		                    180 - start_lat, 20, { arc = len_lat, r = r, g = g, b = b } )
+		visual.drawpolygon( TransformToParentTransform( tr, Transform( Vec(), QuatEuler( 0, 180 - self.max_lng, 90 ) ) ), 1,
+		                    180 - start_lat, 20, { arc = len_lat, r = r, g = g, b = b } )
+	end
+
+	DrawLine( tr.pos, VecAdd( tr.pos, axis ), r, g, b )
+end
+
+function solver_ra_sphere_meta:Build()
+	local quat = constraint.Relative( self.quat )
+	local lng
+	if self.min_lng then
+		local mid = (self.max_lng + self.min_lng) / 2
+		if self.max_lng < self.min_lng then
+			mid = mid + 180
+		end
+		lng = math.acos( math.cos( math.rad( self.min_lng - mid ) ) )
+		quat.val = QuatRotateQuat( QuatAxisAngle( QuatRotateVec( quat.val or Quat(), Vec( 0, 1, 0 ) ), -mid ),
+		                           quat.val or Quat() )
+	end
+	local axis = constraint.Relative( self.axis )
+	axis.val = VecNormalize( axis.val )
+	return {
+		type = "ra_sphere",
+		axis = axis,
+		quat = quat,
+		lng = lng,
+		min_lat = self.min_lat and math.rad( self.min_lat ) or nil,
+		max_lat = self.max_lat and math.rad( self.max_lat ) or nil,
+		max_avel = self.max_avel,
+	}
+end
+
+function solvers:ra_sphere( result )
+	local axis = resolve_axis( self.axis )
+	local tr = resolve_orientation( self.quat )
+	local local_axis = TransformToLocalVec( tr, axis )
+	local resv
+	local lat = math.asin( local_axis[2] )
+	if self.min_lat and lat < self.min_lat then
+		local c = VecNormalize( VecCross( Vec( 0, -1, 0 ), local_axis ) )
+		resv = VecScale( c, lat - self.min_lat )
+	elseif self.max_lat and lat > self.max_lat then
+		local c = VecNormalize( VecCross( Vec( 0, -1, 0 ), local_axis ) )
+		resv = VecScale( c, lat - self.max_lat )
+	end
+	if self.lng then
+		local l = math.sqrt( local_axis[1] ^ 2 + local_axis[3] ^ 2 )
+		if l > 0.05 then
+			local n = math.acos( local_axis[3] / l ) - self.lng
+			if n < 0 then
+				local c = VecNormalize( VecCross( VecCross( Vec( 0, 1, 0 ), local_axis ), local_axis ) )
+				resv = VecAdd( resv, VecScale( c, local_axis[1] > 0 and -n or n ) )
+				-- local c = VecNormalize( VecCross( Vec( 0, 0, -1 ), local_axis ) )
+				-- resv = VecAdd( resv, VecScale( c, -n ) )
+			end
+		end
+	end
+	if resv then
+		if self.max_avel then
+			local len = VecLength( resv )
+			if len > self.max_avel then
+				resv = VecScale( resv, self.max_avel / len )
+			end
+		end
+		result.angvel = VecAdd( result.angvel, TransformToParentVec( tr, resv ) )
+	end
+end
+
+--------------------------------
+--     Orientation Solvers    --
+--------------------------------
+
+function constraint_meta:ConstrainOrientation( quat, body )
+	self.tmp.vsolver = nil
+	self.tmp.asolver = nil
+	self.tmp.quat = constraint.Relative( quat, body )
+	return self
+end
+
+local solver_quat_quat_meta = global_metatable( "constraint_quat_quat_solver", "constraint_solver" )
+
+function constraint_meta:ToOrientation( quat, body )
+	local s = setmetatable( {}, solver_quat_quat_meta )
+	s.quat1 = self.tmp.quat
+	s.quat2 = constraint.Relative( quat, body )
+	s.max_avel = self.tmp.max_avel
+	self.tmp.vsolver = nil
+	self.tmp.asolver = s
+	self.solvers[#self.solvers + 1] = s
+	return self
+end
+
+local cdirections = { Vec( 1, 0, 0 ), Vec( 0, 1, 0 ), Vec( 0, 0, 1 ) }
+function solver_quat_quat_meta:DrawDebug( c, r, g, b )
+	local tr1 = resolve_orientation( self.quat1 )
+	tr1.pos = c
+	local tr2 = resolve_orientation( self.quat2 )
+	tr2.pos = c
+	for i = 1, #cdirections do
+		local dir = cdirections[i]
+		local p1 = TransformToParentPoint( tr1, dir )
+		local p2 = TransformToParentPoint( tr2, dir )
+		DrawLine( tr1.pos, p1, r, g, b )
+		DrawLine( tr1.pos, p2, r, g, b )
+		DrawLine( p1, p2, r, g, b )
+	end
+end
+
+function solver_quat_quat_meta:Build()
+	return { type = "quat_quat", quat1 = self.quat1, quat2 = self.quat2, max_avel = self.max_avel or math.huge }
+end
+
+function solvers:quat_quat( result )
+	ConstrainOrientation( result.c.child, result.c.parent, resolve_orientation( self.quat1 ).rot,
+	                      resolve_orientation( self.quat2 ).rot, self.max_avel, result.c.max_aimp )
+end
+
+--------------------------------
+--      Position Solvers      --
+--------------------------------
+
+function constraint_meta:ConstrainPoint( point, body )
+	self.tmp.vsolver = nil
+	self.tmp.asolver = nil
+	self.tmp.point = constraint.Relative( point, body )
+	return self
+end
+
+local solver_point_point_meta = global_metatable( "constraint_point_point_solver", "constraint_solver" )
+
+function constraint_meta:ToPoint( point, body )
+	local s = setmetatable( {}, solver_point_point_meta )
+	s.point1 = self.tmp.point
+	s.point2 = constraint.Relative( point, body )
+	s.max_vel = self.tmp.max_vel
+	self.tmp.vsolver = s
+	self.tmp.asolver = nil
+	self.solvers[#self.solvers + 1] = s
+	return self
+end
+
+function solver_point_point_meta:DrawDebug( c, r, g, b )
+	local point1 = resolve_point( self.point1 )
+	local point2 = resolve_point( self.point2 )
+	DebugCross( point1, r, g, b )
+	DebugCross( point2, r, g, b )
+	DrawLine( point1, point2, r, g, b )
+end
+
+function solver_point_point_meta:Build()
+	return { type = "point_point", point1 = self.point1, point2 = self.point2, max_vel = self.max_vel or math.huge }
+end
+
+function solvers:point_point( result )
+	ConstrainPosition( result.c.child, result.c.parent, resolve_point( self.point1 ), resolve_point( self.point2 ),
+	                   self.max_vel, result.c.max_vimp )
+end
+
+local solver_point_space_meta = global_metatable( "constraint_point_space_solver", "constraint_solver" )
+
+function constraint_meta:ToSpace( transform, body )
+	local s = setmetatable( {}, solver_point_space_meta )
+	s.point = self.tmp.point
+	s.transform = constraint.Relative( transform, body )
+	s.max_vel = self.tmp.max_vel
+	s.constraints = {}
+	self.tmp.vsolver = s
+	self.tmp.asolver = nil
+	self.solvers[#self.solvers + 1] = s
+	return self
+end
+
+function constraint_meta:WithinBox( center, min, max )
+	local rcenter = constraint.Relative( self.tmp.vsolver.transform )
+	rcenter.val = TransformToParentTransform( rcenter.val, center )
+	table.insert( self.tmp.vsolver.constraints, { type = "box", center = rcenter, min = min, max = max } )
+	return self
+end
+
+function constraint_meta:WithinSphere( center, radius )
+	local rcenter = constraint.Relative( self.tmp.vsolver.transform )
+	rcenter.val = TransformToParentPoint( rcenter.val, center )
+	table.insert( self.tmp.vsolver.constraints, { type = "sphere", center = rcenter, radius = radius } )
+	return self
+end
+
+function constraint_meta:AbovePlane( transform )
+	local rcenter = constraint.Relative( self.tmp.vsolver.transform )
+	rcenter.val = TransformToParentTransform( rcenter.val, transform )
+	table.insert( self.tmp.vsolver.constraints, { type = "plane", center = rcenter } )
+	return self
+end
+
+function solver_point_space_meta:DrawDebug( c, r, g, b )
+	local point = resolve_point( self.point )
+	for i = 1, #self.constraints do
+		local c = self.constraints[i]
+		if c.type == "plane" then
+			local tr = resolve_transform( c.center )
+			local lp = TransformToLocalPoint( tr, point )
+			lp[2] = 0
+			tr.pos = TransformToParentPoint( tr, lp )
+			visual.drawpolygon( tr, 1.414, 45, 4, { r = r, g = g, b = b } )
+		elseif c.type == "box" then
+			local tr = resolve_transform( c.center )
+			visual.drawbox( tr, c.min, c.max, { r = r, g = g, b = b } )
+		elseif c.type == "sphere" then
+			local tr = Transform( resolve_point( c.center ), Quat() )
+			visual.drawwiresphere( tr, c.radius, 32, { r = r, g = g, b = b } )
+		end
+	end
+end
+
+function solver_point_space_meta:Build()
+	local consts = {}
+	for i = 1, #self.constraints do
+		local c = self.constraints[i]
+		if c.type == "box" then
+			local rcenter = constraint.Relative( c.center )
+			rcenter.val.pos = TransformToParentPoint( rcenter.val, VecScale( VecAdd( c.min, c.max ), 0.5 ) )
+			consts[i] = { type = "box", center = rcenter, size = VecScale( VecSub( c.max, c.min ), 0.5 ) }
+		else
+			consts[i] = c
+		end
+	end
+	return { type = "point_space", point = self.point, constraints = consts, max_vel = self.max_vel or math.huge }
+end
+
+function solvers:point_space( result )
+	local point = resolve_point( self.point )
+	local resv
+	for i = 1, #self.constraints do
+		local c = self.constraints[i]
+		if c.type == "plane" then
+			local tr = resolve_transform( c.center )
+			local lp = TransformToLocalPoint( tr, point )
+			if lp[2] < 0 then
+				resv = VecAdd( resv, TransformToParentVec( tr, Vec( 0, lp[2], 0 ) ) )
+			end
+		elseif c.type == "box" then
+			local tr = resolve_transform( c.center )
+			local lp = TransformToLocalPoint( tr, point )
+			local sx, sy, sz = c.size[1], c.size[2], c.size[3]
+			local nlp = Vec( lp[1] < -sx and lp[1] + sx or lp[1] > sx and lp[1] - sx or 0,
+			                 lp[2] < -sy and lp[2] + sy or lp[2] > sy and lp[2] - sy or 0,
+			                 lp[3] < -sz and lp[3] + sz or lp[3] > sz and lp[3] - sz or 0 )
+			if nlp[1] ~= 0 or nlp[2] ~= 0 or nlp[3] ~= 0 then
+				resv = VecAdd( resv, TransformToParentVec( tr, nlp ) )
+			end
+		elseif c.type == "sphere" then
+			local center = resolve_point( c.center )
+			local diff = VecSub( point, center )
+			local len = VecLength( diff )
+			if len > c.radius then
+				resv = VecAdd( resv, VecScale( diff, (len - c.radius) / len ) )
+			end
+		end
+	end
+	if resv then
+		local len = VecLength( resv )
+		resv = VecScale( resv, 1 / len )
+		if self.max_vel and len > self.max_vel then
+			len = self.max_vel
+		end
+		ConstrainVelocity( result.c.parent, result.c.child, point, resv, len * 10, 0, result.c.max_vimp )
+	end
+end
+
+ end)();
+--src/util/resources.lua
+(function() ----------------
+-- Resources Utilities
+-- @script util.resources
+
+util = util or {}
+
+local mod
+do
+	local stack = util.stacktrace()
+	local function findmods( file )
+		local matches = {}
+		while file and #file > 0 do
+			matches[#matches + 1] = file
+			file = file:match( "^(.-)/[^/]*$" )
+		end
+
+		local found
+		for _, key in ipairs( ListKeys( "mods.available" ) ) do
+			local path = GetString( "mods.available." .. key .. ".path" )
+			for _, subpath in ipairs( matches ) do
+				if path:sub( -#subpath ) == subpath then
+					if found then
+						return
+					end
+					found = key
+					break
+				end
+			end
+		end
+		return found
+	end
+	for i = 1, #stack do
+		if stack[i] ~= "[C]:?" then
+			local t = stack[i]:match( "%[string \"%.%.%.(.*)\"%]:%d+" ) or stack[i]:match( "%.%.%.(.*):%d+" )
+			if t then
+				local found = findmods( t )
+				if found then
+					mod = found
+					MOD = found
+					break
+				end
+			end
+		end
+	end
+end
+
+--- Resolves a given mod path to an absolute path.
+---
+---@param path string
+---@return string path Absolute path
+function util.resolve_path( path )
+	-- TODO: support relative paths (relative to the current file)
+	-- TODO: return multiple matches if applicable
+	local replaced, n = path:gsub( "^MOD/", GetString( "mods.available." .. mod .. ".path" ) .. "/" )
+	if n == 0 then
+		replaced, n = path:gsub( "^LEVEL/", GetString( "game.levelpath" ):sub( 1, -5 ) .. "/" )
+	end
+	if n == 0 then
+		replaced, n = path:gsub( "^MODS/([^/]+)", function( mod )
+			return GetString( "mods.available." .. mod .. ".path" )
+		end )
+	end
+	if n == 0 then
+		return path
+	end
+	return replaced
+end
+
+--- Load a lua file from its mod path.
+---
+---@param path string
+---@return function
+---@return string error_message
+function util.load_lua_resource( path )
+	return loadfile( util.resolve_path( path ) )
+end
+
  end)();
 --src/util/timer.lua
-(function() 
+(function() ----------------
+-- Timer Utilities
+--
+--              WARNING
+--   Timers are reset on quickload!
+-- Keep this in mind if you use them.
+--
+-- @script util.timer
 
-----------------------------------------
---              WARNING               --
---   Timers are reset on quickload!   --
--- Keep this in mind if you use them. --
-----------------------------------------
 timer = {}
 timer._backlog = {}
 
@@ -1100,9 +2034,12 @@ hook.add( "base.tick", "framework.timer", function( dt )
 		end
 	end
 end )
+
  end)();
 --src/util/visual.lua
-(function() 
+(function() ----------------
+-- Visual Utilities
+-- @script util.visual
 visual = {}
 degreeToRadian = math.pi / 180
 COLOR_WHITE = { r = 255 / 255, g = 255 / 255, b = 255 / 255, a = 255 / 255 }
@@ -1304,35 +2241,40 @@ if DrawSprite then
 	---@param sides number
 	---@param info table
 	function visual.drawpolygon( transform, radius, rotation, sides, info )
-		local points = {}
-		local iteration = 1
-		local pow, sqrt, sin, cos = math.pow, math.sqrt, math.sin, math.cos
-		local r, g, b, a
+		sides = sides or 4
+		radius = radius or 1
+
+		local offset, interval = math.rad( rotation or 0 ), 2 * math.pi / sides
+		local arc = false
+		local r, g, b, a = 1, 1, 1, 1
 		local DrawFunction = DrawLine
 
-		radius = sqrt( 2 * pow( radius, 2 ) ) or sqrt( 2 )
-		rotation = rotation or 0
-		sides = sides or 4
-
 		if info then
-			r = info.r and info.r or 1
-			g = info.g and info.g or 1
-			b = info.b and info.b or 1
-			a = info.a and info.a or 1
-			DrawFunction = info.DrawFunction ~= nil and info.DrawFunction or (info.writeZ == false and DebugLine or DrawLine)
+			r = info.r or r
+			g = info.g or g
+			b = info.b or b
+			a = info.a or a
+			if info.arc then
+				arc = true
+				interval = interval * info.arc / 360
+			end
+			DrawFunction = info.DrawFunction or (info.writeZ == false and DebugLine or DrawLine)
 		end
 
-		for v = 0, 360, 360 / sides do
-			points[iteration] = TransformToParentPoint( transform, Vec( sin( (v + rotation) * degreeToRadian ) * radius, 0,
-			                                                            cos( (v + rotation) * degreeToRadian ) * radius ) )
-			points[iteration + 1] = TransformToParentPoint( transform,
-			                                                Vec( sin( ((v + 360 / sides) + rotation) * degreeToRadian ) * radius,
-			                                                     0,
-			                                                     cos( ((v + 360 / sides) + rotation) * degreeToRadian ) * radius ) )
-			if iteration > 2 then
-				DrawFunction( points[iteration], points[iteration + 1], r, g, b, a )
+		local points = {}
+		for i = 0, sides - 1 do
+			points[i + 1] = TransformToParentPoint( transform, Vec( math.sin( offset + i * interval ) * radius, 0,
+			                                                        math.cos( offset + i * interval ) * radius ) )
+			if i > 0 then
+				DrawFunction( points[i], points[i + 1], r, g, b, a )
 			end
-			iteration = iteration + 2
+		end
+		if arc then
+			points[#points + 1] = TransformToParentPoint( transform, Vec( math.sin( offset + sides * interval ) * radius, 0,
+			                                                              math.cos( offset + sides * interval ) * radius ) )
+			DrawFunction( points[#points - 1], points[#points], r, g, b, a )
+		else
+			DrawFunction( points[#points], points[1], r, g, b, a )
 		end
 
 		return points
@@ -1472,43 +2414,49 @@ if DrawSprite then
 		return points
 	end
 
+	--- Draws a wireframe sphere.
+	---
+	---@param transform Transformation
+	---@param radius number
+	---@param points number
+	---@param info table
+	function visual.drawwiresphere( transform, radius, points, info )
+		radius = radius or 1
+		points = points or 32
+		if not info or not info.nolines then
+			local tr_r = TransformToParentTransform( transform, Transform( Vec(), QuatEuler( 90, 0, 0 ) ) )
+			local tr_f = TransformToParentTransform( transform, Transform( Vec(), QuatEuler( 0, 0, 90 ) ) )
+			visual.drawpolygon( transform, radius, 0, points, info )
+			visual.drawpolygon( tr_r, radius, 0, points, info )
+			visual.drawpolygon( tr_f, radius, 0, points, info )
+		end
+
+		local cam = info and info.target or GetCameraTransform().pos
+		local diff = VecSub( transform.pos, cam )
+		local len = VecLength( diff )
+		if len < radius then
+			return
+		end
+		local a = math.pi / 2 - math.asin( radius / len )
+		local vtr = Transform( VecAdd( transform.pos, VecScale( diff, -math.cos( a ) / len ) ),
+		                       QuatRotateQuat( QuatLookAt( transform.pos, cam ), QuatEuler( 90, 0, 0 ) ) )
+		visual.drawpolygon( vtr, radius * math.sin( a ), 0, points, info )
+	end
 end
+
  end)();
 --src/util/xml.lua
-(function() 
+(function() ----------------
+-- XML Utilities
+-- @script util.xml
+
 ---@class XMLNode
 ---@field __call fun(children: XMLNode[]): XMLNode
 ---@field attributes table<string, string> | nil
 ---@field children XMLNode[] | nil
 ---@field type string
-local xmlnode = {
-	--- Renders this node into an XML string.
-	---
-	---@return string
-	Render = function( self )
-		local attr = ""
-		if self.attributes then
-			for name, val in pairs( self.attributes ) do
-				attr = string.format( "%s %s=%q", attr, name, val )
-			end
-		end
-		local children = {}
-		if self.children then
-			for i = 1, #self.children do
-				children[i] = self.children[i]:Render()
-			end
-		end
-		return string.format( "<%s%s>%s</%s>", self.type, attr, table.concat( children, "" ), self.type )
-	end,
-}
-
-local meta = {
-	__call = function( self, children )
-		self.children = children
-		return self
-	end,
-	__index = xmlnode,
-}
+local xml_meta
+xml_meta = global_metatable( "xmlnode" )
 
 --- Defines an XML node.
 ---
@@ -1516,7 +2464,7 @@ local meta = {
 ---@return fun(attributes: table<string, string>): XMLNode
 XMLTag = function( type )
 	return function( attributes )
-		return setmetatable( { type = type, attributes = attributes }, meta )
+		return setmetatable( { type = type, attributes = attributes }, xml_meta )
 	end
 end
 
@@ -1619,14 +2567,44 @@ ParseXML = function( xml )
 
 	return readtag()
 end
+
+---@type XMLNode
+
+---@return XMLNode self
+function xml_meta:__call( children )
+	self.children = children
+	return self
+end
+
+--- Renders this node into an XML string.
+---
+---@return string
+function xml_meta:Render()
+	local attr = ""
+	if self.attributes then
+		for name, val in pairs( self.attributes ) do
+			attr = string.format( "%s %s=%q", attr, name, val )
+		end
+	end
+	local children = {}
+	if self.children then
+		for i = 1, #self.children do
+			children[i] = self.children[i]:Render()
+		end
+	end
+	return string.format( "<%s%s>%s</%s>", self.type, attr, table.concat( children, "" ), self.type )
+end
+
  end)();
 --src/vector/quat.lua
-(function() 
+(function() ----------------
+-- Quaternion class and related functions
+-- @script vector.quat
 
----@type Vector
 local vector_meta = global_metatable( "vector" )
 ---@class Quaternion
-local quat_meta = global_metatable( "quaternion" )
+local quat_meta
+quat_meta = global_metatable( "quaternion" )
 
 --- Tests if the parameter is a quaternion.
 ---
@@ -1659,6 +2637,8 @@ function Quaternion( i, j, k, r )
 	end
 	return MakeQuaternion { i or 0, j or 0, k or 0, r or 1 }
 end
+
+---@type Quaternion
 
 ---@param data string
 ---@return Quaternion self
@@ -1701,6 +2681,14 @@ end
 ---@return Quaternion
 function quat_meta:Conjugate()
 	return MakeQuaternion { -self[1], -self[2], -self[3], self[4] }
+end
+
+--- Inverts the quaternion.
+---
+---@return Quaternion
+function quat_meta:Invert()
+	local l = quat_meta.LengthSquare( self )
+	return MakeQuaternion { -self[1] / l, -self[2] / l, -self[3] / l, self[4] / l }
 end
 
 --- Adds to the quaternion.
@@ -1802,10 +2790,14 @@ end
 ---@param o number
 ---@return Quaternion self
 function quat_meta:Div( o )
-	self[1] = self[1] / o
-	self[2] = self[2] / o
-	self[3] = self[3] / o
-	self[4] = self[4] / o
+	if IsQuaternion( o ) then
+		quat_meta.Mul( self, { -o[1], -o[2], -o[3], o[4] } )
+	else
+		self[1] = self[1] / o
+		self[2] = self[2] / o
+		self[3] = self[3] / o
+		self[4] = self[4] / o
+	end
 	return self
 end
 
@@ -1923,18 +2915,20 @@ function quat_meta:Approach( dest, rate )
 	end
 	return MakeQuaternion( QuatSlerp( self, dest, corr_rate ) )
 end
+
  end)();
 --src/vector/transform.lua
-(function() 
+(function() ----------------
+-- Transform class and related functions
+-- @script vector.transform
 
----@type Vector
 local vector_meta = global_metatable( "vector" )
----@type Quaternion
 local quat_meta = global_metatable( "quaternion" )
 ---@class Transformation
 ---@field pos Vector
 ---@field rot Quaternion
-local transform_meta = global_metatable( "transformation" )
+local transform_meta
+transform_meta = global_metatable( "transformation" )
 
 --- Tests if the parameter is a transformation.
 ---
@@ -1962,6 +2956,8 @@ end
 function Transformation( pos, rot )
 	return MakeTransformation { pos = pos, rot = rot }
 end
+
+---@type Transformation
 
 ---@param data string
 ---@return Transformation self
@@ -2081,14 +3077,18 @@ function transform_meta:Raycast( dist, mul, radius, rejectTransparent )
 		hitpos = vector_meta.__add( self.pos, vector_meta.Mul( dir, hit and dist2 or dist ) ),
 	}
 end
+
  end)();
 --src/vector/vector.lua
-(function() 
+(function() ----------------
+-- Vector class and related functions
+-- @script vector.vector
+
+local quat_meta = global_metatable( "quaternion" )
 
 ---@class Vector
-local vector_meta = global_metatable( "vector" )
----@type Quaternion
-local quat_meta = global_metatable( "quaternion" )
+local vector_meta
+vector_meta = global_metatable( "vector" )
 
 --- Tests if the parameter is a vector.
 ---
@@ -2120,6 +3120,8 @@ function Vector( x, y, z )
 	end
 	return MakeVector { x or 0, y or 0, z or 0 }
 end
+
+---@type Vector
 
 ---@param data string
 ---@return Vector self
@@ -2425,14 +3427,77 @@ function vector_meta:Approach( dest, rate )
 	end
 	return vector_meta.Lerp( self, dest, rate / dist )
 end
+
+--- Get the minimum value for each vector component.
+---
+---@vararg Vector
+---@return Vector
+---@overload fun(o: number, ...): Vector
+function vector_meta:Min( ... )
+	local n = vector_meta.Clone( self )
+	for i = 1, select( "#", ... ) do
+		local o = select( i, ... )
+		if type( o ) == "number" then
+			n[1] = math.min( n[1], o )
+			n[2] = math.min( n[2], o )
+			n[3] = math.min( n[3], o )
+		else
+			n[1] = math.min( n[1], o[1] )
+			n[2] = math.min( n[2], o[2] )
+			n[3] = math.min( n[3], o[3] )
+		end
+	end
+	return n
+end
+
+--- Get the maximum value for each vector component.
+---
+---@vararg Vector
+---@return Vector
+---@overload fun(o: number, ...): Vector
+function vector_meta:Max( ... )
+	local n = vector_meta.Clone( self )
+	for i = 1, select( "#", ... ) do
+		local o = select( i, ... )
+		if type( o ) == "number" then
+			n[1] = math.max( n[1], o )
+			n[2] = math.max( n[2], o )
+			n[3] = math.max( n[3], o )
+		else
+			n[1] = math.max( n[1], o[1] )
+			n[2] = math.max( n[2], o[2] )
+			n[3] = math.max( n[3], o[3] )
+		end
+	end
+	return n
+end
+
+--- Clamp the vector components.
+---
+---@param min Vector | number
+---@param max Vector | number
+---@return Vector
+function vector_meta:Clamp( min, max )
+	if type( min ) == "number" then
+		return Vector( math.max( math.min( self[1], max ), min ), math.max( math.min( self[2], max ), min ),
+		               math.max( math.min( self[3], max ), min ) )
+	else
+		return Vector( math.max( math.min( self[1], max[1] ), min[1] ), math.max( math.min( self[2], max[2] ), min[2] ),
+		               math.max( math.min( self[3], max[3] ), min[3] ) )
+	end
+end
+
  end)();
 --src/entities/entity.lua
-(function() 
+(function() ----------------
+-- Entity class and related functions
+-- @script entities.entity
 
 ---@class Entity
 ---@field handle number
 ---@field type string
-local entity_meta = global_metatable( "entity" )
+local entity_meta
+entity_meta = global_metatable( "entity" )
 
 --- Gets the handle of an entity.
 ---
@@ -2473,6 +3538,8 @@ function Entity( handle )
 		return setmetatable( { handle = handle, type = "unknown" }, entity_meta )
 	end
 end
+
+---@type Entity
 
 ---@param data string
 ---@return Entity self
@@ -2568,12 +3635,16 @@ local Delete = Delete
 function entity_meta:Delete()
 	return Delete( self.handle )
 end
+
  end)();
 --src/entities/body.lua
-(function() 
+(function() ----------------
+-- Body class and related functions
+-- @script entities.body
 
 ---@class Body: Entity
-local body_meta = global_metatable( "body", "entity" )
+local body_meta
+body_meta = global_metatable( "body", "entity" )
 
 --- Tests if the parameter is a body entity.
 ---
@@ -2616,6 +3687,8 @@ function FindBodiesByTag( tag, global )
 	end
 	return t
 end
+
+---@type Body
 
 ---@return string
 function body_meta:__tostring()
@@ -2663,6 +3736,14 @@ end
 function body_meta:SetTransform( tr )
 	assert( self:IsValid() )
 	return SetBodyTransform( self.handle, tr )
+end
+
+--- Sets if the body should be simulated.
+---
+---@param bool boolean
+function body_meta:SetActive( bool )
+	assert( self:IsValid() )
+	return SetBodyActive( self.handle, bool )
 end
 
 --- Sets if the body should move.
@@ -2775,6 +3856,33 @@ function body_meta:GetWorldCenterOfMass()
 	return self:GetTransform():ToGlobal( self:GetLocalCenterOfMass() )
 end
 
+--- Gets the closest point to the body from a given origin.
+---
+---@param origin Vector
+---@return boolean hit
+---@return Vector point
+---@return Vector normal
+---@return Shape shape
+function body_meta:GetClosestPoint( origin )
+	local hit, point, normal, shape = GetBodyClosestPoint( self.handle, origin )
+	if not hit then
+		return false
+	end
+	return hit, MakeVector( point ), MakeVector( normal ), Shape( shape )
+end
+
+--- Gets all the dynamic bodies in the jointed structure.
+--- The result will include the current body.
+---
+---@return Body[] jointed
+function body_meta:GetJointedBodies()
+	local list = GetJointedBodies( self.handle )
+	for i = 1, #list do
+		list[i] = Body( list[i] )
+	end
+	return list
+end
+
 --- Gets if the body is currently being simulated.
 ---
 ---@return boolean
@@ -2814,12 +3922,16 @@ function body_meta:IsJointedToStatic()
 	assert( self:IsValid() )
 	return IsBodyJointedToStatic( self.handle )
 end
+
  end)();
 --src/entities/joint.lua
-(function() 
+(function() ----------------
+-- Joint class and related functions
+-- @script entities.joint
 
 ---@class Joint: Entity
-local joint_meta = global_metatable( "joint", "entity" )
+local joint_meta
+joint_meta = global_metatable( "joint", "entity" )
 
 --- Tests if the parameter is a joint entity.
 ---
@@ -2863,9 +3975,18 @@ function FindJointsByTag( tag, global )
 	return t
 end
 
+---@type Joint
+
 ---@return string
 function joint_meta:__tostring()
 	return string.format( "Joint[%d]", self.handle )
+end
+
+--- Detatches the joint from the given shape.
+---
+---@param shape Shape
+function joint_meta:DetachFromShape( shape )
+	DetachJointFromShape( self.handle, GetEntityHandle( shape ) )
 end
 
 --- Makes the joint behave as a motor.
@@ -2928,12 +4049,16 @@ function joint_meta:IsBroken()
 	return not self:IsValid() or IsJointBroken( self.handle )
 end
 
+
  end)();
 --src/entities/light.lua
-(function() 
+(function() ----------------
+-- Light class and related functions
+-- @script entities.light
 
 ---@class Light: Entity
-local light_meta = global_metatable( "light", "entity" )
+local light_meta
+light_meta = global_metatable( "light", "entity" )
 
 --- Tests if the parameter is a light entity.
 ---
@@ -2976,6 +4101,8 @@ function FindLightsByTag( tag, global )
 	end
 	return t
 end
+
+---@type Light
 
 ---@return string
 function light_meta:__tostring()
@@ -3040,12 +4167,16 @@ function light_meta:IsPointAffectedByLight( point )
 	assert( self:IsValid() )
 	return IsPointAffectedByLight( self.handle, point )
 end
+
  end)();
 --src/entities/location.lua
-(function() 
+(function() ----------------
+-- Location class and related functions
+-- @script entities.location
 
 ---@class Location: Entity
-local location_meta = global_metatable( "location", "entity" )
+local location_meta
+location_meta = global_metatable( "location", "entity" )
 
 --- Tests if the parameter is a location entity.
 ---
@@ -3089,6 +4220,8 @@ function FindLocationsByTag( tag, global )
 	return t
 end
 
+---@type Location
+
 ---@return string
 function location_meta:__tostring()
 	return string.format( "Location[%d]", self.handle )
@@ -3101,12 +4234,16 @@ function location_meta:GetTransform()
 	assert( self:IsValid() )
 	return MakeTransformation( GetLocationTransform( self.handle ) )
 end
+
  end)();
 --src/entities/player.lua
-(function() 
+(function() ----------------
+-- Player class and related functions
+-- @script entities.player
 
 ---@class Player
-local player_meta = global_metatable( "player" )
+local player_meta
+player_meta = global_metatable( "player" )
 
 ---@type Player
 PLAYER = setmetatable( {}, player_meta )
@@ -3139,6 +4276,12 @@ function player_meta:Respawn()
 	return RespawnPlayer()
 end
 
+--- Release what the player is currently holding.
+---
+function player_meta:ReleaseGrab()
+	ReleasePlayerGrab()
+end
+
 --- Sets the transform of the player.
 ---
 ---@param transform Transformation
@@ -3151,6 +4294,21 @@ end
 ---@param transform Transformation
 function player_meta:SetCamera( transform )
 	return SetCameraTransform( transform )
+end
+
+--- Sets the Field of View of the camera.
+---
+---@param degrees number
+function player_meta:SetFov( degrees )
+	return SetCameraFov( degrees )
+end
+
+--- Sets the Depth of Field of the camera.
+---
+---@param distance number
+---@param amount number
+function player_meta:SetDof( distance, amount )
+	return SetCameraDof( distance, amount )
 end
 
 --- Sets the transform of the player spawn.
@@ -3186,6 +4344,14 @@ end
 ---@param health number
 function player_meta:SetHealth( health )
 	return SetPlayerHealth( health )
+end
+
+--- Sets the velocity of the ground for the player,
+--- Effectively turning it into a conveyor belt of sorts.
+---
+---@param vel Vector
+function player_meta:SetGroundVelocity(vel)
+	SetPlayerGroundVelocity(vel)
 end
 
 --- Gets the transform of the player.
@@ -3278,12 +4444,16 @@ end
 function player_meta:GetHealth()
 	return GetPlayerHealth()
 end
+
  end)();
 --src/entities/screen.lua
-(function() 
+(function() ----------------
+-- Screen class and related functions
+-- @script entities.screen
 
 ---@class Screen: Entity
-local screen_meta = global_metatable( "screen", "entity" )
+local screen_meta
+screen_meta = global_metatable( "screen", "entity" )
 
 --- Tests if the parameter is a screen entity.
 ---
@@ -3327,6 +4497,8 @@ function FindScreensByTag( tag, global )
 	return t
 end
 
+---@type Screen
+
 ---@return string
 function screen_meta:__tostring()
 	return string.format( "Screen[%d]", self.handle )
@@ -3355,12 +4527,16 @@ function screen_meta:IsEnabled()
 	assert( self:IsValid() )
 	return IsScreenEnabled( self.handle )
 end
+
  end)();
 --src/entities/shape.lua
-(function() 
+(function() ----------------
+-- Shape class and related functions
+-- @script entities.shape
 
 ---@class Shape: Entity
-local shape_meta = global_metatable( "shape", "entity" )
+local shape_meta
+shape_meta = global_metatable( "shape", "entity" )
 
 --- Tests if the parameter is a shape entity.
 ---
@@ -3404,6 +4580,8 @@ function FindShapesByTag( tag, global )
 	return t
 end
 
+---@type Shape
+
 ---@return string
 function shape_meta:__tostring()
 	return string.format( "Shape[%d]", self.handle )
@@ -3440,6 +4618,18 @@ end
 function shape_meta:SetEmissiveScale( scale )
 	assert( self:IsValid() )
 	return SetShapeEmissiveScale( self.handle, scale )
+end
+
+--- Sets the collision filter of the shape.
+--- A shape will only collide with another if the following is true:
+--- ```
+--- (A.layer & B.mask) && (B.layer & A.mask)
+--- ```
+---
+---@param layer? number bit array (8 bits, 0-255)
+---@param mask? number bit mask (8 bits, 0-255)
+function shape_meta:SetCollisionFilter( layer, mask )
+	SetShapeCollisionFilter( self.handle, layer or 1, mask or 255 )
 end
 
 --- Gets the transform of the shape relative to its body.
@@ -3531,6 +4721,20 @@ function shape_meta:GetVoxelCount()
 	return GetShapeVoxelCount( self.handle )
 end
 
+--- Gets the closest point to the shape from a given origin.
+---
+---@param origin Vector
+---@return boolean hit
+---@return Vector point
+---@return Vector normal
+function shape_meta:GetClosestPoint( origin )
+	local hit, point, normal = GetShapeClosestPoint( self.handle, origin )
+	if not hit then
+		return false
+	end
+	return hit, MakeVector( point ), MakeVector( normal )
+end
+
 --- Gets if the shape is currently visible.
 ---
 ---@param maxDist number
@@ -3547,12 +4751,16 @@ end
 function shape_meta:IsBroken()
 	return not self:IsValid() or IsShapeBroken( self.handle )
 end
+
  end)();
 --src/entities/trigger.lua
-(function() 
+(function() ----------------
+-- Trigger class and related functions
+-- @script entities.trigger
 
 ---@class Trigger: Entity
-local trigger_meta = global_metatable( "trigger", "entity" )
+local trigger_meta
+trigger_meta = global_metatable( "trigger", "entity" )
 
 --- Tests if the parameter is a trigger entity.
 ---
@@ -3596,6 +4804,8 @@ function FindTriggersByTag( tag, global )
 	return t
 end
 
+---@type Trigger
+
 ---@return string
 function trigger_meta:__tostring()
 	return string.format( "Trigger[%d]", self.handle )
@@ -3615,6 +4825,21 @@ end
 function trigger_meta:GetTransform()
 	assert( self:IsValid() )
 	return MakeTransformation( GetTriggerTransform( self.handle ) )
+end
+
+--- Gets the distance to the trigger from a given origin.
+--- Negative values indicate the origin is inside the trigger.
+---
+---@param origin Vector
+function trigger_meta:GetDistance(origin)
+	return GetTriggerDistance(self.handle, origin)
+end
+
+--- Gets the closest point to the trigger from a given origin.
+---
+---@param origin Vector
+function trigger_meta:GetClosestPoint(origin)
+	return MakeVector(GetTriggerDistance(self.handle, origin))
 end
 
 --- Gets the bounds of the trigger.
@@ -3673,12 +4898,16 @@ function trigger_meta:IsEmpty( demolision )
 	local empty, highpoint = IsTriggerEmpty( self.handle, demolision )
 	return empty, highpoint and MakeVector( highpoint )
 end
+
  end)();
 --src/entities/vehicle.lua
-(function() 
+(function() ----------------
+-- Vehicle class and related functions
+-- @script entities.vehicle
 
 ---@class Vehicle: Entity
-local vehicle_meta = global_metatable( "vehicle", "entity" )
+local vehicle_meta
+vehicle_meta = global_metatable( "vehicle", "entity" )
 
 --- Tests if the parameter is a vehicle entity.
 ---
@@ -3721,6 +4950,8 @@ function FindVehiclesByTag( tag, global )
 	end
 	return t
 end
+
+---@type Vehicle
 
 ---@return string
 function vehicle_meta:__tostring()
@@ -3776,10 +5007,10 @@ end
 function vehicle_meta:GetGlobalDriverPos()
 	return self:GetTransform():ToGlobal( self:GetDriverPos() )
 end
+
  end)();
 --src/animation/animation.lua
 (function() 
-
 local animator_meta = global_metatable( "animator" )
 
 function animator_meta:Update( dt )
@@ -3862,16 +5093,20 @@ Animator.SpeedLinearApproach = function( init, acceleration, down_acceleration )
 		end,
 	}
 end
+
  end)();
 --src/animation/armature.lua
-(function() 
+(function() ----------------
+-- Armature library
+-- @script animation.armature
 
 ---@class Armature
 ---@field refs any
 ---@field root any
 ---@field scale number | nil
 ---@field dirty boolean
-local armature_meta = global_metatable( "armature" )
+local armature_meta
+armature_meta = global_metatable( "armature" )
 
 --[[
 
@@ -3953,6 +5188,152 @@ Armature {
 
 ]]
 
+--- Loads armature information from a prefab and a list of shapes.
+---
+---@param xml string
+---@param parts table[]
+---@param scale? number
+function LoadArmatureFromXML( xml, parts, scale ) -- Example below
+	scale = scale or 1
+	local dt = ParseXML( xml )
+	assert( (dt.type == "prefab" and dt.children[1] and dt.children[1].type == "group") or dt.type == "group", "Invalid Tool XML" )
+	local shapes = {}
+	local offsets = {}
+	for i = 1, #parts do
+		shapes[i] = parts[i][1]
+		local v = parts[i][2]
+		-- Compensate for the editor placing vox parts relative to the center of the base
+		offsets[parts[i][1]] = Vec( math.floor( v[1] / 2 ) / 10, 0, -math.floor( v[2] / 2 ) / 10 )
+	end
+
+	local function parseVec( str )
+		if not str then
+			return Vec( 0, 0, 0 )
+		end
+		local x, y, z = str:match( "([%d.-]+) ([%d.-]+) ([%d.-]+)" )
+		return Vec( tonumber( x ), tonumber( y ), tonumber( z ) )
+	end
+
+	local function parseTransform( attr )
+		local pos, angv = parseVec( attr.pos ), parseVec( attr.rot )
+		return Transform( Vec( pos[1], pos[2], pos[3] ), QuatEuler( angv[1], angv[2], angv[3] ) )
+	end
+
+	local function translatebone( node, isLocation )
+		local t = { name = node.attributes.name, transform = parseTransform( node.attributes ) }
+		local sub = t
+		if not isLocation then
+			t.name = "__FIXED_" .. node.attributes.name
+			t[1] = { name = node.attributes.name }
+			sub = t[1]
+		end
+		sub.shapes = {}
+		for i = 1, #node.children do
+			local child = node.children[i]
+			if child.type == "vox" then
+				local name = child.attributes.object
+				local tr = parseTransform( child.attributes )
+				local s = child.attributes.scale and tonumber( child.attributes.scale ) or 1
+				tr.pos = VecSub( tr.pos, VecScale( offsets[name], s ) )
+				tr.rot = QuatRotateQuat( tr.rot, QuatEuler( -90, 0, 0 ) )
+				sub.shapes[name] = tr
+			elseif child.type == "group" then
+				sub[#sub + 1] = translatebone( child )
+			elseif child.type == "location" then
+				sub[#sub + 1] = translatebone( child, true )
+			end
+		end
+		return t
+	end
+	local bones = translatebone( dt.type == "prefab" and dt.children[1] or dt )[1]
+	bones.transform = Transform( Vec(), QuatEuler( 0, 0, 0 ) )
+	bones.name = "root"
+
+	local arm = Armature { shapes = shapes, scale = scale, bones = bones }
+	arm:ComputeBones()
+	return arm, dt
+end
+--[=[
+--[[---------------------------------------------------
+    LoadArmatureFromXML is capable of taking the XML of a prefab and turning it into a useable armature object for tools and such.
+    Two things are required: the XML of the prefab itself, and a list of all the objects inside the vox for position correction.
+    The list of objects should be as it appears in MagicaVoxel, with every slot corresponding to an object in the vox file.
+    One notable limitation is that there can only be one vox file used and that all the objects inside it can only be used once.
+--]]---------------------------------------------------
+
+-- Loading the armature from the prefab and the objects list
+local armature = LoadArmatureFromXML([[
+<prefab version="0.7.0">
+    <group id_="1196432640" open_="true" name="instance=MOD/physgun.xml" pos="-3.4 0.7 0.0" rot="0.0 0.0 0.0">
+        <vox id_="1866644736" pos="-0.125 -0.125 0.125" file="MOD/physgun.vox" object="body" scale="0.5"/>
+        <group id_="279659168" open_="true" name="core0" pos="0.0 0.0 -0.075" rot="0.0 0.0 0.0">
+            <vox id_="496006720" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_0" scale="0.5"/>
+        </group>
+        <group id_="961930560" open_="true" name="core1" pos="0.0 0.0 -0.175" rot="0.0 0.0 0.0">
+            <vox id_="1109395584" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_1" scale="0.5"/>
+        </group>
+        <group id_="806535232" open_="true" name="core2" pos="0.0 0.0 -0.275" rot="0.0 0.0 0.0">
+            <vox id_="378362432" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_2" scale="0.5"/>
+        </group>
+        <group id_="1255943040" open_="true" name="arms_rot" pos="0.0 0.0 -0.375" rot="0.0 0.0 0.0">
+            <group id_="439970016" open_="true" name="arm0_base" pos="0.0 0.1 0.0" rot="0.0 0.0 0.0">
+                <vox id_="1925106432" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_00" scale="0.5"/>
+                <group id_="2122316288" open_="true" name="arm0_tip" pos="0.0 0.2 -0.0" rot="0.0 0.0 0.0">
+                    <vox id_="572557440" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_01" scale="0.5"/>
+                </group>
+            </group>
+            <group id_="516324128" open_="true" name="arm1_base" pos="0.087 -0.05 0.0" rot="180.0 180.0 -60.0">
+                <vox id_="28575440" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_10" scale="0.5"/>
+                <group id_="962454912" open_="true" name="arm1_tip" pos="0.0 0.2 0.0" rot="0.0 0.0 0.0">
+                    <vox id_="1966724352" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_11" scale="0.5"/>
+                </group>
+            </group>
+            <group id_="634361664" open_="true" name="arm2_base" pos="-0.087 -0.05 0.0" rot="180.0 180.0 60.0">
+                <vox id_="1049360960" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_20" scale="0.5"/>
+                <group id_="1428116608" open_="true" name="arm2_tip" pos="0.0 0.2 0.0" rot="0.0 0.0 0.0">
+                    <vox id_="1388661504" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_21" scale="0.5"/>
+                </group>
+            </group>
+        </group>
+        <group id_="1569551872" open_="true" name="nozzle" pos="0.0 0.0 -0.475">
+            <vox id_="506099872" pos="-0.025 -0.125 0.1" file="MOD/physgun.vox" object="cannon" scale="0.5"/>
+        </group>
+    </group>
+</prefab>
+]], {
+    -- The list of objects as it appears in MagicaVoxel. Each entry has the name of the object followed by the size as seen in MagicaVoxel.
+    -- Please note that the order MUST be the same as in MagicaVoxel and that there can be no gaps.
+    {"cannon", Vec(5, 3, 5)},
+    {"core_2", Vec(5, 2, 5)},
+    {"core_1", Vec(5, 2, 5)},
+    {"core_0", Vec(5, 2, 5)},
+    {"arm_21", Vec(1, 1, 2)},
+    {"arm_11", Vec(1, 1, 2)},
+    {"arm_01", Vec(1, 1, 2)},
+    {"arm_20", Vec(1, 1, 4)},
+    {"arm_10", Vec(1, 1, 4)},
+    {"arm_00", Vec(1, 1, 4)},
+    {"body", Vec(9, 6, 5)}
+})
+-----------------------------------------------------
+
+-- Every frame you can animate the armature by setting the local transform of bones and then applying the changes to the shapes of the object.
+armature:SetBoneTransform("core0", Transform(Vec(), QuatEuler(0, 0, GetTime()*73)))
+armature:SetBoneTransform("core1", Transform(Vec(), QuatEuler(0, 0, -GetTime()*45)))
+armature:SetBoneTransform("core2", Transform(Vec(), QuatEuler(0, 0, GetTime()*83)))
+armature:SetBoneTransform("arms_rot", Transform(Vec(), QuatEuler(0, 0, GetTime()*20)))
+local tr = Transform(Vec(0,0,0), QuatEuler(-40 + 5 * math.sin(GetTime()), 0, 0))
+armature:SetBoneTransform("arm0_base", tr)
+armature:SetBoneTransform("arm0_tip", tr)
+armature:SetBoneTransform("arm1_base", tr)
+armature:SetBoneTransform("arm1_tip", tr)
+armature:SetBoneTransform("arm2_base", tr)
+armature:SetBoneTransform("arm2_tip", tr)
+-- shapes is the list of all the shapes of the vox, it can be obtained with GetBodyShapes()
+armature:Apply(shapes)
+
+--]=]
+
 --- Creates a new armature.
 ---
 ---@param definition table
@@ -3992,6 +5373,8 @@ function Armature( definition )
 	dobone( armature.root )
 	return setmetatable( armature, armature_meta )
 end
+
+---@type Armature
 
 local function computebone( bone, transform, scale, dirty )
 	dirty = dirty or bone.dirty or bone.jiggle_transform
@@ -4181,167 +5564,98 @@ function armature_meta:DrawDebug( transform )
 	end
 end
 
---- Loads armature information from a prefab and a list of shapes.
----
----@param xml string
----@param parts table[]
----@param scale? number
-function LoadArmatureFromXML( xml, parts, scale ) -- Example below
-	scale = scale or 1
-	local dt = ParseXML( xml )
-	assert( dt.type == "prefab" and dt.children[1] and dt.children[1].type == "group" )
-	local shapes = {}
-	local offsets = {}
-	for i = 1, #parts do
-		shapes[i] = parts[i][1]
-		local v = parts[i][2]
-		-- Compensate for the editor placing vox parts relative to the center of the base
-		offsets[parts[i][1]] = Vec( math.floor( v[1] / 2 ) / 10, 0, -math.floor( v[2] / 2 ) / 10 )
-	end
-
-	local function parseVec( str )
-		if not str then
-			return Vec( 0, 0, 0 )
-		end
-		local x, y, z = str:match( "([%d.-]+) ([%d.-]+) ([%d.-]+)" )
-		return Vec( tonumber( x ), tonumber( y ), tonumber( z ) )
-	end
-
-	local function parseTransform( attr )
-		local pos, angv = parseVec( attr.pos ), parseVec( attr.rot )
-		return Transform( Vec( pos[1], pos[2], pos[3] ), QuatEuler( angv[1], angv[2], angv[3] ) )
-	end
-
-	local function translatebone( node, isLocation )
-		local t = { name = node.attributes.name, transform = parseTransform( node.attributes ) }
-		local sub = t
-		if not isLocation then
-			t.name = "__FIXED_" .. node.attributes.name
-			t[1] = { name = node.attributes.name }
-			sub = t[1]
-		end
-		sub.shapes = {}
-		for i = 1, #node.children do
-			local child = node.children[i]
-			if child.type == "vox" then
-				local name = child.attributes.object
-				local tr = parseTransform( child.attributes )
-				local s = child.attributes.scale and tonumber( child.attributes.scale ) or 1
-				tr.pos = VecSub( tr.pos, VecScale( offsets[name], s ) )
-				tr.rot = QuatRotateQuat( tr.rot, QuatEuler( -90, 0, 0 ) )
-				sub.shapes[name] = tr
-			elseif child.type == "group" then
-				sub[#sub + 1] = translatebone( child )
-			elseif child.type == "location" then
-				sub[#sub + 1] = translatebone( child, true )
-			end
-		end
-		return t
-	end
-	local bones = translatebone( dt.children[1] )[1]
-	bones.transform = Transform( Vec(), QuatEuler( 0, 0, 0 ) )
-	bones.name = "root"
-
-	local arm = Armature { shapes = shapes, scale = scale, bones = bones }
-	arm:ComputeBones()
-	return arm, dt
-end
---[=[
---[[---------------------------------------------------
-    LoadArmatureFromXML is capable of taking the XML of a prefab and turning it into a useable armature object for tools and such.
-    Two things are required: the XML of the prefab itself, and a list of all the objects inside the vox for position correction.
-    The list of objects should be as it appears in MagicaVoxel, with every slot corresponding to an object in the vox file.
-    One notable limitation is that there can only be one vox file used and that all the objects inside it can only be used once.
---]]---------------------------------------------------
-
--- Loading the armature from the prefab and the objects list
-local armature = LoadArmatureFromXML([[
-<prefab version="0.7.0">
-    <group id_="1196432640" open_="true" name="instance=MOD/physgun.xml" pos="-3.4 0.7 0.0" rot="0.0 0.0 0.0">
-        <vox id_="1866644736" pos="-0.125 -0.125 0.125" file="MOD/physgun.vox" object="body" scale="0.5"/>
-        <group id_="279659168" open_="true" name="core0" pos="0.0 0.0 -0.075" rot="0.0 0.0 0.0">
-            <vox id_="496006720" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_0" scale="0.5"/>
-        </group>
-        <group id_="961930560" open_="true" name="core1" pos="0.0 0.0 -0.175" rot="0.0 0.0 0.0">
-            <vox id_="1109395584" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_1" scale="0.5"/>
-        </group>
-        <group id_="806535232" open_="true" name="core2" pos="0.0 0.0 -0.275" rot="0.0 0.0 0.0">
-            <vox id_="378362432" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_2" scale="0.5"/>
-        </group>
-        <group id_="1255943040" open_="true" name="arms_rot" pos="0.0 0.0 -0.375" rot="0.0 0.0 0.0">
-            <group id_="439970016" open_="true" name="arm0_base" pos="0.0 0.1 0.0" rot="0.0 0.0 0.0">
-                <vox id_="1925106432" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_00" scale="0.5"/>
-                <group id_="2122316288" open_="true" name="arm0_tip" pos="0.0 0.2 -0.0" rot="0.0 0.0 0.0">
-                    <vox id_="572557440" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_01" scale="0.5"/>
-                </group>
-            </group>
-            <group id_="516324128" open_="true" name="arm1_base" pos="0.087 -0.05 0.0" rot="180.0 180.0 -60.0">
-                <vox id_="28575440" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_10" scale="0.5"/>
-                <group id_="962454912" open_="true" name="arm1_tip" pos="0.0 0.2 0.0" rot="0.0 0.0 0.0">
-                    <vox id_="1966724352" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_11" scale="0.5"/>
-                </group>
-            </group>
-            <group id_="634361664" open_="true" name="arm2_base" pos="-0.087 -0.05 0.0" rot="180.0 180.0 60.0">
-                <vox id_="1049360960" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_20" scale="0.5"/>
-                <group id_="1428116608" open_="true" name="arm2_tip" pos="0.0 0.2 0.0" rot="0.0 0.0 0.0">
-                    <vox id_="1388661504" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_21" scale="0.5"/>
-                </group>
-            </group>
-        </group>
-        <group id_="1569551872" open_="true" name="nozzle" pos="0.0 0.0 -0.475">
-            <vox id_="506099872" pos="-0.025 -0.125 0.1" file="MOD/physgun.vox" object="cannon" scale="0.5"/>
-        </group>
-    </group>
-</prefab>
-]], {
-    -- The list of objects as it appears in MagicaVoxel. Each entry has the name of the object followed by the size as seen in MagicaVoxel.
-    -- Please note that the order MUST be the same as in MagicaVoxel and that there can be no gaps.
-    {"cannon", Vec(5, 3, 5)},
-    {"core_2", Vec(5, 2, 5)},
-    {"core_1", Vec(5, 2, 5)},
-    {"core_0", Vec(5, 2, 5)},
-    {"arm_21", Vec(1, 1, 2)},
-    {"arm_11", Vec(1, 1, 2)},
-    {"arm_01", Vec(1, 1, 2)},
-    {"arm_20", Vec(1, 1, 4)},
-    {"arm_10", Vec(1, 1, 4)},
-    {"arm_00", Vec(1, 1, 4)},
-    {"body", Vec(9, 6, 5)}
-})
------------------------------------------------------
-
--- Every frame you can animate the armature by setting the local transform of bones and then applying the changes to the shapes of the object.
-armature:SetBoneTransform("core0", Transform(Vec(), QuatEuler(0, 0, GetTime()*73)))
-armature:SetBoneTransform("core1", Transform(Vec(), QuatEuler(0, 0, -GetTime()*45)))
-armature:SetBoneTransform("core2", Transform(Vec(), QuatEuler(0, 0, GetTime()*83)))
-armature:SetBoneTransform("arms_rot", Transform(Vec(), QuatEuler(0, 0, GetTime()*20)))
-local tr = Transform(Vec(0,0,0), QuatEuler(-40 + 5 * math.sin(GetTime()), 0, 0))
-armature:SetBoneTransform("arm0_base", tr)
-armature:SetBoneTransform("arm0_tip", tr)
-armature:SetBoneTransform("arm1_base", tr)
-armature:SetBoneTransform("arm1_tip", tr)
-armature:SetBoneTransform("arm2_base", tr)
-armature:SetBoneTransform("arm2_tip", tr)
--- shapes is the list of all the shapes of the vox, it can be obtained with GetBodyShapes()
-armature:Apply(shapes)
-
---]=]
  end)();
---src/tool.lua
-(function() 
+--src/tool/tool.lua
+(function() ----------------
+-- Tool Framework
+-- @script tool.tool
 
 ---@class Tool
 ---@field _TRANSFORM Transformation
 ---@field _TRANSFORM_FIX Transformation
 ---@field _TRANSFORM_DIFF Transformation
 ---@field _ARMATURE Armature
+---@field _TOOLAMMOSTRING string
 ---@field armature Armature
 ---@field _SHAPES Shape[]
 ---@field _OBJECTS table[]
 ---@field model string
 ---@field printname string
 ---@field id string
-local tool_meta = global_metatable( "tool" )
+local tool_meta
+tool_meta = global_metatable( "tool", nil, true )
+
+local extra_tools = {}
+
+--- Registers a tool using UMF.
+---
+---@param id string
+---@param data table
+---@return Tool
+function RegisterToolUMF( id, data )
+	if LoadArmatureFromXML and type( data.model ) == "table" then
+		local arm, xml = LoadArmatureFromXML( data.model.prefab, data.model.objects, data.model.scale )
+		data.armature = arm
+		data._ARMATURE = arm
+		data._OBJECTS = data.model.objects
+		local function findvox( xml )
+			if xml.type == "vox" then
+				return xml.attributes["file"]
+			end
+			for i, c in ipairs( xml.children ) do
+				local t = findvox( c )
+				if t then
+					return t
+				end
+			end
+		end
+		data.model = data.model.path or findvox( xml )
+	end
+	setmetatable( data, tool_meta )
+	data.id = id
+	extra_tools[id] = data
+	RegisterTool( id, data.printname or id, data.model or "", data.group or 6 )
+	SetBool( "game.tool." .. id .. ".enabled", true )
+	for k, f in pairs( tool_meta._C ) do
+		local v = rawget( data, k )
+		if v ~= nil then
+			rawset( data, k, nil )
+			f( data, v )
+		end
+	end
+	return data
+end
+
+---@type Tool
+
+function tool_meta._C:ammo( val )
+	local key = "game.tool." .. self.id .. ".ammo"
+	local keystr = key .. ".display"
+	if val ~= nil then
+		if type( val ) == "number" then
+			SetFloat( key, val )
+			ClearKey( keystr )
+			rawset( self, "_TOOLAMMOSTRING", false )
+		else
+			SetFloat( key, 0 )
+			SetString( key .. ".display", tostring( val ) )
+			rawset( self, "_TOOLAMMOSTRING", tostring( val ) )
+		end
+	elseif HasKey( keystr ) then
+		return GetString( keystr )
+	else
+		return GetFloat( key )
+	end
+end
+
+function tool_meta._C:enabled( val )
+	local key = "game.tool." .. self.id .. ".enabled"
+	if val ~= nil then
+		SetBool( key, val )
+	else
+		return GetBool( key )
+	end
+end
 
 --- Draws the tool in the world instead of the player view.
 ---
@@ -4437,40 +5751,6 @@ end
 function tool_meta:Holster()
 end
 
----@type table<string, Tool>
-local extra_tools = {}
---- Registers a tool using UMF.
----
----@param id string
----@param data table
----@return Tool
-function RegisterToolUMF( id, data )
-	if LoadArmatureFromXML and type( data.model ) == "table" then
-		local arm, xml = LoadArmatureFromXML( data.model.prefab, data.model.objects, data.model.scale )
-		data.armature = arm
-		data._ARMATURE = arm
-		data._OBJECTS = data.model.objects
-		local function findvox( xml )
-			if xml.type == "vox" then
-				return xml.attributes["file"]
-			end
-			for i, c in ipairs( xml.children ) do
-				local t = findvox( c )
-				if t then
-					return t
-				end
-			end
-		end
-		data.model = data.model.path or findvox( xml )
-	end
-	setmetatable( data, tool_meta )
-	data.id = id
-	extra_tools[id] = data
-	RegisterTool( id, data.printname or id, data.model or "" )
-	SetBool( "game.tool." .. id .. ".enabled", true )
-	return data
-end
-
 local function istoolactive()
 	return GetBool( "game.player.canusetool" )
 end
@@ -4483,6 +5763,16 @@ hook.add( "api.mouse.wheel", "api.tool_loader", function( ds )
 	local tool = prev and extra_tools[prev]
 	if tool and tool.MouseWheel then
 		tool:MouseWheel( ds )
+	end
+end )
+
+hook.add( "base.update", "api.tool_loader", function( dt )
+	local cur = GetString( "game.player.tool" )
+	local tool = extra_tools[cur]
+	if tool then
+		if tool.Update then
+			softassert( pcall( tool.Update, tool, dt ) )
+		end
 	end
 end )
 
@@ -4538,6 +5828,10 @@ hook.add( "base.tick", "api.tool_loader", function( dt )
 				tool._ARMATURE:Apply( tool._SHAPES )
 			end
 		end
+		if tool._TOOLAMMOSTRING then
+			-- Fix sandbox ammo string
+			SetInt( "game.tool." .. tool.id .. ".ammo", 0 )
+		end
 		if tool.Tick then
 			softassert( pcall( tool.Tick, tool, dt ) )
 		end
@@ -4578,9 +5872,835 @@ hook.add( "api.mouse.released", "api.tool_loader", function( button )
 		softassert( pcall( tool[event], tool ) )
 	end
 end )
+
+ end)();
+--src/tdui/base.lua
+(function() 
+--[[
+-- prototype code (desired outcome)
+TDUI.Label = TDUI.Panel {
+
+	text = ""
+	font = RegisterFont("font/consolas.ttf"),
+	fontSize = 24,
+
+	Draw = function(self, w, h)
+		UiFont(self.font, self.fontSize)
+		UiAlign("left top")
+		UiText(self.text)
+		-- This example doesn't account for:
+		--  * custom alignment
+		--  * wrapping on width
+		--  * Layout calculation
+	end,
+}
+
+local window = TDUI.Frame {
+	title = "Test Window",
+
+	width = "80%h",
+	height = "80%h",
+	resizeable = true,
+
+	padding = 10,
+
+	TDUI.Label {
+		text = "Something"
+	}
+}
+]]
+
+local function createchild( self, def )
+	setmetatable( def, { __index = self, __call = createchild, __PANEL = true } )
+	if self and self.__PerformInherit then
+		self:__PerformInherit( def )
+	end
+	if def.__PerformRegister then
+		def:__PerformRegister()
+	end
+	return def
+end
+
+TDUI = createchild( nil, {} )
+
+local function parseFour( data )
+	local dtype = type( data )
+	if dtype == "number" then
+		return { data, data, data, data }
+	elseif dtype == "string" then
+		local tmp = {}
+		for match in data:gmatch( "[^ ]+" ) do
+			tmp[#tmp + 1] = tonumber( match )
+		end
+		data = tmp
+		dtype = "table"
+	end
+	if dtype == "table" then
+		if #data == 0 then
+			return { 0, 0, 0, 0 }
+		end
+		if #data == 1 then
+			return { data[1], data[1], data[1], data[1] }
+		end
+		if #data < 4 then
+			return { data[1], data[2], data[1], data[2] }
+		end
+		return data
+	end
+	return { 0, 0, 0, 0 }
+end
+
+local function parsePos( data, w, h, def )
+	if type( data ) == "number" then
+		return data
+	end
+	if type( data ) == "function" then
+		return data( w, h, def )
+	end
+	if type( data ) ~= "string" then
+		return 0
+	end
+	if data:find( "function" ) then
+		return 0
+	end
+
+	local code = "local _,_w,_h = ...\nreturn" .. data:gsub( "(-?)([%d.]+)(%%?)([wh]?)", function( sub, n, prc, mod )
+		if prc == "" and mod == "" then
+			return sub .. n
+		end
+		return sub .. "(" .. n .. "*_" .. mod .. ")"
+	end )
+	local fn, err = loadstring( code )
+	assert( fn, err )
+	setfenv( fn, {} )
+
+	return fn( def / 100, w / 100, h / 100 )
+end
+
+local function parseAlign( data )
+	local alignx, aligny = 1, 1
+	for str in data:gmatch( "%w+" ) do
+		if str == "left" then
+			alignx = 1
+		end
+		if str == "center" then
+			alignx = 0
+		end
+		if str == "right" then
+			alignx = -1
+		end
+		if str == "top" then
+			aligny = 1
+		end
+		if str == "middle" then
+			aligny = 0
+		end
+		if str == "bottom" then
+			aligny = -1
+		end
+	end
+	return alignx, aligny
+end
+
+TDUI.Slot = function( name )
+	return { __SLOT = name }
+end
+
+-- Base Panel,
+TDUI.Panel = TDUI {
+	__alignx = 1,
+	__aligny = 1,
+	__realx = 0,
+	__realy = 0,
+	__realw = 0,
+	__realh = 0,
+	margin = { 0, 0, 0, 0 },
+	padding = { 0, 0, 0, 0 },
+	boxsizing = "parent",
+	align = "left top",
+	clip = false,
+	visible = true,
+
+	layout = TDUI.Layout,
+
+	oninit = function( self )
+	end,
+
+	predraw = function( self, w, h )
+	end,
+	ondraw = function( self, w, h )
+		-- UiColor(1, 1, 1)
+		-- UiTranslate(-40, -40)
+		-- UiImageBox("common/box-solid-shadow-50.png", w+80, h+81, 50, 50)
+		-- UiTranslate(40, 40)
+		-- UiColor(1, 0, 0, 0.2)
+		-- UiRect(w, h)
+	end,
+	postdraw = function( self, w, h )
+	end,
+
+	__Draw = function( self )
+		if not self.visible then
+			return
+		end
+		if not rawget( self, "__validated" ) then
+			self:InvalidateLayout( true )
+		end
+		local w, h = self:GetComputedSize()
+		self:predraw( w, h )
+		self:ondraw( w, h )
+
+		if self.clip then
+			UiPush()
+			UiWindow( w, h, true )
+		end
+
+		local x, y = 0, 0
+		for i = 1, #self do
+			local child = self[i]
+			local dfx, dfy = child:GetComputedPos()
+			UiTranslate( dfx - x, dfy - y )
+			child:__Draw()
+			x, y = dfx, dfy
+		end
+		UiTranslate( -x, -y )
+
+		if self.clip then
+			UiPop()
+		end
+
+		self:postdraw( w, h )
+	end,
+
+	__PerformRegister = function( self )
+		self.margin = parseFour( self.margin )
+		self.padding = parseFour( self.padding )
+		self.__alignx, self.__aligny = parseAlign( self.align )
+		local i = 1
+		self.__dynamic = {}
+		local hasslots, slots = false, rawget( self, "__SLOTS" ) or {}
+		while i <= #self do
+			if type( self[i] ) == "function" or (type( self[i] ) == "table" and type( self[i].__SLOT ) == "string") then
+				local id = #self.__dynamic + 1
+				local result
+				if self[i] == TDUI.Slot or (type( self[i] ) == "table" and type( self[i].__SLOT ) == "string") then
+					local name = self[i] == TDUI.Slot and "default" or self[i].__SLOT
+					result = {}
+					local content
+					slots[name] = function( c )
+						content = c
+						self:__RefreshDynamic( id )
+					end
+					self.__dynamic[id] = {
+						func = function()
+							return content
+						end,
+						min = i,
+						count = 0,
+					}
+					hasslots = true
+				else
+					result = self[i]( self, id )
+					self.__dynamic[id] = { func = self[i], min = i, count = #result }
+				end
+				if #result == 0 then
+					table.remove( self, i )
+				elseif #result == 1 then
+					self[i] = result[1]
+				else
+					for j = #self, i + 1, -1 do
+						self[j + #result - 1] = self[j]
+					end
+					for j = 1, #result do
+						self[i + j - 1] = result[j]
+					end
+				end
+				i = i - 1
+			else
+				local cslots = rawget( self[i], "__SLOTS" )
+				if cslots then -- TODO: WHY DOES THIS SECTION WORK???
+					hasslots = true -- need to use __dynamic to make sure the right child is being referenced
+					for name, update in pairs( cslots ) do
+						slots[name] = update
+					end
+					self[i].__SLOTS = nil
+				end
+				rawset( self[i], "__parent", self )
+			end
+			i = i + 1
+		end
+		if hasslots then
+			self.__SLOTS = slots
+		end
+		self:oninit()
+	end,
+
+	__PerformInherit = function( self, child )
+		local SLOTS = rawget( self, "__SLOTS" )
+		if SLOTS then
+			for name, update in pairs( SLOTS ) do
+				local src = name == "default" and child or child[name]
+				update( src )
+			end
+		end
+		if SLOTS and SLOTS.default then
+			for i = 1, #child do
+				child[i] = nil
+			end
+		end
+		if #self > 0 then
+			for i = #child, 1, -1 do
+				child[i + #self] = child[i]
+			end
+			for i = 1, #self do
+				local meta = getmetatable( self[i] )
+				if meta and meta.__PANEL then
+					child[i] = self[i] {}
+				else
+					child[i] = self[i]
+				end
+			end
+		end
+	end,
+
+	__RefreshDynamic = function( self, id )
+		local dyn = self.__dynamic[id]
+		if not dyn then
+			return
+		end
+		local result = dyn.func( self, id )
+		local d = #result - dyn.count
+		if d > 0 then
+			for i = #self, dyn.min + dyn.count, -1 do
+				self[i + d] = self[i]
+			end
+		elseif d < 0 then
+			for i = dyn.min + dyn.count, #self - d do
+				self[i + d] = self[i]
+			end
+		end
+		for i = 1, #result do
+			self[dyn.min + i - 1] = result[i]
+		end
+		dyn.count = #result
+		for i = id + 1, #self.__dynamic do
+			self.__dynamic[i].min = self.__dynamic[i].min + d
+		end
+		self:InvalidateLayout()
+	end,
+
+	onlayout = function( self, data, pw, ph, ew, eh )
+		-- onlayout must do 2 things:
+		--  1. Position its children within the available space
+		--  2. Compute its own size for the layout of its parent
+
+		-- TODO: Optimize for static sizes and unchanged bounds
+
+		local selflayout = self.layout
+		if selflayout then
+			local f = selflayout.onlayout
+			if f and f ~= self.onlayout then
+				return f( self, selflayout, pw, ph, ew, eh )
+			end
+		end
+		warning( "Unable to compute layout" )
+		self.__validated = true
+		self:ComputeSize( pw, ph )
+		for i = 1, #self do
+			local child = self[i]
+			child:onlayout( child, self.__realw, self.__realh, self.__realw, self.__realh )
+			child:ComputePosition( 0, 0, self.__realw, self.__realh )
+		end
+		return self.__realw, self.__realh
+
+		--[[self.__realx = self.x and parsePos(self.x, pw, ph, pw) or 0
+		self.__realy = self.y and parsePos(self.y, pw, ph, ph) or 0
+		self.__realw = self.width and parsePos(self.width, pw, ph, pw) or 256
+		self.__realh = self.height and parsePos(self.height, pw, ph, ph) or 256
+		self.__validated = true
+		for i = 1, #self do
+			local child = self[i]
+			child:__PerformLayout(self.__realw, self.__realh)
+		end]]
+	end,
+
+	ComputePosition = function( self, dx, dy, pw, ph )
+		if self.boxsizing == "parent" then
+			local parent = self:GetParent()
+			if parent then
+				pw = pw - self.margin[4] - self.margin[2]
+				ph = ph - self.margin[1] - self.margin[3]
+			end
+		end
+
+		local x = self.x and parsePos( self.x, pw, ph, pw ) or 0
+		if self.__alignx == 1 then
+			self.__realx = x + self.margin[4] + dx
+		elseif self.__alignx == 0 then
+			self.__realx = x + (pw - self.__realw) / 2 + dx
+		elseif self.__alignx == -1 then
+			self.__realx = x + pw - self.margin[2] - self.__realw + dx
+		end
+
+		local y = self.y and parsePos( self.y, pw, ph, ph ) or 0
+		if self.__aligny == 1 then
+			self.__realy = y + self.margin[1] + dy
+		elseif self.__aligny == 0 then
+			self.__realy = y + (ph - self.__realh) / 2 + dy
+		elseif self.__aligny == -1 then
+			self.__realy = y + ph - self.margin[3] - self.__realh + dy
+		end
+
+		return self.__realx, self.__realy
+	end,
+
+	ComputeSize = function( self, pw, ph )
+		if self.boxsizing == "parent" then
+			local parent = self:GetParent()
+			if parent then
+				pw = pw - self.margin[4] - self.margin[2]
+				ph = ph - self.margin[1] - self.margin[3]
+			end
+		end
+		self.__realw = (self.width and parsePos( self.width, pw, ph, pw ) or 0)
+		self.__realh = (self.height and parsePos( self.height, pw, ph, ph ) or 0)
+		if self.ratio then
+			if self.width and not self.height then
+				self.__realh = self.__realw * self.ratio
+			elseif self.height and not self.width then
+				self.__realw = self.__realh / self.ratio
+			end
+		end
+		return self.__realw - self.padding[4] - self.padding[2], self.__realh - self.padding[1] - self.padding[3]
+	end,
+
+	InvalidateLayout = function( self, immediate )
+		if immediate then
+			local cw, ch = self:GetComputedSize()
+			local pw, ph = self:GetParentSize()
+			self:onlayout( self, pw, ph, self.__prevew or pw, self.__preveh or ph )
+			local nw, nh = self:GetComputedSize()
+			if nw ~= cw or nh ~= ch then
+				self:InvalidateParentLayout( true )
+			end
+		else
+			self.__validated = false
+		end
+	end,
+
+	InvalidateParentLayout = function( self, immediate )
+		local parent = self:GetParent()
+		if parent then
+			return parent:InvalidateLayout( immediate )
+		else
+			local pw, ph = UiWidth(), UiHeight()
+			self:InvalidateLayout( immediate )
+			self.__realx = self.x and parsePos( self.x, pw, ph, pw ) or 0
+			self.__realy = self.y and parsePos( self.y, pw, ph, ph ) or 0
+		end
+	end,
+
+	SetParent = function( self, parent )
+		local prev = self:GetParent()
+		if prev then
+			for i = 1, #prev do
+				if prev[i] == self then
+					table.remove( prev, i )
+					prev:InvalidateLayout()
+					break
+				end
+			end
+		end
+		if parent then
+			parent[#parent + 1] = self
+			rawset( self, "__parent", parent )
+			parent:InvalidateLayout()
+		end
+	end,
+
+	GetParent = function( self )
+		return rawget( self, "__parent" )
+	end,
+
+	GetComputedPos = function( self )
+		return self.__realx, self.__realy
+	end,
+
+	GetComputedSize = function( self )
+		return self.__realw, self.__realh
+	end,
+
+	SetSize = function( self, w, h )
+		self.width, self.height = w, h
+		self:InvalidateLayout()
+	end,
+	SetWidth = function( self, w )
+		self.width = w
+		self:InvalidateLayout()
+	end,
+	SetHeight = function( self, h )
+		self.height = h
+		self:InvalidateLayout()
+	end,
+
+	SetPos = function( self, x, y )
+		self.x, self.y = x, y
+		self:InvalidateLayout()
+	end,
+	SetX = function( self, x )
+		self.x = x
+		self:InvalidateLayout()
+	end,
+	SetY = function( self, y )
+		self.y = y
+		self:InvalidateLayout()
+	end,
+
+	SetMargin = function( self, top, right, bottom, left )
+		if right then
+			top = { top, right, bottom, left }
+		end
+		self.margin = parseFour( top )
+		self:InvalidateLayout()
+	end,
+
+	SetPadding = function( self, top, right, bottom, left )
+		if right then
+			top = { top, right, bottom, left }
+		end
+		self.padding = parseFour( top )
+		self:InvalidateLayout()
+	end,
+
+	GetParentSize = function( self )
+		local parent = self:GetParent()
+		if parent then
+			return parent:GetComputedSize()
+		else
+			return UiWidth(), UiHeight()
+		end
+	end,
+
+	Hide = function( self )
+		self.visible = false
+	end,
+	Show = function( self )
+		self.visible = true
+	end,
+}
+
+TDUI.Layout = TDUI.Panel {
+	onlayout = function( self, data, pw, ph, ew, eh )
+		self.__validated = true
+		self.__prevew, self.__preveh = ew, eh
+		local nw, nh = self:ComputeSize( pw, ph )
+		local p1, p2, p3, p4 = self.padding[1], self.padding[2], self.padding[3], self.padding[4]
+		for i = 1, #self do
+			local child = self[i]
+			child:onlayout( child, nw, nh, ew, eh )
+			child:ComputePosition( p4, p1, nw, nh )
+		end
+		return self.__realw + self.margin[4] + self.margin[2], self.__realh + self.margin[1] + self.margin[3]
+	end,
+}
+
+TDUI.SimpleForEach = function( tab, callback )
+	return function()
+		local rt = {}
+		for i = 1, #tab do
+			local e = callback( tab[i], i, tab )
+			if e then
+				rt[#rt + 1] = e
+			end
+		end
+		return rt
+	end
+end
+
+TDUI.Panel.layout = TDUI.Layout
+
+local ScreenPanel = TDUI.Panel { x = 0, y = 0, width = 0, height = 0 }
+
+function TDUI.Panel:Popup( parent )
+	self:SetParent( parent or ScreenPanel )
+end
+
+function TDUI.Panel:Close()
+	self:SetParent()
+end
+
+hook.add( "base.draw", "api.tdui.ScreenPanel", function()
+	if ScreenPanel.width == 0 then
+		ScreenPanel:SetSize( UiWidth(), UiHeight() )
+	end
+	UiPush()
+	softassert( pcall( ScreenPanel.__Draw, ScreenPanel ) )
+	UiPop()
+end )
+
+ end)();
+--src/tdui/image.lua
+(function() 
+TDUI.Image = TDUI.Panel {
+	path = "",
+	fit = "fit",
+
+	ondraw = function( self, w, h )
+		if not HasFile( self.path ) then
+			return
+		end
+		local iw, ih = self:GetImageSize()
+		UiPush()
+		if self.fit == "stretch" then
+			UiScale( w / iw, h / ih )
+		elseif self.fit == "cover" then
+			local r, ir = w / h, iw / ih
+			UiWindow( w, h, true )
+			if r > ir then
+				UiTranslate( 0, h / 2 - ih * w / iw / 2 )
+				UiScale( w / iw )
+			else
+				UiTranslate( w / 2 - iw * h / ih / 2, 0 )
+				UiScale( h / ih )
+			end
+		elseif self.fit == "fit" then
+			local r, ir = w / h, iw / ih
+			if r > ir then
+				UiTranslate( w / 2 - iw * h / ih / 2, 0 )
+				UiScale( h / ih )
+			else
+				UiTranslate( 0, h / 2 - ih * w / iw / 2 )
+				UiScale( w / iw )
+			end
+		end
+		self:DrawImage( iw, ih )
+		UiPop()
+	end,
+
+	GetImageSize = function( self )
+		return UiGetImageSize( self.path )
+	end,
+	DrawImage = function( self, w, h )
+		UiImage( self.path )
+	end,
+}
+
+TDUI.AtlasImage = TDUI.Image {
+	atlas_width = 1,
+	atlas_height = 1,
+	atlas_x = 1,
+	atlas_y = 1,
+
+	GetImageSize = function( self )
+		local iw, ih = UiGetImageSize( self.path )
+		return iw / self.atlas_width, ih / self.atlas_height
+	end,
+	DrawImage = function( self, w, h )
+		UiWindow( w, h, true )
+		UiTranslate( (1 - self.atlas_x) * w, (1 - self.atlas_y) * h )
+		UiImage( self.path )
+	end,
+}
+
+ end)();
+--src/tdui/layout.lua
+(function() 
+TDUI.StackLayout = TDUI.Layout {
+	orientation = "vertical",
+
+	onlayout = function( self, data, pw, ph, ew, eh )
+		self.__validated = true
+		self.__prevew, self.__preveh = ew, eh
+		local isvertical = data.orientation == "vertical"
+		local nw, nh = self:ComputeSize( pw, ph )
+		local pdw, pdh = self.padding[4] + self.padding[2], self.padding[1] + self.padding[3]
+		local nfw, nfh = nw == -pdw, nh == -pdh
+		if not nfw then
+			ew = nw
+		else
+			ew = ew - pdw
+		end
+		if not nfh then
+			eh = nh
+		else
+			eh = eh - pdh
+		end
+		if isvertical then
+			if nfh then
+				nh = 0
+			end
+		else
+			if nfw then
+				nw = 0
+			end
+		end
+		for i = 1, #self do
+			local child = self[i]
+			local cw, ch = child:onlayout( child, nw, nh, ew, eh )
+			if isvertical then
+				if nfw and cw > nw and cw <= ew then
+					nw = cw
+				end
+				if nfh then
+					nh = nh + ch
+				end
+			else
+				if nfw then
+					nw = nw + cw
+				end
+				if nfh and ch > nh and ch <= eh then
+					nh = ch
+				end
+			end
+		end
+		local dx, dy = self.padding[4], self.padding[1]
+		for i = 1, #self do
+			local child = self[i]
+			local cw, ch = child:onlayout( child, nw, nh, ew, eh )
+			child:ComputePosition( dx, dy, nw, nh )
+			if isvertical then
+				dy = dy + ch
+			else
+				dx = dx + cw
+			end
+		end
+		if nfw then
+			self.__realw = nw + pdw
+		end
+		if nfh then
+			self.__realh = nh + pdh
+		end
+		return self.__realw + self.margin[4] + self.margin[2], self.__realh + self.margin[1] + self.margin[3]
+	end,
+}
+
+TDUI.WrapLayout = TDUI.Layout {
+	orientation = "vertical",
+
+	onlayout = function( self, data, pw, ph, ew, eh )
+		self.__validated = true
+		self.__prevew, self.__preveh = ew, eh
+		local isvertical = data.orientation == "vertical"
+		local nw, nh = self:ComputeSize( pw, ph )
+		local pdw, pdh = self.padding[4] + self.padding[2], self.padding[1] + self.padding[3]
+		local nfw, nfh = nw == -pdw, nh == -pdh
+		if not nfw then
+			ew = nw
+		else
+			ew = ew - pdw
+		end
+		if not nfh then
+			eh = nh
+		else
+			eh = eh - pdh
+		end
+		if isvertical then
+			if nfh then
+				nh = 0
+			end
+		else
+			if nfw then
+				nw = 0
+			end
+		end
+		for i = 1, #self do
+			local child = self[i]
+			local cw, ch = child:onlayout( child, nw, nh, ew, eh )
+			if isvertical then
+				if nfw and cw > nw and cw <= ew then
+					nw = cw
+				end
+				if nfh then
+					nh = nh + ch
+				end
+			else
+				if nfw then
+					nw = nw + cw
+				end
+				if nfh and ch > nh and ch <= eh then
+					nh = ch
+				end
+			end
+		end
+		local dx, dy = self.padding[4], self.padding[1]
+		local curr = 0
+		for i = 1, #self do
+			local child = self[i]
+			local cw, ch = child:onlayout( child, nw, nh, ew, eh )
+			if isvertical then
+				if nw + pdw < dx + cw then
+					dx = self.padding[4]
+					dy = dy + curr
+					curr = 0
+				end
+				child:ComputePosition( dx, dy, nw, nh )
+				curr = math.max( curr, ch )
+				dx = dx + cw
+			else
+				if nh + pdh < dy + ch then
+					dy = self.padding[1]
+					dx = dx + curr
+					curr = 0
+				end
+				child:ComputePosition( dx, dy, nw, nh )
+				curr = math.max( curr, cw )
+				dy = dy + ch
+			end
+		end
+		if nfw then
+			self.__realw = nw + pdw
+		end
+		if nfh then
+			self.__realh = nh + pdh
+		end
+		return self.__realw + self.margin[4] + self.margin[2], self.__realh + self.margin[1] + self.margin[3]
+	end,
+}
+
+ end)();
+--src/tdui/panel.lua
+(function() 
+TDUI.SlicePanel = TDUI.Panel {
+	color = { 1, 1, 1, 1 },
+
+	predraw = function( self, w, h )
+		UiPush()
+		UiColor( self.color[1] or 1, self.color[2] or 1, self.color[3] or 1, self.color[4] or 1 )
+		local t = self.template
+		UiTranslate( -t.offset_left, -t.offset_top )
+		UiImageBox( t.image, w + t.offset_left + t.offset_right, h + t.offset_top + t.offset_bottom, t.slice_x, t.slice_y )
+		UiPop()
+	end,
+}
+
+TDUI.SlicePanel.SolidShadow50 = {
+	image = "ui/common/box-solid-shadow-50.png",
+	slice_x = 50,
+	slice_y = 50,
+	offset_left = 40,
+	offset_top = 40,
+	offset_bottom = 41,
+	offset_right = 40,
+}
+
+TDUI.SlicePanel.template = TDUI.SlicePanel.SolidShadow50
+
+ end)();
+--src/tdui/window.lua
+(function() 
+TDUI.Window = TDUI.Panel {
+	color = { 1, 1, 1, 1 },
+
+	predraw = function( self, w, h )
+	end,
+
+	TDUI.Panel { TDUI.Slot "title" },
+
+	TDUI.Panel { TDUI.Slot },
+}
+
  end)();
 --src/_index.lua
-(function() 
--- UMF_REQUIRE "tdui"
+(function() -- 
  end)();
 for i = 1, #__RUNLATER do local f = loadstring(__RUNLATER[i]) if f then pcall(f) end end

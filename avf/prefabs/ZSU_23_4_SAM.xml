@@ -1,6 +1,6 @@
 <prefab version="1.2.0">
-	<group name="instance=MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml" pos="100.5 2.1 -722.59998" rot="0.0 0.0 0.0">
-		<vehicle name=" ZSU-23-4  shilka" tags="AA AA_Type=MG" pos="0.0 0.0 0.0" rot="0.0 -90.0 0.0" driven="false" sound="tank2" spring="1" damping="0.8" topspeed="50" acceleration=".25" strength="50" antispin="0.9" antiroll="0.2" difflock="1" steerassist="1" friction="1.3">
+	<group name="instance=MOD/avf/prefabs/ZSU_23_4_SAM.xml" pos="101.60001 2.4 -847.20001" rot="0.0 0.0 0.0">
+		<vehicle name=" ZSU-23-4  shilka" tags="AA AA_Type=SAM" pos="-0.1 -0.3 0.1" rot="0.0 -90.0 0.0" driven="false" sound="tank2" spring="1" damping="0.8" topspeed="50" acceleration=".25" strength="50" antispin="0.9" antiroll="0.2" difflock="1" steerassist="1" friction="1.3">
 			<body tags="component=body" pos="-0.05 0.6 -0.25" rot="0.0 0.0 0.0" dynamic="true">
 				<vox tags="component=chassis" pos="0.0 0.2 0.25" rot="0 180 0" texture="8 .4" density="20" strength="10" file="MOD/avf/prefabs/ZSU_23_4/ZSU-23-4.vox" object="body">
 					<light pos="-1.35 0.95 2.6" rot="0.0 0.0 0.0" type="cone" color="1 .9 .8" scale="30" angle="90" penumbra="30" size="0.2" unshadowed="0.4" glare="0.35"/>

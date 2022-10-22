@@ -126,11 +126,12 @@ function Ui_Option_Keybind(w, h, marginX, title, label, tb, key)
 
         -- Label.
         UiFont('regular.ttf', font_size)
-        UiAlign('left top')
-        -- UiText(title)
+        UiAlign('right middle')
+        UiText(title)
 
         -- Bind button.
-        -- UiTranslate(marginX + font_size, 0)
+        UiAlign('left middle')
+        UiTranslate(marginX + font_size, 0)
         UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
         UiButtonHoverColor(0.5,0.5,1,1)
 
@@ -255,7 +256,6 @@ function ManageUiBinding()
         end
 
     end
-
 
     return bindTriggered
 

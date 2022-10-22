@@ -1,4 +1,4 @@
-<scene version="1.1.0" shadowVolume="200 50 200">
+<scene version="1.2.0" shadowVolume="200 50 200">
 	<group name="Map Static" pos="-70.2 0.0 -101.0">
 		<script file="sandbox.lua"/>
 		<script file="main.lua"/>
@@ -93,8 +93,11 @@
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -300.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -500.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 	</group>
-	<instance pos="149.0 2.1 -807.5" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance pos="257.10001 2.1 -682.5" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance pos="115.10001 2.1 -663.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance pos="100.5 2.1 -722.59998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance name="ZSU MG" pos="56.6 2.1 -797.5" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance pos="150.3 2.1 -798.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance pos="101.60001 2.4 -847.20001" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance pos="-61.89999 2.4 -793.10004" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance pos="255.70001 2.4 -783.0" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
 </scene>
 

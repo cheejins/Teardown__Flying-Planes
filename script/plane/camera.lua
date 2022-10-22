@@ -1,7 +1,7 @@
 camPositions = {
-    "custom",
-    "aligned",
-    "vehicle",
+    "Orbit",
+    -- "Aligned",
+    "Vehicle",
     -- "seat"
 }
 
@@ -27,7 +27,7 @@ function manageCamera(plane, disableRotation)
 
     local scale = 1
 
-	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * plane.camera.zoom/8
+	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * plane.camera.zoom/5
 	plane.camera.zoom = clamp(plane.camera.zoom, 10, 500) * scale
 
 
@@ -36,32 +36,31 @@ function manageCamera(plane, disableRotation)
         camAddHeight = 12
     end
     camH = camAddHeight * scale + plane.camera.zoom/10
+
 	local cameraPos = TransformToParentPoint(cameraT, Vec(0, camH, plane.camera.zoom))
 	local camera = Transform(VecLerp(cameraPos, GetCameraTransform().pos, 0.5), cameraRot)
 
-	-- local hit, p, s, b, d = RaycastFromTransform(camera)
-	-- if hit then
-	-- 	camera.pos = TransformToParentPoint(camera, Vec(0,0, 1.5))
-	-- end
+    local zoomFOV = ternary(InputDown("mmb"), 40 , nil)
 
-	SetCameraTransform(camera)
+
+	SetCameraTransform(camera, zoomFOV)
 end
 function planeCamera(plane)
 
-    if camPos == 'aligned' then
+    -- if camPos == 'Aligned' then
 
-        local camPos = TransformToParentPoint(plane.tr, Vec(0, 10, 30))
-        -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(plane.forces[1], plane.forces[2], plane.forces[3]))
-        local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(Vec(math.rad(plane.forces[2]), 0, 0)))
+    --     -- local camPos = TransformToParentPoint(plane.tr, Vec(0, 10, 30))
+    --     -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(plane.forces[1], plane.forces[2], plane.forces[3]))
+    --     -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(Vec(math.rad(plane.forces[2]), 0, 0)))
 
-        local camTr = Transform(camPos, camRot)
-        SetCameraTransform(camTr)
+    --     local camTr = Transform(camPos, camRot)
+    --     SetCameraTransform(camTr)
 
-    elseif camPos == 'custom' then
+    -- elseif camPos == 'Orbit' then
 
         manageCamera(plane)
 
-    end
+    -- end
 
 end
 function planeChangeCamera()
