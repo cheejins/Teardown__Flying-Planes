@@ -1,10 +1,16 @@
+local versions = {
+    1,
+    2,
+}
+
 function checkRegInitialized()
 
-    if GetBool('savegame.mod.regInit') == false then
+    local version = GetInt("savegame.mod.version")
 
-        SetBool('savegame.mod.options.showRespawnText', true)
-        SetBool('savegame.mod.regInit', true)
-
+    if version < versions[#versions] then
+        ClearKey("savegame.mod")
+        SetInt("savegame.mod.version", versions[#versions])
+        print("Reg reset version")
     end
 
 end

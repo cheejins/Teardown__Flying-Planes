@@ -1,12 +1,12 @@
-<scene version="1.2.0" shadowVolume="200 50 200">
-	<group name="Map Static" pos="-70.2 0.0 -101.0">
+<scene version="1.2.0" shadowVolume="300 50 300">
+	<group name="Map Static" pos="-120.7 0.0 -50.0">
 		<script file="sandbox.lua"/>
 		<script file="main.lua"/>
 		<water pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="10000 10000" depth="10" wave="0" ripple="0.01" motion="0"/>
 		<spawnpoint name="spawnpoint" pos="46.39999 2.9 159.69998" rot="0.0 60.0 0.0"/>
 		<environment template="sunny" skybox="sunset_in_the_chalk_quarry_2k.dds" skyboxtint="1.0 0.66 0.46" skyboxbrightness="1" fogColor="0.52 0.35 0.14" fogParams="0 0 0 0" sunBrightness="3" sunColorTint="0.15 0.26 1.0" sunSpread="0.05"/>
 	</group>
-	<group name="Planes" pos="-70.2 0.0 -101.0">
+	<group name="Planes" pos="-120.7 0.0 -50.0">
 		<instance pos="60.0 0.2 167.59999" rot="0.0 0 0.0" file="MOD/prefab/A10.xml"/>
 		<instance pos="157.30002 0.7 163.60001" rot="0.0 0.0 0.0" file="MOD/prefab/Jet.xml"/>
 		<instance pos="120.79998 0.5 156.2" rot="0.0 0.0 0.0" file="MOD/prefab/AC130.xml"/>
@@ -69,7 +69,7 @@
 		<instance pos="3.4 2.0 163.2" rot="0.0 180.0 0.0" file="MOD/prefab/Cessna172/Cessna172.xml"/>
 		<instance pos="201.7 1.8 166.20001" rot="0.0 0.0 0.0" file="MOD/prefab/B2.xml"/>
 	</group>
-	<group pos="0.0 -0.2 -400.0">
+	<group pos="-50.5 -0.2 -349.0">
 		<voxbox tags="unbreakable" pos="-100.0 0.0 -300.0" texture="11" size="2000 2 2000" color="0.5 0.5 0.5"/>
 		<voxbox tags="unbreakable" pos="-100.0 0.0 300.0" texture="11" size="2000 2 2000" color="0.25 0.25 0.25"/>
 		<voxbox tags="unbreakable" pos="-100.0 0.0 -500.0" texture="11" size="2000 2 2000" color="0.25 0.25 0.25"/>
@@ -81,7 +81,7 @@
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -300.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -500.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 	</group>
-	<group pos="199.99998 -0.2 -400.0">
+	<group pos="149.49998 -0.2 -349.0">
 		<voxbox tags="unbreakable" pos="-100.0 0.0 -300.0" texture="11" size="2000 2 2000" color="0.5 0.5 0.5"/>
 		<voxbox tags="unbreakable" pos="-100.0 0.0 300.0" texture="11" size="2000 2 2000" color="0.25 0.25 0.25"/>
 		<voxbox tags="unbreakable" pos="-100.0 0.0 -500.0" texture="11" size="2000 2 2000" color="0.25 0.25 0.25"/>
@@ -93,11 +93,11 @@
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -300.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -500.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 	</group>
-	<instance pos="100.5 2.1 -722.59998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance name="ZSU MG" pos="56.6 2.1 -797.5" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance pos="150.3 2.1 -798.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance pos="101.60001 2.4 -847.20001" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
-	<instance pos="-61.89999 2.4 -793.10004" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
-	<instance pos="255.70001 2.4 -783.0" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance pos="50.0 2.1 -671.59998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance name="ZSU MG" pos="6.1 2.1 -746.5" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance pos="99.8 2.1 -747.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance pos="51.10001 2.4 -796.20001" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance pos="-112.39999 2.4 -742.10004" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance pos="205.20001 2.4 -732.0" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
 </scene>
 

@@ -1,4 +1,10 @@
+#include "script.lua"
+
 function init()
+
+    checkRegInitialized()
+
+    Init_Config()
 
     if GetBool('savegame.mod.debugMode') then
         if GetBool('savegame.mod.testMap') then
@@ -34,9 +40,16 @@ function init()
         bgColor = 0.12,
         fgColor = 0.4,
     }
+
 end
 
 function tick()
+
+    if InputPressed("g") then
+        ClearKey("savegame.mod")
+        print("Reset reg level loader...")
+    end
+
     if GetBool('savegame.mod.debugMode') then
         if GetBool('savegame.mod.testMap') then
             StartLevel('', 'test.xml', '')
@@ -44,6 +57,13 @@ function tick()
             StartLevel('', 'demo.xml', '')
         end
     end
+
+    FlightMode = GetString("savegame.mod.FlightMode")
+    FlightModeSet = GetBool("savegame.mod.flightmodeset")
+
+    -- DebugWatch("FlightMode", FlightMode)
+    -- DebugWatch("FlightModeSet", FlightModeSet)
+
 end
 
 
@@ -62,10 +82,78 @@ function draw()
         -- Title
         UiAlign("center middle")
         UiFont("bold.ttf", ui.text.size.m * 2)
-        UiText("Flying Planes 3.0 TEST (New Aerodynamics)")
+        UiText("Flying Planes + New Aerodynamics")
 
     UiPop() end
 
+
+    if not FlightModeSet then
+        draw_flightModeSelection()
+    else
+        draw_levelSelection()
+    end
+
+end
+
+
+
+function draw_flightModeSelection()
+
+    do UiPush()
+
+        local c = 1
+        UiColor(c,1,c,1)
+        UiFont("regular.ttf",  48)
+        UiAlign('center middle')
+
+
+        UiTranslate(UiCenter(), UiMiddle()/2)
+        UiText("Choose flight mode")
+
+        UiTranslate(-275, 0)
+        do UiPush()
+            UiButtonHoverColor(0.5,0.5,0.5, 1)
+            UiTranslate(0, 150)
+            UiText("Simple")
+            UiTranslate(0, 100)
+            UiWordWrap(400)
+            UiFont("regular.ttf",  24)
+            UiText("Aim in the direction you would like to fly using your mouse.")
+
+            UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
+            if UiTextButton(' ', 500, 300) then
+                SetString("savegame.mod.FlightMode", "simple")
+                SetBool("savegame.mod.flightmodeset", true)
+                print("level loader: simple")
+            end
+        UiPop() end
+
+        UiTranslate(550, 0)
+        do UiPush()
+            UiButtonHoverColor(0.5,0.5,0.5, 1)
+            UiTranslate(0, 150)
+            UiText("Simulation")
+            UiTranslate(0, 100)
+            UiWordWrap(400)
+            UiFont("regular.ttf",  24)
+            UiText("Fly with realistic aerodynamics and control pitch, roll and yaw manually.")
+
+            UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
+            if UiTextButton(' ', 500, 300) then
+                SetString("savegame.mod.FlightMode", "simulation")
+                SetBool("savegame.mod.flightmodeset", true)
+                print("level loader: simulation")
+            end
+
+        UiPop() end
+
+
+    UiPop() end
+
+end
+
+
+function draw_levelSelection()
 
     -- Demo map
     do UiPush()

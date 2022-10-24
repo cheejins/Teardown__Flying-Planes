@@ -9,9 +9,9 @@ function draw()
     local uiH = 650
 
     if Config.showOptions then
-        if Config.flightMode == FlightModes.simple then
+        if FlightMode == FlightModes.simple then
             DrawControlsSimple()
-        elseif Config.flightMode == FlightModes.simulation then
+        elseif FlightMode == FlightModes.simulation then
             DrawControlsSimulation()
         end
     end
@@ -346,6 +346,8 @@ function planeDrawHud(plane, uiW, uiH)
         UiText('Homing Missiles: ' .. ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
         UiTranslate(0, 30)
         UiText("Camera: " .. camPos)
+        UiTranslate(0, 30)
+        UiText("Status: " .. plane.status)
 
     UiPop() end
 

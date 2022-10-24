@@ -28,8 +28,8 @@ function initProjectiles()
                 effects = {
                     -- particle = 'aeon_secondary',
                     color = Vec(1,0.5,0.3),
-                    sprite = 'MOD/script/img/bullet_aa.png',
-                    sprite_dimensions = {2, 0.1},
+                    sprite = 'MOD/script/img/bullet1.png',
+                    sprite_dimensions = {7, 1},
                     sprite_facePlayer = false,
                 },
 
@@ -187,12 +187,12 @@ function initProjectiles()
 
                 category = 'missile',
 
-                speed = 2,
+                speed = 1.5,
                 spread = 0,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 1.5,
-                rcRad = 0.2,
+                explosionSize = 1,
+                rcRad = 0.1,
                 force = 0,
                 penetrate = false,
                 holeSize = 0,
@@ -201,7 +201,7 @@ function initProjectiles()
                     particle = 'smoke',
                     color = Vec(1,0.5,0.3),
                     sprite = 'MOD/script/img/missile1.png',
-                    sprite_dimensions = {5, 2},
+                    sprite_dimensions = {6, 2},
                     sprite_facePlayer = false,
                 },
 
@@ -212,7 +212,7 @@ function initProjectiles()
 
                 homing = {
                     force = 0.01,
-                    gain = 0,
+                    gain = 0.0,
                     max = 0.01,
                     targetShape = nil,
                     targetPos = Vec(),
@@ -375,8 +375,8 @@ function propelProjectile(proj)
     if proj.homing.max > 0 and proj.homing.targetShape ~= nil then
 
         local b = GetShapeBody(proj.homing.targetShape)
-        proj.homing.targetPos = AabbGetBodyCenterPos(b)
-        -- proj.homing.targetPos = GetBodyTransform(b).pos
+        -- proj.homing.targetPos = VecAdd(AabbGetBodyCenterPos(b), GetBodyVelocity(b))
+        proj.homing.targetPos = VecAdd(AabbGetBodyCenterPos(b))
 
         dbl(proj.transform.pos, proj.homing.targetPos, 1,0,1, 1)
         dbray(proj.transform, 30, 0,1,1, 1)

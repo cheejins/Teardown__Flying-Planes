@@ -83,8 +83,8 @@ function drawUiGyro(plane, width, height)
     UiPop() end
 
 
-    local camTr = GetCameraTransform()
-    -- local camTr = plane.tr
+    -- local camTr = GetCameraTransform()
+    local camTr = plane.tr
     local camDir = QuatToDir(camTr.rot)
     local camDirY = math.deg(camDir[2]) * math.pi / 2
     -- dbw('camDirY', camDirY)

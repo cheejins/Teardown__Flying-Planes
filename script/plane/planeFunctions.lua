@@ -22,7 +22,7 @@ function planeMove(plane)
         local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
         if thrustSpeedMult then
 
-            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) * plane.health
+            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.4) / plane.thrust)) * clamp(plane.health, 0.5, 1)
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
@@ -32,111 +32,7 @@ function planeMove(plane)
     end
 
 end
-function planeSteer(plane)
 
-    local angDim = plane.getForwardVelAngle()
-
-    local imp = 500 * angDim * GetBodyMass(plane.body)/10000 * plane.health
-    dbw("steer angDim", sfn(angDim))
-
-    local nose = TransformToParentPoint(plane.tr, Vec(0,0,-10))
-    local wing = TransformToParentPoint(plane.tr, Vec(-10,0,0))
-
-    local planeUp = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0,10,0)))
-    local planeLeft = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(10,0,0)))
-
-    local ic = InputControls
-    local inc = InputControlIncrement
-
-
-    local w = InputDown("w")
-    local s = InputDown("s")
-    local a = InputDown("a")
-    local d = InputDown("d")
-    local z = InputDown("z")
-    local c = InputDown("c")
-
-
-    -- if camPos == "aligned" then
-
-    --     if InputValue("mousedy") > 1 then
-    --         s = true
-    --         ic.s = InputValue("mousedy")/10
-    --     end
-    --     if InputValue("mousedy") < -1 then
-    --         w = true
-    --         ic.w = -InputValue("mousedy")/10
-    --     end
-    --     if InputValue("mousedx") > 1 then
-    --         c = true
-    --         ic.c = InputValue("mousedx")/10
-    --     end
-    --     if InputValue("mousedx") < -1 then
-    --         z = true
-    --         ic.z = -InputValue("mousedx")/10
-    --     end
-
-    -- end
-
-
-    if w then
-        ic.w = clamp(ic.w + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, imp * ic.w * plane.pitchVal))
-    else
-        ic.w = clamp(ic.w - inc, 0, 1)
-    end
-    if s then
-        ic.s = clamp(ic.s + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, -imp * ic.s * plane.pitchVal))
-    else
-        ic.s = clamp(ic.s - inc, 0, 1)
-    end
-
-
-    if a then
-        ic.a = clamp(ic.a + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp/1.5 * ic.a * plane.rollVal ^ 2))
-    else
-        ic.a = clamp(ic.a - inc, 0, 1)
-    end
-    if d then
-        ic.d = clamp(ic.d + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp/1.5 * ic.d * plane.rollVal ^ 2))
-    else
-        ic.d = clamp(ic.d - inc, 0, 1)
-    end
-
-
-    if z then
-        ic.z = clamp(ic.z + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.z * plane.yawFac))
-    else
-        ic.z = clamp(ic.z - inc, 0, 1)
-    end
-    if c then
-        ic.c = clamp(ic.c + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.c * plane.yawFac))
-    else
-        ic.c = clamp(ic.c - inc, 0, 1)
-    end
-
-    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
-        plane.thrust = plane.thrust + 1
-    end
-    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
-        plane.thrust = plane.thrust - 1
-    end
-
-    if InputDown("alt") then
-        ApplyBodyImpulse(
-            plane.body,
-            TransformToParentPoint(
-                plane.tr, Vec(0,0,-5)),
-            plane.getFwdPos(plane.speed*plane.brakeImpulseAmt))
-        plane.status = 'Air Braking'
-    end
-
-end
 
 function planeSteer_simple(plane)
 

@@ -15,6 +15,21 @@ end
 function planesUpdate()
 
     for key, plane in pairs(planeObjectList) do
+        if GetPlayerVehicle() == plane.vehicle then
+
+            if not ShouldDrawIngameOptions then
+                planeCamera(plane)
+            end
+
+        end
+    end
+
+end
+
+function planesTick()
+
+
+    for key, plane in pairs(planeObjectList) do
 
         plane_update(plane)
 
@@ -22,9 +37,9 @@ function planesUpdate()
 
             plane_ProcessHealth(plane)
 
-            if Config.flightMode == FlightModes.simple then
+            if FlightMode == FlightModes.simple then
                 -- planeMove_simple(plane)
-            elseif Config.flightMode == FlightModes.simulation then
+            elseif FlightMode == FlightModes.simulation then
                 planeMove(plane)
             end
 
@@ -36,6 +51,8 @@ function planesUpdate()
         runEffects(plane)
 
         if GetPlayerVehicle() == plane.vehicle then
+
+            planeChangeCamera()
 
             if not ShouldDrawIngameOptions then
                 planeCamera(plane)
@@ -60,19 +77,20 @@ function planesUpdate()
 
                 if not ShouldDrawIngameOptions then
 
-                    if Config.flightMode == FlightModes.simple and camPos ~= 'Vehicle' then
+                    if FlightMode == FlightModes.simple and camPos ~= 'Vehicle' then
                         planeSteer_simple(plane)
-                    elseif Config.flightMode == FlightModes.simulation then
+                    elseif FlightMode == FlightModes.simulation then
                         planeSteer(plane)
                     end
 
                 end
 
-                if Config.flightMode == FlightModes.simple then
+                if FlightMode == FlightModes.simple then
                     planeMove_simple(plane)
                     plane_applyForces_simple(plane)
-                elseif Config.flightMode == FlightModes.simulation then
+                elseif FlightMode == FlightModes.simulation then
                     plane_applyForces(plane)
+                    plane_applyTurbulence(plane)
                 end
 
 
@@ -94,21 +112,16 @@ function planesUpdate()
 
     end
 
-end
+    -- local vehicle = GetPlayerVehicle()
+    -- for key, plane in pairs(planeObjectList) do
+    --     if vehicle == plane.vehicle then
 
-function planesTick()
+    --         if camPos ~= camPositions[2] then
+    --             -- AimSteerVehicle(plane.vehicle)
+    --         end
 
-    local vehicle = GetPlayerVehicle()
-    for key, plane in pairs(planeObjectList) do
-        if vehicle == plane.vehicle then
-            planeChangeCamera()
-
-            if camPos ~= camPositions[2] then
-                -- AimSteerVehicle(plane.vehicle)
-            end
-
-        end
-    end
+    --     end
+    -- end
 
 end
 
@@ -124,6 +137,7 @@ function plane_ProcessHealth(plane)
 
         PlaySound(sounds.engine_deaths[3], plane.tr.pos, 3)
         PlaySound(sounds.engine_deaths[1], plane.tr.pos, 3)
+        Explosion(plane.tr.pos, 1)
 
     else
         plane.isAlive = true

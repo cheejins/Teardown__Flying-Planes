@@ -54,9 +54,10 @@ ShouldDrawIngameOptions = false
 
 function Init_Config()
 
-    Config = util.structured_table("savegame.mod.keybinds", {
+    FlightMode = GetString("savegame.mod.FlightMode")
+    FlightModeSet = GetBool("savegame.mod.flightmodeset")
 
-        flightMode      = { "string", FlightModes.simulation },
+    Config = util.structured_table("savegame.mod.keybinds", {
 
         changeTarget    = { "string", "q" },
         toggleOptions   = { "string", "o" },
@@ -66,10 +67,11 @@ function Init_Config()
         smallMapMode    = { "boolean", false },
         showOptions     = { "boolean", false },
 
-
     })
 
-    print(Config.changeTarget)
+    print("FlightMode", FlightMode)
+    print("FlightModeSet", FlightModeSet)
+
 
 end
 
@@ -78,7 +80,6 @@ function init()
     Init_Config()
 
     Tick = 1
-    checkRegInitialized()
 
 
     -- Init core functions.
@@ -94,6 +95,27 @@ function init()
 end
 function tick()
 
+    FlightMode = GetString("savegame.mod.FlightMode")
+    FlightModeSet = GetBool("savegame.mod.flightmodeset")
+
+
+    -- if InputPressed("g") then
+    --     ClearKey("savegame.mod")
+    --     print("Reset reg...")
+    -- end
+
+    if not FlightModeSet then
+        SetString("savegame.mod.FlightMode", FlightModes.simple)
+        SetBool("savegame.mod.flightmodeset", true)
+        print("backup flightmode simple")
+    end
+
+
+    -- DebugWatch("FlightMode", FlightMode)
+    -- DebugWatch("FlightModeSet", FlightModeSet)
+
+
+
     if InputPressed(Config.toggleOptions) then
         ShouldDrawIngameOptions = not ShouldDrawIngameOptions
         SetBool("level.showedOptions", true)
@@ -105,7 +127,6 @@ function tick()
 
     -- Root of plane management.
     planesTick()
-    planesUpdate()
 
 
     local propellers = FindJoints('planePropeller', true)
@@ -122,6 +143,7 @@ function tick()
 
 end
 function update()
+    planesUpdate()
 end
 
 

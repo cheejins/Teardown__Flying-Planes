@@ -1,4 +1,20 @@
 function plane_applyTurbulence(plane)
+
+    -- local turbImp = VecRdm(math.abs(plane.lvel[1] + plane.lvel[2]) * 10000)
+
+    -- TURBULENCE = TURBULENCE
+    -- if InputDown("f") then
+    --     TURBULENCE = not TURBULENCE or false
+    -- end
+
+    -- if TURBULENCE then
+    --     ApplyBodyImpulse(plane.body, VecAdd(plane.tr.pos, VecRdm(1)), turbImp)
+    -- end
+
+    -- dbw("TURB imp", turbImp)
+    -- dbw("TURBULENCE", TURBULENCE)
+
+
 end
 
 -- forces
@@ -21,7 +37,7 @@ function plane_applyForces(plane)
 
 
     local impMult = 2
-    if Config.flightMode == FlightModes.simple then
+    if FlightMode == FlightModes.simple then
         impMult = 4
         if Config.smallMapMode then
             impMult = 6
@@ -30,7 +46,7 @@ function plane_applyForces(plane)
 
 
     local forces = Vec(force_x, force_y, force_z)
-    plane.forces = VecScale(forces, plane.health)
+    plane.forces = VecScale(forces, clamp(plane.health, 0.5, 1))
 
     local impSpeedScale = 1 - (plane.speedFac / plane.topSpeed)
     local imp = gtZero(GetBodyMass(plane.body) * impSpeedScale) * 5 * impMult
@@ -51,16 +67,16 @@ function plane_applyForces(plane)
 
     ApplyBodyImpulse(plane.body,
         plane.tr.pos,
-        TransformToParentPoint(plane.tr, VecScale(Vec(force_x,0,0), imp)))
+        TransformToParentPoint(plane.tr, VecScale(Vec(force_x, 0, 0), imp)))
 
     ApplyBodyImpulse(plane.body,
         plane.tr.pos,
-        TransformToParentPoint(plane.tr, VecScale(Vec(0,force_y,0), imp)))
+        TransformToParentPoint(plane.tr, VecScale(Vec(0, force_y, 0), imp)))
 
     ApplyBodyImpulse(
         plane.body,
-        TransformToParentPoint(plane.tr, VecScale(Vec(0,1,0))),
-        TransformToParentPoint(plane.tr, VecScale(Vec(force_z,0,0), imp)))
+        TransformToParentPoint(plane.tr, VecScale(Vec(0, 1, 0))),
+        TransformToParentPoint(plane.tr, VecScale(Vec(force_z, 0, 0), imp)))
 
 
     local angDim = 1 - (plane.speedFac / plane.topSpeed * 6)
@@ -69,13 +85,12 @@ function plane_applyForces(plane)
 
 
     if Config.showOptions and plane.totalVel > 1 then
-        DrawForces(plane, x,y,z, 5, 20)
+        DrawForces(plane, x, y, z, 5, 20)
     end
 
 end
 
-
-function DrawForces(plane, x,y,z, outness, scale)
+function DrawForces(plane, x, y, z, outness, scale)
 
     local outness = outness or 5
     local sc = scale or 5
@@ -108,7 +123,117 @@ function DrawForces(plane, x,y,z, outness, scale)
         1, 0, 0, 1)
 
     -- DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, forces) , 1,1,0, 1)
-    DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel) , 1,1,0, 1)
-    DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0,0,-20)) , 1,1,1, 1)
+    DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel), 1, 1, 0, 1)
+    DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0, 0, -20)), 1, 1, 1, 1)
+
+end
+
+function planeSteer(plane)
+
+    local angDim = plane.idealSpeedFactor
+
+    if (math.abs(plane.speed / plane.topSpeed)) > 0.75 then
+        angDim = 0.5
+    end
+
+    local imp = 500 * angDim * GetBodyMass(plane.body) / 10000 * clamp(plane.health, 0.5, 1)
+    dbw("steer angDim", sfn(angDim))
+
+    local nose = TransformToParentPoint(plane.tr, Vec(0, 0, -10))
+    local wing = TransformToParentPoint(plane.tr, Vec(-10, 0, 0))
+
+    local planeUp = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0, 10, 0)))
+    local planeLeft = DirLookAt(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(10, 0, 0)))
+
+    local ic = InputControls
+    local inc = InputControlIncrement
+
+
+    local w = InputDown("w")
+    local s = InputDown("s")
+    local a = InputDown("a")
+    local d = InputDown("d")
+    local z = InputDown("z")
+    local c = InputDown("c")
+
+
+    -- if camPos == "aligned" then
+
+    --     if InputValue("mousedy") > 1 then
+    --         s = true
+    --         ic.s = InputValue("mousedy")/10
+    --     end
+    --     if InputValue("mousedy") < -1 then
+    --         w = true
+    --         ic.w = -InputValue("mousedy")/10
+    --     end
+    --     if InputValue("mousedx") > 1 then
+    --         c = true
+    --         ic.c = InputValue("mousedx")/10
+    --     end
+    --     if InputValue("mousedx") < -1 then
+    --         z = true
+    --         ic.z = -InputValue("mousedx")/10
+    --     end
+
+    -- end
+
+
+    if w then
+        ic.w = clamp(ic.w + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, imp * ic.w))
+    else
+        ic.w = clamp(ic.w - inc, 0, 1)
+    end
+    if s then
+        ic.s = clamp(ic.s + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, -imp * ic.s))
+    else
+        ic.s = clamp(ic.s - inc, 0, 1)
+    end
+
+
+    if a then
+        ic.a = clamp(ic.a + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp * ic.a))
+    else
+        ic.a = clamp(ic.a - inc, 0, 1)
+    end
+    if d then
+        ic.d = clamp(ic.d + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp * ic.d))
+    else
+        ic.d = clamp(ic.d - inc, 0, 1)
+    end
+
+
+    if z then
+        ic.z = clamp(ic.z + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.z))
+    else
+        ic.z = clamp(ic.z - inc, 0, 1)
+    end
+    if c then
+        ic.c = clamp(ic.c + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.c))
+    else
+        ic.c = clamp(ic.c - inc, 0, 1)
+    end
+
+    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
+        plane.thrust = plane.thrust + 1
+    end
+    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
+        plane.thrust = plane.thrust - 1
+    end
+
+    if InputDown("alt") then
+        ApplyBodyImpulse(
+            plane.body,
+            TransformToParentPoint(
+                plane.tr, Vec(0, 0, -5)),
+            plane.getFwdPos(plane.speed * plane.brakeImpulseAmt))
+        plane.status = 'Air Braking'
+    end
 
 end

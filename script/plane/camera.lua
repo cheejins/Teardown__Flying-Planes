@@ -40,10 +40,11 @@ function manageCamera(plane, disableRotation)
 	local cameraPos = TransformToParentPoint(cameraT, Vec(0, camH, plane.camera.zoom))
 	local camera = Transform(VecLerp(cameraPos, GetCameraTransform().pos, 0.5), cameraRot)
 
-    local zoomFOV = ternary(InputDown("mmb"), 40 , nil)
+    local zoomFOV = ternary(InputDown("mmb"), 30 , nil)
 
 
 	SetCameraTransform(camera, zoomFOV)
+
 end
 function planeCamera(plane)
 
@@ -57,10 +58,11 @@ function planeCamera(plane)
     --     SetCameraTransform(camTr)
 
     -- elseif camPos == 'Orbit' then
+    if camPos == 'Orbit' then
 
         manageCamera(plane)
 
-    -- end
+    end
 
 end
 function planeChangeCamera()
@@ -84,6 +86,7 @@ function planeChangeCamera()
 
                     setCamPos(nextCamPos) -- assign new camera
                     camChanged = true
+
                 end
 
             end

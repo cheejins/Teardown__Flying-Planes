@@ -110,11 +110,21 @@ function TickEnemies()
                     if TimerConsumed(AA.timer) then
                         TimerResetTime(AA.timer)
 
+                        if AA.type == AA_Types.SAM.title then
+                            AA.timer.time = AA.timer.time * (math.random() + 1) -- offset timer.
+                            PlaySound(sounds.missile, shootTr.pos, 100)
+                        end
+
                         createProjectile(shootTr, Projectiles, proj, {AA.body}, targetShape)
                         PointLight(shootTr.pos, 1,0.25,1, 3)
+
                     end
 
-                    PlayLoop(sounds.mg3, shootTr.pos, 100)
+
+                    if AA.type == AA_Types.MG.title then
+                        PlayLoop(sounds.mg3, shootTr.pos, 100)
+                    end
+
 
                 end
 
@@ -122,7 +132,7 @@ function TickEnemies()
                 TimerRunTime(AA.shootTimer)
                 if TimerConsumed(AA.shootTimer) then
                     TimerResetTime(AA.shootTimer)
-                    AA.shootTimer.time = AA.shootTimer.time + ((math.random()-0.5)*1.5)
+                    AA.shootTimer.time = AA.shootTimer.time + ((math.random()-0.5)*2)
                     AA.shooting = false
                 end
 
@@ -131,7 +141,7 @@ function TickEnemies()
                 TimerRunTime(AA.pauseTimer)
                 if TimerConsumed(AA.pauseTimer) then
                     TimerResetTime(AA.pauseTimer)
-                    AA.pauseTimer.time = AA.pauseTimer.time + ((math.random()-0.5)*1.5)
+                    AA.pauseTimer.time = AA.pauseTimer.time + ((math.random()-0.5)*2)
                     AA.shooting = true
                 end
 

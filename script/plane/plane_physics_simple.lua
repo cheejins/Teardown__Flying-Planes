@@ -72,10 +72,10 @@ function planeMove_simple(plane)
 
     local speed = plane.speed
 
-    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
+    if InputDown("w") and plane.thrust + plane.thrustIncrement <= 101 then
         plane.thrust = plane.thrust + 1
     end
-    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
+    if InputDown("s") and plane.thrust - plane.thrustIncrement >= 0 then
         plane.thrust = plane.thrust - 1
     end
 

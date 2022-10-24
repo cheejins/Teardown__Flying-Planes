@@ -70,29 +70,29 @@ function DrawIngameOptions()
     margin(0, marginY2*2)
 
     UiPush()
-        local c = boolColor(Config.flightMode == FlightModes.simulation)
+        local c = boolColor(FlightMode == FlightModes.simulation)
         UiColor(c[1], c[2], c[3])
         margin(btn_w/2, 0)
         UiAlign('center middle')
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
         if UiTextButton('Simulation', btn_w, marginY2*1.5) then
-            Config.flightMode = FlightModes.simulation
+            SetString("savegame.mod.FlightMode", FlightModes.simulation)
         end
     UiPop()
 
     UiPush()
-        local c = boolColor(Config.flightMode == FlightModes.simple)
+        local c = boolColor(FlightMode == FlightModes.simple)
         UiColor(c[1], c[2], c[3])
         margin(-btn_w/2, 0)
         UiAlign('center middle')
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
         if UiTextButton('Simple', btn_w, marginY2*1.5) then
-            Config.flightMode = FlightModes.simple
+            SetString("savegame.mod.FlightMode", FlightModes.simple)
         end
     UiPop()
 
     margin(0, marginY2)
-    if Config.flightMode == FlightModes.simple then
+    if FlightMode == FlightModes.simple then
 
         UiPush()
             UiColor(0.5,0.5,0.5, 1)
@@ -101,7 +101,7 @@ function DrawIngameOptions()
             UiText("Fly in the direction you're looking.")
         UiPop()
 
-    elseif Config.flightMode == FlightModes.simulation then
+    elseif FlightMode == FlightModes.simulation then
 
         UiPush()
             UiColor(0.5,0.5,0.5, 1)
@@ -128,7 +128,7 @@ function DrawIngameOptions()
 
     margin(0, marginY2*2)
 
-    if Config.flightMode == FlightModes.simple then
+    if FlightMode == FlightModes.simple then
         UiPush()
             local c = boolColor(Config.smallMapMode)
             UiColor(c[1], c[2], c[3])
