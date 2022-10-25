@@ -1,15 +1,3 @@
-function initPlanes()
-
-    -- Create objects for each existing plane.
-    local planeVehicleList = FindVehicles("Plane_ID", true)
-    for key, planeVehicle in pairs(planeVehicleList) do
-        local plane = createPlaneObject(planeVehicle)
-        plane_update(plane)
-        table.insert(planeObjectList, plane)
-    end
-
-end
-
 function planesUpdate()
 
     for key, plane in pairs(planeObjectList) do
@@ -26,8 +14,9 @@ end
 
 function planesTick()
 
-
     for key, plane in pairs(planeObjectList) do
+
+        DebugWatch(plane.id, plane.isAlive)
 
         plane_update(plane)
 
@@ -35,9 +24,8 @@ function planesTick()
 
             plane_ProcessHealth(plane)
 
-            if FlightMode == FlightModes.simple then
-                planeMove_simple(plane)
-            elseif FlightMode == FlightModes.simulation then
+
+            if FlightMode == FlightModes.simulation then
                 planeMove(plane)
             end
 
@@ -46,6 +34,7 @@ function planesTick()
         end
 
         runEffects(plane)
+
 
         if GetPlayerVehicle() == plane.vehicle then
 
@@ -90,6 +79,9 @@ function planesTick()
                     plane_applyTurbulence(plane)
                 end
 
+                if FlightMode == FlightModes.simple then
+                    planeMove_simple(plane)
+                end
 
                 manageTargetting(plane)
 
@@ -125,6 +117,7 @@ end
 function plane_ProcessHealth(plane)
 
     plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)
+    -- plane.health = GetVehicleHealth(plane.vehicle)
 
     if plane.isAlive and plane.health <= 0 and not plane.justDied then
 

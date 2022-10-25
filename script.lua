@@ -80,7 +80,6 @@ function init()
 
     -- Init core functions.
     initSounds()
-    initPlanes()
     initProjectiles()
 
     SmallMapMode = false
@@ -90,6 +89,8 @@ function init()
 
 end
 function tick()
+
+    DebugWatch("#planeObjectList", #planeObjectList)
 
     local v = FindVehicles("Plane_ID", true)
     for _, vehicle in ipairs(v) do
@@ -156,9 +157,9 @@ function manageSpawning()
 
         if not HasTag(vehicle, 'planeActive') then
 
-            local plane = createPlaneObject(GetTagValue(vehicle, "Plane_ID"))
             SetTag(vehicle, 'planeActive')
-            dbp('Plane spawned. ' .. plane.id)
+            local ID = GetTagValue(vehicle, "Plane_ID")
+            local plane = createPlaneObject(ID)
 
             table.insert(planeObjectList, plane)
 

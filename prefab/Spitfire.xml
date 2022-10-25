@@ -1,7 +1,7 @@
-<prefab version="1.1.0">
-	<group name="instance=MOD/prefab/Spitfire.xml" pos="73.2 -0.7 184.39999" rot="0.0 0.0 0.0">
+<prefab version="1.2.0">
+	<group name="instance=MOD/prefab/Spitfire.xml" pos="10.9 -0.7 168.59999" rot="0.0 0.0 0.0">
 		<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
-			<vehicle name="spitfire" tags="planeVehicle planeModel=spitfire planeType=propeller weaponPreset=none" pos="0.0 0.9 7.0" rot="10.0 0.0 0.0" driven="false" sound="classic" spring="1" damping="4" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
+			<vehicle name="spitfire" tags="planeVehicle planeModel=spitfire planeType=propeller" pos="0.0 0.9 7.0" rot="10.0 0.0 0.0" driven="false" sound="classic" spring="1" damping="4" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
 				<body tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
 					<vox tags="planeShape_engine explosive=1.4" pos="0.0 0.0 -1.0" rot="0 0 0" texture="14" density="5" strength="2" file="MOD/prefab/Spitfire.vox" object="body">
 						<location tags="vital" pos="0.0 1.0 -1.2" rot="-180.0 360.0 -180.0"/>

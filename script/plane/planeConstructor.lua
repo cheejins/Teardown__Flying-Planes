@@ -19,6 +19,7 @@ function createPlaneObject(ID)
 
         -- references
             id = ID,
+            isAlive = true,
             model = GetTagValue(_vehicle, "planeModel"),
 
             vehicle = _vehicle,
@@ -36,7 +37,6 @@ function createPlaneObject(ID)
             status = "-",
             seatPosOffset = Vec(0,0,-10),
             brakeImpulseAmt = 500,
-            isAlive = true,
             timeOfDeath = 0,
             groundDist = 0,
 

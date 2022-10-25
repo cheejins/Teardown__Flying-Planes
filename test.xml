@@ -105,11 +105,11 @@
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -300.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -500.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 	</group>
-	<instance pos="50.0 2.1 -671.59998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance name="ZSU MG" pos="50.0 2.1 -671.59998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
 	<instance name="ZSU MG" pos="6.1 2.1 -746.5" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance pos="99.8 2.1 -747.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance pos="51.10001 2.4 -796.20001" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
-	<instance pos="-112.39999 2.4 -742.10004" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
-	<instance pos="205.20001 2.4 -732.0" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance name="ZSU MG" pos="99.8 2.1 -747.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance name="ZSU SAM" pos="51.1 2.4 -796.20001" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance name="ZSU SAM" pos="-112.4 2.4 -742.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance name="ZSU SAM" pos="205.2 2.4 -732.0" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
 </scene>
 

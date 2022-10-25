@@ -27,15 +27,11 @@ function planeMove(plane)
 
         plane.setThrustOutput()
 
-
         local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 10 * CONFIG.smallMapMode.dragMult
         ApplyBodyImpulse(
             plane.body,
             plane.tr.pos,
             TransformToParentPoint(plane.tr, Vec(0,0,-thrustImpulseAmt)))
-
-        print(thrustImpulseAmt)
-
 
     end
 

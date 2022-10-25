@@ -161,7 +161,6 @@ end
 function planeStateText(plane)
     plane.status = "-"
     if InputDown("space") then
-        -- DebugWatch("Plane: ", "air braking")
         plane.status = "Air-Braking"
     end
 end
@@ -196,33 +195,33 @@ function runEffects(plane)
     end
 
 
-    -- Spawn fire for a specified duration after death is triggered.
-    if not plane.isAlive then
+    -- -- Spawn fire for a specified duration after death is triggered.
+    -- if not plane.isAlive then
 
-        local endPlaneDeathTime = plane.timeOfDeath + 20
+    --     local endPlaneDeathTime = plane.timeOfDeath + 20
 
-        if endPlaneDeathTime >= GetTime() then
+    --     if endPlaneDeathTime >= GetTime() then
 
-            local fireVolumeScale = 10
+    --         local fireVolumeScale = 10
 
-            local fireLarge = clamp(((endPlaneDeathTime - GetTime()) / endPlaneDeathTime), 0, 1)
-            local fireSmall = clamp(1 - fireLarge, 0, 1)
+    --         local fireLarge = clamp(((endPlaneDeathTime - GetTime()) / endPlaneDeathTime), 0, 1)
+    --         local fireSmall = clamp(1 - fireLarge, 0, 1)
 
-            PlayLoop(sounds.fire_small, plane.tr.pos, fireSmall * fireVolumeScale)
-            PlayLoop(sounds.fire_large, plane.tr.pos, fireLarge * fireVolumeScale)
+    --         PlayLoop(sounds.fire_small, plane.tr.pos, fireSmall * fireVolumeScale)
+    --         PlayLoop(sounds.fire_large, plane.tr.pos, fireLarge * fireVolumeScale)
 
 
-            local amount = 1 - ((GetTime()/(endPlaneDeathTime)))
+    --         local amount = 1 - ((GetTime()/(endPlaneDeathTime)))
 
-            local fireRdmVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(5,7) * amount)
-            particle_fire(VecAdd(plane.tr.pos, fireRdmVec), math.random()*4 * amount)
+    --         local fireRdmVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(5,7) * amount)
+    --         particle_fire(VecAdd(plane.tr.pos, fireRdmVec), math.random()*4 * amount)
 
-            local damageAlpha = 1 - plane.health
-            local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5) * amount)
-            particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2 * amount)
+    --         local damageAlpha = 1 - plane.health
+    --         local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5) * amount)
+    --         particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2 * amount)
 
-        end
-    end
+    --     end
+    -- end
 
 end
 function handlePlayerInWater()

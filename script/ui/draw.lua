@@ -8,98 +8,105 @@ function draw()
     local uiW = 600
     local uiH = 650
 
-    if Config.showOptions then
-        if FlightMode == FlightModes.simple then
-            DrawControlsSimple()
-        elseif FlightMode == FlightModes.simulation then
-            DrawControlsSimulation()
+    UiPush()
+
+        if Config.showOptions then
+            if FlightMode == FlightModes.simple then
+                DrawControlsSimple()
+            elseif FlightMode == FlightModes.simulation then
+                DrawControlsSimulation()
+            end
         end
-    end
 
-    if ShouldDrawIngameOptions then
+        if ShouldDrawIngameOptions then
 
-        DrawIngameOptions()
+            DrawIngameOptions()
 
-    else
+        else
 
-        do UiPush()
+            do UiPush()
 
-            CAMERA = {}
-            CAMERA.xy = {UiCenter(), UiMiddle()}
-            local vehicle = GetPlayerVehicle()
-            for i = 1, #planeObjectList do
-                if vehicle == planeObjectList[i].vehicle then
+                CAMERA = {}
+                CAMERA.xy = {UiCenter(), UiMiddle()}
+                local vehicle = GetPlayerVehicle()
+                for i = 1, #planeObjectList do
+                    if vehicle == planeObjectList[i].vehicle then
 
-                    local plane = planeObjectList[i]
-
-                    do UiPush()
-                        planeDrawHud(plane, uiW + 200, uiH)
-                    UiPop() end
-
-
-                    if plane.playerInUnbrokenPlane then
+                        local plane = planeObjectList[i]
 
                         do UiPush()
-                            drawUiGyro(plane, uiW, uiH)
+                            planeDrawHud(plane, uiW + 200, uiH)
                         UiPop() end
 
-                        do UiPush()
-                            drawCompass(plane, uiW, uiH)
-                        UiPop() end
 
-                        do UiPush()
-                            drawTargets(plane)
-                        UiPop() end
+                        if plane.playerInUnbrokenPlane then
 
-                    end
+                            do UiPush()
+                                drawUiGyro(plane, uiW, uiH)
+                            UiPop() end
 
+                            do UiPush()
+                                drawCompass(plane, uiW, uiH)
+                            UiPop() end
 
-                    do UiPush()
-
-                        local pos = Vec(0,0,0)
-                        local dist = VecDist(plane.tr.pos, pos)
-                        local a = (dist / 800) - 0.6
-
-                        UiColor(0.7,0.7,0.7, a)
-                        UiTextShadow(0,0,0, a)
-                        UiFont("bold.ttf", 20)
-
-
-                        if Config.smallMapMode then
-
-                            local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
-                            if isInfront then
-
-                                local x,y = UiWorldToPixel(pos)
-
-                                UiTranslate(x,y)
-                                UiAlign("center middle")
-                                UiImageBox("MOD/img/dot.png", 10, 10, 0,0)
-
-                                do UiPush()
-                                    UiTranslate(-15, 0)
-                                    UiAlign("right middle")
-                                    UiText('Map Center')
-                                UiPop() end
-
-                                do UiPush()
-                                    UiTranslate(15, 0)
-                                    UiAlign("left middle")
-                                    UiText(sfn(dist, 0) .. ' m')
-                                UiPop() end
-
-                            end
+                            do UiPush()
+                                drawTargets(plane)
+                            UiPop() end
 
                         end
 
-                    UiPop() end
 
+                        do UiPush()
+
+                            local pos = Vec(0,0,0)
+                            local dist = VecDist(plane.tr.pos, pos)
+                            local a = (dist / 800) - 0.6
+
+                            UiColor(0.7,0.7,0.7, a)
+                            UiTextShadow(0,0,0, a)
+                            UiFont("bold.ttf", 20)
+
+
+                            if Config.smallMapMode then
+
+                                local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
+                                if isInfront then
+
+                                    local x,y = UiWorldToPixel(pos)
+
+                                    UiTranslate(x,y)
+                                    UiAlign("center middle")
+                                    UiImageBox("MOD/img/dot.png", 10, 10, 0,0)
+
+                                    do UiPush()
+                                        UiTranslate(-15, 0)
+                                        UiAlign("right middle")
+                                        UiText('Map Center')
+                                    UiPop() end
+
+                                    do UiPush()
+                                        UiTranslate(15, 0)
+                                        UiAlign("left middle")
+                                        UiText(sfn(dist, 0) .. ' m')
+                                    UiPop() end
+
+                                end
+
+                            end
+
+                        UiPop() end
+
+                    end
                 end
-            end
 
-        UiPop() end
+            UiPop() end
 
-    end
+        end
+
+    UiPop()
+
+
+    DrawPlaneIDs()
 
 end
 
@@ -517,4 +524,27 @@ function WriteMessage(message, fontSize)
         UiText(message)
 
     UiPop()
+end
+
+
+
+function DrawPlaneIDs()
+
+    UiColor(1,1,1, 1)
+    UiTextShadow(0,0,0, 1, 0.2)
+    UiAlign("center middle")
+    UiFont("regular.ttf", 48)
+
+    for _, plane in ipairs(planeObjectList) do
+        UiPush()
+
+            local pos = AabbGetBodyCenterTopPos(plane.body)
+            local x, y = UiWorldToPixel(pos)
+
+            UiTranslate(x,y)
+            UiText(plane.id)
+
+        UiPop()
+    end
+
 end
