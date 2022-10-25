@@ -28,7 +28,7 @@ function initProjectiles()
                 effects = {
                     -- particle = 'aeon_secondary',
                     color = Vec(1,0.5,0.3),
-                    sprite = 'MOD/script/img/bullet1.png',
+                    sprite = 'MOD/img/bullet1.png',
                     sprite_dimensions = {7, 1},
                     sprite_facePlayer = false,
                 },
@@ -70,7 +70,7 @@ function initProjectiles()
                 effects = {
                     -- particle = 'aeon_secondary',
                     color = Vec(1,0.5,0.3),
-                    sprite = 'MOD/script/img/bullet1.png',
+                    sprite = 'MOD/img/bullet1.png',
                     sprite_dimensions = {7, 1},
                     sprite_facePlayer = false,
                 },
@@ -112,7 +112,7 @@ function initProjectiles()
                 effects = {
                     -- particle = 'aeon_secondary',
                     color = Vec(1,0,0),
-                    sprite = 'MOD/script/img/bullet_emg.png',
+                    sprite = 'MOD/img/bullet_emg.png',
                     sprite_dimensions = {9, 1.5},
                     sprite_facePlayer = false,
                 },
@@ -158,7 +158,7 @@ function initProjectiles()
                 effects = {
                     particle = 'smoke',
                     color = Vec(1,0.5,0.3),
-                    sprite = 'MOD/script/img/missile1.png',
+                    sprite = 'MOD/img/missile1.png',
                     sprite_dimensions = {5, 2},
                     sprite_facePlayer = false,
                 },
@@ -200,7 +200,7 @@ function initProjectiles()
                 effects = {
                     particle = 'smoke',
                     color = Vec(1,0.5,0.3),
-                    sprite = 'MOD/script/img/missile1.png',
+                    sprite = 'MOD/img/missile1.png',
                     sprite_dimensions = {6, 2},
                     sprite_facePlayer = false,
                 },
@@ -246,7 +246,7 @@ function initProjectiles()
                 effects = {
                     particle = 'smoke',
                     color = Vec(1,0.5,0.3),
-                    sprite = 'MOD/script/img/bomb1.png',
+                    sprite = 'MOD/img/bomb1.png',
                     sprite_dimensions = {2, 1},
                     sprite_facePlayer = false,
                 },

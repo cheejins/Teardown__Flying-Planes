@@ -17,6 +17,31 @@ function plane_applyTurbulence(plane)
 
 end
 
+--[[Plane Physics]]
+function planeMove(plane)
+
+    local speed = plane.speed
+
+    -- stall speed
+    if speed < plane.topSpeed then
+
+        plane.setThrustOutput()
+
+
+        local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 10 * CONFIG.smallMapMode.dragMult
+        ApplyBodyImpulse(
+            plane.body,
+            plane.tr.pos,
+            TransformToParentPoint(plane.tr, Vec(0,0,-thrustImpulseAmt)))
+
+        print(thrustImpulseAmt)
+
+
+    end
+
+end
+
+
 -- forces
 function plane_applyForces(plane)
 
@@ -153,8 +178,8 @@ function planeSteer(plane)
     local s = InputDown("s")
     local a = InputDown("a")
     local d = InputDown("d")
-    local z = InputDown("z")
-    local c = InputDown("c")
+    local alt = InputDown("alt")
+    local ctrl = InputDown("ctrl")
 
 
     -- if camPos == "aligned" then
@@ -207,27 +232,28 @@ function planeSteer(plane)
     end
 
 
-    if z then
-        ic.z = clamp(ic.z + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.z))
-    else
-        ic.z = clamp(ic.z - inc, 0, 1)
-    end
-    if c then
+    if ctrl then
         ic.c = clamp(ic.c + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.c))
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.c))
     else
         ic.c = clamp(ic.c - inc, 0, 1)
     end
+    if alt then
+        ic.z = clamp(ic.z + inc, 0, 1)
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.z))
+    else
+        ic.z = clamp(ic.z - inc, 0, 1)
+    end
 
-    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
+
+    if InputDown("r") and plane.thrust + plane.thrustIncrement <= 101 then
         plane.thrust = plane.thrust + 1
     end
-    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
+    if InputDown("f") and plane.thrust - plane.thrustIncrement >= 0 then
         plane.thrust = plane.thrust - 1
     end
 
-    if InputDown("alt") then
+    if InputDown("space") then
         ApplyBodyImpulse(
             plane.body,
             TransformToParentPoint(

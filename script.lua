@@ -1,6 +1,5 @@
 #include "Automatic.lua"
 #include "script/ai_SAMS.lua"
-#include "script/config_smallMapMode.lua"
 #include "script/debug.lua"
 #include "script/input/controlPanel.lua"
 #include "script/input/input.lua"
@@ -18,19 +17,16 @@
 #include "script/sounds.lua"
 #include "script/ui/compass.lua"
 #include "script/ui/draw.lua"
-#include "script/ui/draw.lua"
 #include "script/ui/ui.lua"
-#include "script/ui/uiDebug.lua"
 #include "script/ui/uiModItem.lua"
 #include "script/ui/uiOptions.lua"
 #include "script/ui/uiPanes.lua"
-#include "script/ui/uiPresetSystem.lua"
 #include "script/ui/uiTextBinding.lua"
 #include "script/ui/uiTools.lua"
 #include "script/umf.lua"
 #include "script/utility.lua"
-#include "script/weapons/projectiles.lua"
-#include "script/weapons/weapons.lua"
+#include "script/projectiles.lua"
+#include "script/weapons.lua"
 
 
 

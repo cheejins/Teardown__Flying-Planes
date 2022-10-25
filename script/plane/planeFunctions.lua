@@ -8,30 +8,7 @@ InputControls = {
     z = 0,
 }
 
---[[Plane Physics]]
-function planeMove(plane)
 
-    local speed = plane.speed
-
-    -- stall speed
-    if speed < plane.topSpeed then
-
-        plane.setThrustOutput()
-
-        local thrustSpeed = plane.thrust/100
-        local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
-        if thrustSpeedMult then
-
-            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.4) / plane.thrust)) * clamp(plane.health, 0.5, 1)
-            ApplyBodyImpulse(
-                plane.body,
-                plane.tr.pos,
-                plane.getFwdPos(thrustImpulseAmt))
-        end
-
-    end
-
-end
 
 
 function planeSteer_simple(plane)

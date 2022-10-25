@@ -37,11 +37,7 @@ function planesTick()
 
             plane_ProcessHealth(plane)
 
-            if FlightMode == FlightModes.simple then
-                -- planeMove_simple(plane)
-            elseif FlightMode == FlightModes.simulation then
-                planeMove(plane)
-            end
+
 
 
             planeSound(plane)
@@ -51,6 +47,12 @@ function planesTick()
         runEffects(plane)
 
         if GetPlayerVehicle() == plane.vehicle then
+
+            if FlightMode == FlightModes.simple then
+                -- planeMove_simple(plane)
+            elseif FlightMode == FlightModes.simulation then
+                planeMove(plane)
+            end
 
             planeChangeCamera()
 

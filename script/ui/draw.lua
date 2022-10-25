@@ -74,7 +74,7 @@ function draw()
 
                                 UiTranslate(x,y)
                                 UiAlign("center middle")
-                                UiImageBox("MOD/script/img/dot.png", 10, 10, 0,0)
+                                UiImageBox("MOD/img/dot.png", 10, 10, 0,0)
 
                                 do UiPush()
                                     UiTranslate(-15, 0)
@@ -141,7 +141,7 @@ function DrawControlsSimulation()
 
 
 
-        UiText('Change camera = R')
+        UiText('Change camera = C')
         UiTranslate(0, -fs)
         UiText('Change zoom = Mouse wheel')
         UiTranslate(0, -fs)
@@ -152,7 +152,7 @@ function DrawControlsSimulation()
         UiTranslate(0, -fs)
 
 
-        UiText('Yaw = Z/C')
+        UiText('Yaw = CTRL/ALT')
         UiTranslate(0, -fs)
         UiText('Pitch = W/S')
         UiTranslate(0, -fs)
@@ -160,9 +160,9 @@ function DrawControlsSimulation()
         UiTranslate(0, -fs)
         UiTranslate(0, -fs)
 
-        UiText('Air brakes = ALT')
+        UiText('Air brakes = SPACE')
         UiTranslate(0, -fs)
-        UiText('Thrust = SHIFT/CTRL')
+        UiText('Thrust = R/F')
         UiTranslate(0, -fs)
 
         UiTranslate(0, -fs)
@@ -248,7 +248,7 @@ function planeDrawHud(plane, uiW, uiH)
 
         UiColor(0,0,0, 0.5)
         UiTranslate(UiCenter(), UiMiddle())
-        UiImageBox("MOD/script/img/hud_crosshair_outer.png", w, w)
+        UiImageBox("MOD/img/hud_crosshair_outer.png", w, w)
 
     UiPop() end
 
@@ -265,7 +265,7 @@ function planeDrawHud(plane, uiW, uiH)
         if isInfront then
             local x,y = UiWorldToPixel(pos)
             UiTranslate(x,y)
-            UiImageBox("MOD/script/img/dot.png", 20, 20, 0,0)
+            UiImageBox("MOD/img/dot.png", 20, 20, 0,0)
         end
 
     UiPop() end
@@ -288,7 +288,7 @@ function planeDrawHud(plane, uiW, uiH)
                     UiColor(0.1, 0.1, 0.1, 0.15)
                     UiRect(w * 1.25, h * 1.25)
                     UiColor(1,1,1, oscillate(0.5))
-                    UiImageBox("MOD/script/img/hud_overspeed.png", w * 1.25, h * 1.25, 1,1)
+                    UiImageBox("MOD/img/hud_overspeed.png", w * 1.25, h * 1.25, 1,1)
                 end
             UiPop() end
 
@@ -299,7 +299,7 @@ function planeDrawHud(plane, uiW, uiH)
                     UiColor(0.1, 0.1, 0.1, 0.15)
                     UiRect(w,h)
                     UiColor(1,1,1, oscillate(0.75))
-                    UiImageBox("MOD/script/img/hud_stall.png", w, h, 1,1)
+                    UiImageBox("MOD/img/hud_stall.png", w, h, 1,1)
                 end
             UiPop() end
 
@@ -385,7 +385,7 @@ function planeDrawHud(plane, uiW, uiH)
 
             UiColor(c[1], c[2], c[3])
             UiTranslate(0, 700)
-            -- UiImageBox("MOD/script/img/squareBg.png", 160, 90, 0, 0)
+            -- UiImageBox("MOD/img/squareBg.png", 160, 90, 0, 0)
 
             UiText("SPEED")
             UiTranslate(-0, -700)

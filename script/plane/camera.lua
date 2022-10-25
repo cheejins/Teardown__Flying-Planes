@@ -67,7 +67,7 @@ function planeCamera(plane)
 end
 function planeChangeCamera()
 
-    if InputPressed("r") then -- Iterate camera position.
+    if InputPressed("c") then -- Iterate camera position.
 
         local camChanged = false
         for i=1, #camPositions do
