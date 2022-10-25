@@ -1,7 +1,7 @@
-<prefab version="1.0.0">
-	<group name="instance=MOD/prefab/Jet.xml" pos="150.00002 0.7 167.00002" rot="0.0 50.0 0.0">
-		<vehicle name="BombardierJet" tags="planeVehicle planeModel=bombardierJet planeType=jet weaponPreset=none" pos="0.1 1.5 11.1" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="1" damping="4" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
-			<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+<prefab version="1.2.0">
+	<group name="instance=MOD/prefab/Jet.xml" pos="167.50002 0.7 163.60001" rot="0.0 0.0 0.0">
+		<script pos="0.1 1.5 11.1" rot="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+			<vehicle name="BombardierJet" tags="planeVehicle planeModel=bombardierJet planeType=jet weaponPreset=none" pos="0.1 1.5 11.1" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="1" damping="4" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
 				<body tags="planeBody" pos="0.0 -1.0 -19.7" rot="0.0 0.0 0.0" dynamic="true">
 					<vox tags="planeShape_engine explosive=1.4" pos="0.0 0.0 -1.6" rot="0 0 0" texture="14" density="2" strength="2" file="MOD/prefab/Jet.vox" object="body_nose">
 						<location tags="vital" pos="0.0 0.5 0.1" rot="-180.0 360.0 -180.0"/>
@@ -31,8 +31,8 @@
 						</vox>
 					</wheel>
 				</body>
-			</script>
-		</vehicle>
+			</vehicle>
+		</script>
 	</group>
 </prefab>
 

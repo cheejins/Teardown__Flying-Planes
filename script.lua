@@ -91,6 +91,11 @@ function init()
 end
 function tick()
 
+    local v = FindVehicles("Plane_ID", true)
+    for _, vehicle in ipairs(v) do
+        DrawBodyOutline(GetVehicleBody(vehicle), 1,1,1, 1)
+    end
+
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
 
@@ -99,6 +104,7 @@ function tick()
     --     ClearKey("savegame.mod")
     --     print("Reset reg...")
     -- end
+
 
     if not FlightModeSet then
         SetString("savegame.mod.FlightMode", FlightModes.simple)
@@ -109,7 +115,6 @@ function tick()
 
     -- DebugWatch("FlightMode", FlightMode)
     -- DebugWatch("FlightModeSet", FlightModeSet)
-
 
 
     if InputPressed(Config.toggleOptions) then
@@ -151,7 +156,7 @@ function manageSpawning()
 
         if not HasTag(vehicle, 'planeActive') then
 
-            local plane = createPlaneObject(vehicle)
+            local plane = createPlaneObject(GetTagValue(vehicle, "Plane_ID"))
             SetTag(vehicle, 'planeActive')
             dbp('Plane spawned. ' .. plane.id)
 
@@ -168,14 +173,14 @@ function checkScriptValid()
     else
         scriptValid = true
     end
-    -- dbw("Script valid", scriptValid)
 end
+
+
 function getCurrentPlane()
     return curPlane
 end
 
-
-
 function CompressRange(val, lower, upper)
     return (val-lower) / (upper-lower)
 end
+

@@ -1,14 +1,12 @@
 function initPlanes()
 
     -- Create objects for each existing plane.
-    local planeVehicleList = FindVehicles("planeVehicle", true)
+    local planeVehicleList = FindVehicles("Plane_ID", true)
     for key, planeVehicle in pairs(planeVehicleList) do
         local plane = createPlaneObject(planeVehicle)
         plane_update(plane)
         table.insert(planeObjectList, plane)
     end
-
-    dbpc(#planeObjectList .. ' planes initialized. ' .. sfnTime())
 
 end
 
@@ -37,8 +35,11 @@ function planesTick()
 
             plane_ProcessHealth(plane)
 
-
-
+            if FlightMode == FlightModes.simple then
+                planeMove_simple(plane)
+            elseif FlightMode == FlightModes.simulation then
+                planeMove(plane)
+            end
 
             planeSound(plane)
 
@@ -47,12 +48,6 @@ function planesTick()
         runEffects(plane)
 
         if GetPlayerVehicle() == plane.vehicle then
-
-            if FlightMode == FlightModes.simple then
-                -- planeMove_simple(plane)
-            elseif FlightMode == FlightModes.simulation then
-                planeMove(plane)
-            end
 
             planeChangeCamera()
 

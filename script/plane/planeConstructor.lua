@@ -1,32 +1,29 @@
-function createPlaneObject(_vehicle)
+-- Build the plane data object (entities and properties)
+function createPlaneObject(ID)
 
     -- Default plane is a mig29
 
-    PLANE_IDS = PLANE_IDS + 1
 
-    local body = GetVehicleBody(_vehicle)
+    local _vehicle = nil
+
+    for index, v in ipairs(FindVehicles("Plane_ID", true)) do
+        if GetTagValue(v, "Plane_ID") == ID then
+            _vehicle = v
+            print("found plane ", ID)
+            break
+        end
+    end
+
 
     local plane = {
 
         -- references
-            id = PLANE_IDS,
+            id = ID,
             model = GetTagValue(_vehicle, "planeModel"),
 
             vehicle = _vehicle,
             engineType = GetTagValue(_vehicle, "planeType"),
-            body = body,
-
-            bodyShapes = GetBodyShapes(_body),
-            partsShapes = {
-                engine      = FindShape("plane_engine", true),
-                wings = {
-                    left    = FindShape("plane_wing_left", true),
-                    right   = FindShape("plane_wing_right", true),
-                },
-                tail        = FindShape("plane_tail", true),
-                elevators   = FindShape("plane_elevators", true),
-                rudder      = FindShape("plane_rudder", true),
-            },
+            body = GetVehicleBody(_vehicle),
 
         -- const values
             speed = 0,
@@ -37,7 +34,6 @@ function createPlaneObject(_vehicle)
 
         -- misc
             status = "-",
-            taxiModeEnabled = true,
             seatPosOffset = Vec(0,0,-10),
             brakeImpulseAmt = 500,
             isAlive = true,
@@ -86,6 +82,7 @@ function createPlaneObject(_vehicle)
             camUp = 8,
             camPitch = -7,
     }
+
 
     plane.getLiftSpeedFac = function()
         local x = plane.speed

@@ -166,9 +166,6 @@ function planeStateText(plane)
     end
 end
 function planeToggleEngine(plane)
-    -- if InputPressed("v") then
-    --     plane.taxiModeEnabled = not plane.taxiModeEnabled
-    -- end
 end
 function runEffects(plane)
 
