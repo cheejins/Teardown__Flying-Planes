@@ -1,3 +1,7 @@
+#include "../TDSU/tdsu.lua"
+
+
+
 -- This script is ran for each plane that is spawned.
 
 
@@ -32,10 +36,6 @@ end
 
 function tick()
 
-    for _, body in ipairs(FindBodies(IDTag, false)) do
-        DrawBodyOutline(body, 1,1,1,1)
-    end
-
 end
 
 
@@ -56,7 +56,10 @@ function ApplyPlaneEntityIDs(ID)
         end
     end
 
-    print("Plane_ID tags set: ", ID)
+    for index, shape in ipairs(AllEntities.AllShapes) do
+        SetShapeCollisionFilter(shape, clamp(ID, 2, 255))
+    end
+
 
 end
 

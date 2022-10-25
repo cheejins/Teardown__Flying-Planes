@@ -32,6 +32,16 @@ function PLANES_Tick()
             plane_ChangeCamera()
 
 
+            if InputPressed("v") then
+                plane.engineOn = not plane.engineOn
+            end
+
+            if InputPressed("x") then
+                plane.flaps = not plane.flaps
+            end
+
+
+
             if not ShouldDrawIngameOptions then
                 plane_Camera(plane)
             end
@@ -99,12 +109,16 @@ end
 -- Run update() functions for each plane.
 function PLANES_Update()
     for key, plane in pairs(PLANES) do
+
         if GetPlayerVehicle() == plane.vehicle then
+
+            plane_Animate_AeroParts(plane)
 
             if not ShouldDrawIngameOptions then
                 plane_Camera(plane)
             end
 
         end
+
     end
 end

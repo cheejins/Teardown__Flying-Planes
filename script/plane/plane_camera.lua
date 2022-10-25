@@ -67,7 +67,14 @@ function plane_ChangeCamera()
 
     if InputPressed("c") then -- Iterate camera position.
 
+        local index = 1
+        for i = 1, #CameraPositions do
+            if CameraPositions[i] == SelectedCamera then
+                index = GetTableNextIndex(CameraPositions, i)
+            end
+        end
 
+        SelectedCamera = CameraPositions[index]
 
     end
 

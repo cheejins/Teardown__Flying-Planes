@@ -25,6 +25,9 @@ function createPlaneObject(ID)
             engineType = GetTagValue(_vehicle, "planeType"),
             health = 1,
             isAlive = true,
+            engineOn = true,
+
+            flaps = false,
 
         -- const values
             speed = 0,
@@ -137,8 +140,14 @@ function createPlaneObject(ID)
     plane_UpdateProperties(plane)
     plane_ManageTargetting(plane)
     plane_ProcessHealth(plane)
-    _plane_SetMinAltitude(plane)
-    _plane_AutoConvertToPreset(plane)
+    plane_SetMinAltitude(plane)
+    plane_AutoConvertToPreset(plane)
+
+
+    -- plane_builder.lua
+    plane.parts = plane_CollectParts_Aero(plane)
+
+    PrintTable(plane.parts)
 
 
     SetTag(plane.vehicle, 'planeActive')
@@ -173,7 +182,7 @@ function plane_UpdateProperties(plane)
 end
 
 
-function _plane_SetMinAltitude(plane)
+function plane_SetMinAltitude(plane)
     -- Lowest point ooint of the plane (light entity on the wheel)
     for index, light in ipairs(FindLights('ground', true)) do
         if GetBodyVehicle(GetShapeBody(GetLightShape(light))) == plane.vehicle then

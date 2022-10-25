@@ -3,16 +3,20 @@ function plane_Move(plane)
 
     local speed = plane.speed
 
-    -- stall speed
-    if speed < plane.topSpeed then
+    if plane.engineOn then
 
-        plane_SetThrustOutput(plane)
+        -- stall speed
+        if speed < plane.topSpeed then
 
-        local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 10 * CONFIG.smallMapMode.dragMult
-        ApplyBodyImpulse(
-            plane.body,
-            plane.tr.pos,
-            TransformToParentPoint(plane.tr, Vec(0,0,-thrustImpulseAmt)))
+            plane_SetThrustOutput(plane)
+
+            local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 10 * CONFIG.smallMapMode.dragMult
+            ApplyBodyImpulse(
+                plane.body,
+                plane.tr.pos,
+                TransformToParentPoint(plane.tr, Vec(0,0,-thrustImpulseAmt)))
+
+        end
 
     end
 
@@ -168,13 +172,13 @@ function plane_Steer(plane)
 
     if w then
         ic.w = clamp(ic.w + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, imp * ic.w))
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, -imp * ic.w))
     else
         ic.w = clamp(ic.w - inc, 0, 1)
     end
     if s then
         ic.s = clamp(ic.s + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, -imp * ic.s))
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeUp, imp * ic.s))
     else
         ic.s = clamp(ic.s - inc, 0, 1)
     end
@@ -182,13 +186,13 @@ function plane_Steer(plane)
 
     if a then
         ic.a = clamp(ic.a + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp * ic.a))
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp * ic.a))
     else
         ic.a = clamp(ic.a - inc, 0, 1)
     end
     if d then
         ic.d = clamp(ic.d + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp * ic.d))
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp * ic.d))
     else
         ic.d = clamp(ic.d - inc, 0, 1)
     end
@@ -196,13 +200,13 @@ function plane_Steer(plane)
 
     if ctrl then
         ic.c = clamp(ic.c + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.c))
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.c))
     else
         ic.c = clamp(ic.c - inc, 0, 1)
     end
     if alt then
         ic.z = clamp(ic.z + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.z))
+        ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.z))
     else
         ic.z = clamp(ic.z - inc, 0, 1)
     end
@@ -214,6 +218,7 @@ function plane_Steer(plane)
     if InputDown("f") and plane.thrust - plane.thrustIncrement >= 0 then
         plane.thrust = plane.thrust - 1
     end
+
 
     if InputDown("space") then
         ApplyBodyImpulse(

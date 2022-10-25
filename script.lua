@@ -6,6 +6,8 @@
 #include "script/input/input.lua"
 #include "script/input/keybinds.lua"
 #include "script/particles.lua"
+#include "script/plane/plane_animate.lua"
+#include "script/plane/plane_builder.lua"
 #include "script/plane/plane_camera.lua"
 #include "script/plane/plane_constructor.lua"
 #include "script/plane/plane_functions.lua"
@@ -27,19 +29,17 @@
 
 
 
-----------------------------------------------------------------------------------------
--- THIS SCRIPT IS PRETTY OLD AND MESSY. I'M GOING TO BE RECREATING A LOT OF IT.
-----------------------------------------------------------------------------------------
-
 
 PLANES = {}
 
 ShouldDrawIngameOptions = false
 
 
+
 function init()
 
     Init_Utils()
+
 
     PLANES_Init()
     Init_Config()
@@ -48,7 +48,6 @@ function init()
     InitEnemies()
 
     SelectedCamera = CameraPositions[1]
-
 
 end
 
@@ -60,7 +59,6 @@ function tick()
 
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
-
 
     if not FlightModeSet then
         SetString("savegame.mod.FlightMode", FlightModes.simple)

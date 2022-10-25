@@ -1,7 +1,6 @@
-#include "script/utility.lua"
-#include "script/umf.lua"
-#include "script/registry.lua"
 #include "script.lua"
+#include "TDSU/tdsu.lua"
+#include "script/registry.lua"
 
 
 

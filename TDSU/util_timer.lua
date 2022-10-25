@@ -45,7 +45,7 @@ end
 
 -- Reset time to start (60/rpm).
 function TimerResetTime(timer)
-    timer.time = timer.rpm
+    timer.time = 60/timer.rpm
 end
 
 function TimerConsumed(timer)

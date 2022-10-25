@@ -4,37 +4,37 @@
 			<vehicle name="F15" tags="planeVehicle planeModel=mig29 planeType=jet weaponPreset=none" pos="0.0 1.9 2.0" rot="0.0 0.0 0.0" driven="true" sound="classic" spring="0.5" damping="2" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
 				<body tags="planeBody" pos="0.0 0.2 0.5" rot="0.0 0.0 0.0" dynamic="true">
 					<group name="parts_main" pos="0.0 -0.5 0.0">
-						<vox texture="14" tags="aileron=right" pos="4.4 0.3 4.5" prop="true" file="MOD/prefab/F15.vox" object="aileron_right">
+						<vox tags="aileron=right" pos="4.4 0.3 4.5" texture="14" prop="true" file="MOD/prefab/F15.vox" object="aileron_right">
 							<joint pos="0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 							<joint pos="-0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" tags="aileron=left" pos="-4.7 0.3 4.5" prop="true" file="MOD/prefab/F15.vox" object="aileron_left">
+						<vox tags="aileron=left" pos="-4.7 0.3 4.5" texture="14" prop="true" file="MOD/prefab/F15.vox" object="aileron_left">
 							<joint pos="-0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 							<joint pos="0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" tags="flap=center" pos="2.6 0.3 4.4" prop="true" file="MOD/prefab/F15.vox" object="flap_right">
+						<vox tags="flap=center" pos="2.6 0.3 4.4" texture="14" prop="true" file="MOD/prefab/F15.vox" object="flap_right">
 							<joint pos="0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 							<joint pos="-0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" tags="flap=center" pos="-2.9 0.3 4.4" prop="true" file="MOD/prefab/F15.vox" object="flap_lefy">
+						<vox tags="flap=center" pos="-2.9 0.3 4.4" texture="14" prop="true" file="MOD/prefab/F15.vox" object="flap_lefy">
 							<joint pos="0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 							<joint pos="-0.2 0.3 -0.4" rot="0.0 -90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" tags="elevator=left" pos="-3.0 0.2 7.3" prop="true" file="MOD/prefab/F15.vox" object="elevator_left">
+						<vox tags="elevator=left" pos="-3.0 0.2 7.3" texture="14" prop="true" file="MOD/prefab/F15.vox" object="elevator_left">
 							<joint pos="1.2 0.0 0.0" rot="0.0 -90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" tags="elevator=right" pos="2.7 0.2 7.3" prop="true" file="MOD/prefab/F15.vox" object="elevator_right">
+						<vox tags="elevator=right" pos="2.7 0.2 7.3" texture="14" prop="true" file="MOD/prefab/F15.vox" object="elevator_right">
 							<joint pos="-1.2 0.0 0.0" rot="0.0 90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" tags="rudder=center" pos="-1.7 0.9 7.1" prop="true" file="MOD/prefab/F15.vox" object="rudder_left">
+						<vox tags="rudder=center" pos="-1.7 0.9 7.1" texture="14" prop="true" file="MOD/prefab/F15.vox" object="rudder_left">
 							<joint pos="0.0 1.7 -0.4" rot="90.0 -90.0 0.0" type="hinge"/>
 							<joint pos="0.0 0.1 -0.4" rot="90.0 -90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" tags="rudder=center" pos="1.4 0.9 7.1" prop="true" file="MOD/prefab/F15.vox" object="rudder_right">
+						<vox tags="rudder=center" pos="1.4 0.9 7.1" texture="14" prop="true" file="MOD/prefab/F15.vox" object="rudder_right">
 							<joint pos="0.0 0.1 -0.4" rot="90.0 -90.0 0.0" type="hinge"/>
 							<joint pos="0.0 1.7 -0.4" rot="90.0 -90.0 0.0" type="hinge"/>
 						</vox>
-						<vox texture="14" pos="-0.2 -1.4 -0.8" file="MOD/prefab/F15.vox" object="fuselage">
+						<vox pos="-0.2 -1.4 -0.8" texture="14" file="MOD/prefab/F15.vox" object="fuselage">
 							<location tags="vital" pos="0.1 1.9 -4.5" rot="-180.0 360.0 -180.0"/>
 							<location tags="player" pos="0.05 2.55 -5.15" rot="0.0 0.0 0.0"/>
 							<light name="engine thruster" tags="exhaust" pos="0.6 1.6 8.3" type="cone" color="0.0 0.0 0.0" scale="0"/>
@@ -48,18 +48,18 @@
 					</group>
 					<group name="parts_wheels" pos="0.0 -2.2 -1.9">
 						<wheel name="wl_c" pos="-1.75 0.0 3.4" drive="0" steer="0" travel="-0.4 0.4">
-							<vox texture="14" pos="0.0 -0.4 0.0" file="MOD/prefab/F15.vox" object="wheel_rear"/>
+							<vox pos="0.0 -0.4 0.0" texture="14" file="MOD/prefab/F15.vox" object="wheel_rear"/>
 						</wheel>
 						<wheel name="wl_c" pos="1.45 0.0 3.4" drive="0" steer="0" travel="-0.4 0.4">
-							<vox texture="14" pos="0.0 -0.4 0.0" file="MOD/prefab/F15.vox" object="wheel_rear"/>
+							<vox pos="0.0 -0.4 0.0" texture="14" file="MOD/prefab/F15.vox" object="wheel_rear"/>
 						</wheel>
 						<wheel name="wl_c" pos="0.05 -0.05 -2.8" drive="0" steer="0" travel="-0.4 0.4">
-							<vox texture="14" pos="-0.05 -0.35 0.05" file="MOD/prefab/F15.vox" object="wheel_front"/>
+							<vox pos="-0.05 -0.35 0.05" texture="14" file="MOD/prefab/F15.vox" object="wheel_front"/>
 						</wheel>
 					</group>
 					<group name="parts_weapons" pos="0.0 -0.6 4.2">
-						<vox texture="14" pos="-4.7 -0.5 -0.7" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
-						<vox texture="14" pos="5.0 -0.5 -0.6" rot="0 0 0" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+						<vox pos="-4.7 -0.5 -0.7" rot="0 0 0" texture="14" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
+						<vox pos="5.0 -0.5 -0.6" rot="0 0 0" texture="14" density="2" file="MOD/prefab/Mig29.vox" object="wpn_missile1"/>
 					</group>
 				</body>
 			</vehicle>
