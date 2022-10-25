@@ -1,3 +1,16 @@
+2022.10.25
+> Added F15-E.
+> Added animated air foil parts (ailerons, flaps, etc.)
+> Minor fixes and major code restructured.
+> Added spawnable MG and SAM AA tanks.
+
+
+2022.10.21
+> Added new simulation flight mode (calculates lift and drag)
+> Added Sandbox map.
+> Added MG AA tanks.
+
+
 2022.05.08
 > Added B2 Stealth Bomber and carpet bombing.
 > Mod no longer needs to be enabled.

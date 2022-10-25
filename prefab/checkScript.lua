@@ -56,8 +56,11 @@ function ApplyPlaneEntityIDs(ID)
         end
     end
 
+    -- No intercollisions, but leave world collision on.
+    local id = tonumber(ID)
+    id = clamp(id, 2, 255-2)
     for index, shape in ipairs(AllEntities.AllShapes) do
-        SetShapeCollisionFilter(shape, 3, 1)
+        SetShapeCollisionFilter(shape, id, 255-id)
     end
 
 

@@ -51,8 +51,8 @@ function PLANES_Tick()
                 SetPlayerHealth(1)
 
 
-                crosshairPos = GetCrosshairWorldPos({plane.body}, plane.tr.pos)
-                -- dbdd(crosshairPos, 1,1, 1,0,0, 1)
+                crosshairPos = GetCrosshairWorldPos(plane.allBodies, plane.tr.pos)
+                dbdd(crosshairPos, 1,1, 1,0,0, 1)
 
                 if InputPressed(Config.toggleHoming) then
                     beep()
@@ -106,13 +106,15 @@ function PLANES_Tick()
     end
 end
 
+
 -- Run update() functions for each plane.
 function PLANES_Update()
     for key, plane in pairs(PLANES) do
 
-        if GetPlayerVehicle() == plane.vehicle then
+        plane_Animate_AeroParts(plane)
 
-            plane_Animate_AeroParts(plane)
+
+        if GetPlayerVehicle() == plane.vehicle then
 
             if not ShouldDrawIngameOptions then
                 plane_Camera(plane)

@@ -146,8 +146,6 @@ function DrawControlsSimulation()
         UiFont("regular.ttf", fs)
         UiAlign("left bottom")
 
-
-
         UiText('Change camera = C')
         UiTranslate(0, -fs)
         UiText('Change zoom = Mouse wheel')
@@ -169,7 +167,7 @@ function DrawControlsSimulation()
 
         UiText('Air brakes = SPACE')
         UiTranslate(0, -fs)
-        UiText('Thrust = R/F')
+        UiText('Thrust = Shift/Ctrl')
         UiTranslate(0, -fs)
 
         UiTranslate(0, -fs)
@@ -212,7 +210,7 @@ function DrawControlsSimple()
 
         UiText('Air brakes = ALT')
         UiTranslate(0, -fs)
-        UiText('Thrust = SHIFT/CTRL')
+        UiText('Thrust = W/S')
         UiTranslate(0, -fs)
 
         UiTranslate(0, -fs)

@@ -65,7 +65,7 @@ end
 
 function plane_ChangeCamera()
 
-    if InputPressed("c") then -- Iterate camera position.
+    if InputPressed("x") then -- Iterate camera position.
 
         local index = 1
         for i = 1, #CameraPositions do

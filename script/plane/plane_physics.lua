@@ -10,7 +10,7 @@ function plane_Move(plane)
 
             plane_SetThrustOutput(plane)
 
-            local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 10 * CONFIG.smallMapMode.dragMult
+            local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 2.5 * CONFIG.smallMapMode.dragMult
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
@@ -144,8 +144,8 @@ function plane_Steer(plane)
     local s = InputDown("s")
     local a = InputDown("a")
     local d = InputDown("d")
-    local alt = InputDown("alt")
-    local ctrl = InputDown("ctrl")
+    local c = InputDown("c")
+    local z = InputDown("z")
 
 
     -- if camPos == "aligned" then
@@ -198,13 +198,13 @@ function plane_Steer(plane)
     end
 
 
-    if ctrl then
+    if z then
         ic.c = clamp(ic.c + inc, 0, 1)
         ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, -imp * ic.c))
     else
         ic.c = clamp(ic.c - inc, 0, 1)
     end
-    if alt then
+    if c then
         ic.z = clamp(ic.z + inc, 0, 1)
         ApplyBodyImpulse(plane.body, nose, VecScale(planeLeft, imp * ic.z))
     else
@@ -212,10 +212,10 @@ function plane_Steer(plane)
     end
 
 
-    if InputDown("r") and plane.thrust + plane.thrustIncrement <= 101 then
+    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
         plane.thrust = plane.thrust + 1
     end
-    if InputDown("f") and plane.thrust - plane.thrustIncrement >= 0 then
+    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
         plane.thrust = plane.thrust - 1
     end
 

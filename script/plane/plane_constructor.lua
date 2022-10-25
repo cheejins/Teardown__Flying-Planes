@@ -148,6 +148,15 @@ function createPlaneObject(ID)
     plane.parts = plane_CollectParts_Aero(plane)
 
 
+    plane.allBodies = {}
+    local planeShapes = FindShapes("Plane_ID", true)
+    for index, shape in ipairs(planeShapes) do
+        if GetTagValue(shape, "Plane_ID") == plane.id then
+            table.insert(plane.allBodies, GetShapeBody(shape))
+        end
+    end
+
+
     SetTag(plane.vehicle, 'planeActive')
 
     return plane

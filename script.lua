@@ -49,6 +49,8 @@ function init()
 
     SelectedCamera = CameraPositions[1]
 
+    SetString("hud.notification", "Note: The F-15 is still in developemt and is slightly unstable.")
+
 end
 
 
