@@ -9,124 +9,16 @@ InputControls = {
 }
 
 
+function planeDebug(plane)
 
-
-function planeSteer_simple(plane)
-
-    local pTr = plane.tr
-
-    local ang = plane.getForwardVelAngle()/10
-
-    local speed = plane.speed
-    local speedClamped = (clamp(speed, 0.01, speed+0.01))
-
-    local divSpeed = speedClamped / plane.topSpeed
-    local turnDiv = 80
-
-    if Config.smallMapMode then
-        turnDiv = 60
-    end
-
-    local turnAmt = math.abs(getQuadtratic(divSpeed) / turnDiv)
-
-    if speedClamped > plane.topSpeed /2 then
-        turnAmt = math.abs(1 / turnDiv)
-    end
-
-
-
-    -- -- Roll
-    -- if InputDown("a") or InputDown("d") then
-
-    --     local yawSign = 1
-    --     if InputDown("d") then yawSign = -1 end -- Determine yaw direction
-
-    --     local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 2
-
-    --     -- local yawLowerLim = plane.topSpeed/3
-    --     -- local yawUpperLim = plane.topSpeed - (plane.topSpeed/3)
-    --     -- if plane.speed < yawLowerLim then
-    --     --     yawAmt = yawAmt * (plane.speed/yawLowerLim)
-    --     -- elseif plane.speed > plane.topSpeed/5 then
-    --     --     yawAmt = yawAmt * (yawUpperLim/plane.speed)
-    --     -- end
-
-    --     pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, yawAmt))
-
-    -- end
-
-    if InputDown("z") then
-
-        local yawSign = 1
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal* CONFIG.smallMapMode.turnMult
-        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
-
-    end
-    if InputDown("c") then
-
-        local yawSign = -1
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal* CONFIG.smallMapMode.turnMult
-        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
-
-    end
-
-
-
-    local crosshairRot = QuatLookAt(plane.tr.pos, crosshairPos)
-
-    -- Roll plane based on crosshair
-    local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
-    rollAmt[1] = rollAmt[1] * turnAmt * -350 / plane.rollVal
-
-    pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
-
-
-    -- local crosshairRot = QuatLookAt(plane.tr.pos, crosshairPos)
-
-    -- local camDir = QuatToDir(QuatEuler(plane.camera.cameraY, plane.camera.cameraX, 0))
-    -- local planeDir = QuatToDir(plane.tr.rot)
-
-    -- -- Roll plane based on crosshair
-    -- local rollAmt = VecNormalize(TransformToLocalPoint(planeDir, camDir))
-    -- rollAmt[1] = rollAmt[1] * -5
-    -- dbw('rollAmt[1]', rollAmt[1])
-    -- pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
-
-
-    -- Align with crosshair pos
-    pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
-    pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / plane.yawFac)
-
-    SetBodyTransform(plane.body, pTr)
-
-
-
-
-    local speed = plane.speed
-
-    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
-        plane.thrust = plane.thrust + 1
-    end
-    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
-        plane.thrust = plane.thrust - 1
-    end
-
-    if InputDown("space") then
-        ApplyBodyImpulse(
-            plane.body,
-            TransformToParentPoint(
-                plane.tr, Vec(0,0,-5)),
-            plane.getFwdPos(speed*plane.brakeImpulseAmt))
-        plane.status = 'Air Braking'
-    end
-
-    plane.setThrustOutput()
+    dbw('plane.speed', sfn(plane.speed))
+    dbw("plane.idealSpeedFactor", sfn(plane.idealSpeedFactor))
+    dbw("plane.speedFac", sfn(plane.speedFac))
 
 end
 
 
---[[Misc]]
-function planeSound(plane)
+function plane_Sound(plane)
 
     PlayLoop(sounds.fire_large, plane.tr.pos, 1 - plane.health + 0.25)
 
@@ -158,15 +50,18 @@ function planeSound(plane)
     end
 
 end
-function planeStateText(plane)
+
+--[[Misc]]
+
+function plane_StateText(plane)
     plane.status = "-"
     if InputDown("space") then
         plane.status = "Air-Braking"
     end
 end
-function planeToggleEngine(plane)
+function plane_ToggleEngine(plane)
 end
-function runEffects(plane)
+function plane_VisualEffects(plane)
 
     for index, exhaust in pairs(plane.exhausts) do
 
@@ -224,20 +119,7 @@ function runEffects(plane)
     -- end
 
 end
-function handlePlayerInWater()
-
-    local v = GetPlayerVehicle()
-    local vIsDeadPlane = v ~= 0 and HasTag(v, 'planeVehicle') and GetVehicleHealth(v) <= 0.5
-
-end
-function planeDebug(plane)
-
-    dbw('plane.speed', sfn(plane.speed))
-    dbw("plane.idealSpeedFactor", sfn(plane.idealSpeedFactor))
-    dbw("plane.speedFac", sfn(plane.speedFac))
-
-end
-function planeLandingGear(plane)
+function plane_LandingGear(plane)
 
     if InputPressed("g") then
         for index, shape in ipairs(FindShapes("gear", true)) do
@@ -450,5 +332,27 @@ function planeShoot(plane)
     TimerRunTime(plane.timers.weap.primary)
     TimerRunTime(plane.timers.weap.secondary)
     TimerRunTime(plane.timers.weap.special)
+
+end
+
+function plane_ProcessHealth(plane)
+
+    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)
+    -- plane.health = GetVehicleHealth(plane.vehicle)
+
+    if plane.isAlive and plane.health <= 0 and not plane.justDied then
+
+        plane.justDied = true
+        plane.isAlive = false
+        plane.timeOfDeath = GetTime()
+
+        PlaySound(sounds.engine_deaths[3], plane.tr.pos, 3)
+        PlaySound(sounds.engine_deaths[1], plane.tr.pos, 3)
+        Explosion(plane.tr.pos, 1)
+
+    else
+        plane.isAlive = true
+        plane.justDied = false
+    end
 
 end

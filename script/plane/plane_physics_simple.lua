@@ -1,4 +1,5 @@
-function planeSteer_simple(plane)
+-- Steer plane based on camera direction.
+function plane_Steer_Simple(plane)
 
     local pTr = plane.tr
 
@@ -67,8 +68,8 @@ function planeSteer_simple(plane)
 
 end
 
-
-function planeMove_simple(plane)
+-- Apply engine/thrust impulse to move the plane forward.
+function plane_Move_Simple(plane)
 
     local speed = plane.speed
 
@@ -113,9 +114,8 @@ function planeMove_simple(plane)
 
 end
 
-
--- forces
-function plane_applyForces_simple(plane)
+-- Apply basic lift and drag.
+function plane_ApplyForces_Simple(plane)
 
 --[LIFT]
     -- Lift determined by AoA and speed
@@ -175,7 +175,7 @@ function plane_applyForces_simple(plane)
     local speed = gtZero(plane.speed)
 
     -- low fwd vel angle * speed = min drag
-    local fwdDragAmt = (plane_getForwardVelAngle_old(plane) * plane.speed+10) * vel/plane.topSpeed/2
+    local fwdDragAmt = (plane_GetForwardVelAngle_old(plane) * plane.speed+10) * vel/plane.topSpeed/2
     local fwdDragDir = VecScale(plane.vel, -fwdDragAmt)
 
     plane.fwdDragAmt = 1.7 * CONFIG.smallMapMode.dragMult
@@ -194,8 +194,8 @@ function plane_applyForces_simple(plane)
 
 end
 
-
-function plane_getForwardVelAngle_old(plane)
+--
+function plane_GetForwardVelAngle_old(plane)
     -- - Returns the angle between the plane's direction and velocity
 
     local velSub = VecNormalize(VecSub(Vec(0,0,0),GetBodyVelocity(plane.body)))

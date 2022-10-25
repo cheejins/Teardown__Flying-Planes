@@ -128,7 +128,7 @@ function tick()
     manageActiveProjectiles()
 
     -- Root of plane management.
-    planesTick()
+    PLANES_Tick()
 
 
     local propellers = FindJoints('planePropeller', true)
@@ -145,7 +145,7 @@ function tick()
 
 end
 function update()
-    planesUpdate()
+    PLANES_Update()
 end
 
 

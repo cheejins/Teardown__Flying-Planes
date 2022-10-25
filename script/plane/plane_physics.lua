@@ -1,24 +1,5 @@
-function plane_applyTurbulence(plane)
-
-    -- local turbImp = VecRdm(math.abs(plane.lvel[1] + plane.lvel[2]) * 10000)
-
-    -- TURBULENCE = TURBULENCE
-    -- if InputDown("f") then
-    --     TURBULENCE = not TURBULENCE or false
-    -- end
-
-    -- if TURBULENCE then
-    --     ApplyBodyImpulse(plane.body, VecAdd(plane.tr.pos, VecRdm(1)), turbImp)
-    -- end
-
-    -- dbw("TURB imp", turbImp)
-    -- dbw("TURBULENCE", TURBULENCE)
-
-
-end
-
---[[Plane Physics]]
-function planeMove(plane)
+-- Apply engine/thrust impulse to move the plane forward.
+function plane_Move(plane)
 
     local speed = plane.speed
 
@@ -38,8 +19,8 @@ function planeMove(plane)
 end
 
 
--- forces
-function plane_applyForces(plane)
+-- Apply aerodynamic impulses.
+function plane_ApplyAerodynamics(plane)
 
     local localVel = TransformToLocalVec(plane.tr, plane.vel)
     local FwdVel = (plane.topSpeed / clamp(math.abs(-localVel[3]), 1, plane.topSpeed)) * 3
@@ -106,50 +87,35 @@ function plane_applyForces(plane)
 
 
     if Config.showOptions and plane.totalVel > 1 then
-        DrawForces(plane, x, y, z, 5, 20)
+        plane_draw_Forces(plane, x, y, z, 5, 20)
     end
 
 end
 
-function DrawForces(plane, x, y, z, outness, scale)
 
-    local outness = outness or 5
-    local sc = scale or 5
+-- Apply turbulence based on velocity and aerodynamics.
+function plane_ApplyTurbulence(plane)
 
-    DebugLine(
-        TransformToParentPoint(plane.tr, Vec(0, 0, -outness)),
-        TransformToParentPoint(plane.tr, Vec(x * sc, 0, -outness)),
-        0, 0, 1, 1)
-    DebugLine(
-        TransformToParentPoint(plane.tr, Vec(0, 0, outness)),
-        TransformToParentPoint(plane.tr, Vec(-x * sc, 0, outness)),
-        0, 0, 1, 1)
+    -- local turbImp = VecRdm(math.abs(plane.lvel[1] + plane.lvel[2]) * 10000)
 
-    DebugLine(
-        TransformToParentPoint(plane.tr, Vec(0, 0, -outness)),
-        TransformToParentPoint(plane.tr, Vec(0, y * sc, -outness)),
-        0, 1, 0, 1)
-    DebugLine(
-        TransformToParentPoint(plane.tr, Vec(0, 0, outness)),
-        TransformToParentPoint(plane.tr, Vec(0, -y * sc, outness)),
-        0, 1, 0, 1)
+    -- TURBULENCE = TURBULENCE
+    -- if InputDown("f") then
+    --     TURBULENCE = not TURBULENCE or false
+    -- end
 
-    DebugLine(
-        TransformToParentPoint(plane.tr, Vec(outness, 0, 0)),
-        TransformToParentPoint(plane.tr, Vec(outness, z * sc, 0)),
-        1, 0, 0, 1)
-    DebugLine(
-        TransformToParentPoint(plane.tr, Vec(-outness, 0, 0)),
-        TransformToParentPoint(plane.tr, Vec(-outness, -z * sc, 0)),
-        1, 0, 0, 1)
+    -- if TURBULENCE then
+    --     ApplyBodyImpulse(plane.body, VecAdd(plane.tr.pos, VecRdm(1)), turbImp)
+    -- end
 
-    -- DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, forces) , 1,1,0, 1)
-    DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel), 1, 1, 0, 1)
-    DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0, 0, -20)), 1, 1, 1, 1)
+    -- dbw("TURB imp", turbImp)
+    -- dbw("TURBULENCE", TURBULENCE)
+
 
 end
 
-function planeSteer(plane)
+
+-- Apply impulses to control the pitch, roll and yaw.
+function plane_Steer(plane)
 
     local angDim = plane.idealSpeedFactor
 
@@ -257,5 +223,45 @@ function planeSteer(plane)
             plane.getFwdPos(plane.speed * plane.brakeImpulseAmt))
         plane.status = 'Air Braking'
     end
+
+end
+
+
+-- Draw aerodynamic forces debug lines.
+function plane_draw_Forces(plane, x, y, z, outness, scale)
+
+    local outness = outness or 5
+    local sc = scale or 5
+
+    DebugLine(
+        TransformToParentPoint(plane.tr, Vec(0, 0, -outness)),
+        TransformToParentPoint(plane.tr, Vec(x * sc, 0, -outness)),
+        0, 0, 1, 1)
+    DebugLine(
+        TransformToParentPoint(plane.tr, Vec(0, 0, outness)),
+        TransformToParentPoint(plane.tr, Vec(-x * sc, 0, outness)),
+        0, 0, 1, 1)
+
+    DebugLine(
+        TransformToParentPoint(plane.tr, Vec(0, 0, -outness)),
+        TransformToParentPoint(plane.tr, Vec(0, y * sc, -outness)),
+        0, 1, 0, 1)
+    DebugLine(
+        TransformToParentPoint(plane.tr, Vec(0, 0, outness)),
+        TransformToParentPoint(plane.tr, Vec(0, -y * sc, outness)),
+        0, 1, 0, 1)
+
+    DebugLine(
+        TransformToParentPoint(plane.tr, Vec(outness, 0, 0)),
+        TransformToParentPoint(plane.tr, Vec(outness, z * sc, 0)),
+        1, 0, 0, 1)
+    DebugLine(
+        TransformToParentPoint(plane.tr, Vec(-outness, 0, 0)),
+        TransformToParentPoint(plane.tr, Vec(-outness, -z * sc, 0)),
+        1, 0, 0, 1)
+
+    -- DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, forces) , 1,1,0, 1)
+    DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel), 1, 1, 0, 1)
+    DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0, 0, -20)), 1, 1, 1, 1)
 
 end
