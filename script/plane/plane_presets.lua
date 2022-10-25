@@ -1,4 +1,4 @@
-function convertPlaneToPreset(plane)
+function _plane_AutoConvertToPreset(plane)
 
     if plane.model == "spitfire" then
         convertPlaneToSpitfire(plane)

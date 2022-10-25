@@ -35,32 +35,20 @@
 ----------------------------------------------------------------------------------------
 
 
-
-PLANE_IDS = 0 -- Assigns unique plane ids.
-planeObjectList = {}
-
-scriptValid = false
-hintsOff = false
-isDemoMap = false
+PLANES = {}
 
 ShouldDrawIngameOptions = false
 
 
 function init()
 
-    Tick = 1
-
-    SelectedCamera = camPositions[1]
+    SelectedCamera = CameraPositions[1]
 
 
     Init_Config()
     initSounds()
     initProjectiles()
     InitEnemies()
-
-
-    -- SmallMapMode = false
-    -- config_setSmallMapMode(SmallMapMode)
 
 end
 
@@ -69,6 +57,7 @@ function tick()
 
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
+
 
     if not FlightModeSet then
         SetString("savegame.mod.FlightMode", FlightModes.simple)
@@ -96,10 +85,6 @@ function tick()
 
     plane_RunPropellers()
 
-
-
-    Tick = Tick + 1
-
 end
 
 function update()
@@ -119,7 +104,7 @@ function Manage_Spawning()
             local ID = GetTagValue(vehicle, "Plane_ID")
             local plane = createPlaneObject(ID)
 
-            table.insert(planeObjectList, plane)
+            table.insert(PLANES, plane)
 
         end
 

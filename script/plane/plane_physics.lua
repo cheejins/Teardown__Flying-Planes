@@ -6,7 +6,7 @@ function plane_Move(plane)
     -- stall speed
     if speed < plane.topSpeed then
 
-        plane.setThrustOutput()
+        plane_SetThrustOutput(plane)
 
         local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 10 * CONFIG.smallMapMode.dragMult
         ApplyBodyImpulse(
@@ -220,7 +220,7 @@ function plane_Steer(plane)
             plane.body,
             TransformToParentPoint(
                 plane.tr, Vec(0, 0, -5)),
-            plane.getFwdPos(plane.speed * plane.brakeImpulseAmt))
+            plane_GetFwdPos(plane.speed * plane.brakeImpulseAmt))
         plane.status = 'Air Braking'
     end
 
@@ -263,5 +263,44 @@ function plane_draw_Forces(plane, x, y, z, outness, scale)
     -- DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, forces) , 1,1,0, 1)
     DebugLine(plane.tr.pos, VecAdd(plane.tr.pos, plane.vel), 1, 1, 0, 1)
     DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0, 0, -20)), 1, 1, 1, 1)
+
+end
+
+
+
+
+function GetPitchAoA(tr, vel)
+
+    local lVel = TransformToLocalVec(tr, vel)
+    local aoa = math.deg(math.atan2(-lVel[2], -lVel[3]))
+
+    aoa = math.rad(aoa)
+    aoa = math.sin(aoa)
+
+    return aoa
+
+end
+
+function GetYawAoA(tr, vel)
+
+    local lVel = TransformToLocalVec(tr, vel)
+    local aoa = math.deg(math.atan2(-lVel[1], -lVel[2]))
+
+    aoa = math.rad(aoa)
+    aoa = math.sin(aoa)
+
+    return aoa
+
+end
+
+function GetRollAoA(tr, vel)
+
+    local lVel = TransformToLocalVec(tr, vel)
+    local aoa = math.deg(math.atan2(-lVel[1], -lVel[3]))
+
+    aoa = math.rad(aoa)
+    aoa = math.sin(aoa)
+
+    return aoa
 
 end

@@ -23,29 +23,28 @@ function plane_Sound(plane)
 
     PlayLoop(sounds.fire_large, plane.tr.pos, 1 - plane.health + 0.25)
 
+
+    if not plane.isAlive then
+        return
+    end
+
     if plane.engineType == "jet" then
 
         PlayLoop(sounds.jet_engine_loop, plane.tr.pos, 2)
         PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
-        -- PlayLoop(sounds.jet_engine_loop, GetCameraTransform().pos, 0.1)
 
     elseif plane.engineType == "propeller" then
 
         if plane.thrust < 20 then
             PlayLoop(sounds.prop_5, plane.tr.pos, plane.engineVol * 3)
-            -- PlayLoop(sounds.prop_5, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 40 then
             PlayLoop(sounds.prop_4, plane.tr.pos, plane.engineVol * 3)
-            -- PlayLoop(sounds.prop_4, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 60 then
             PlayLoop(sounds.prop_3, plane.tr.pos, plane.engineVol * 3)
-            -- PlayLoop(sounds.prop_3, GetCameraTransform().pos, 0.1)
         elseif plane.thrust < 80 then
             PlayLoop(sounds.prop_2, plane.tr.pos, plane.engineVol * 3)
-            -- PlayLoop(sounds.prop_2, GetCameraTransform().pos, 0.1)
         elseif plane.thrust <= 100 then
             PlayLoop(sounds.prop_1, plane.tr.pos, plane.engineVol * 3)
-            -- PlayLoop(sounds.prop_1, GetCameraTransform().pos, 0.1)
         end
 
     end
@@ -80,39 +79,51 @@ function plane_VisualEffects(plane)
     end
 
 
-    -- -- Spawn fire for a specified duration after death is triggered.
-    -- if not plane.isAlive then
+    -- Spawn fire for a specified duration after death is triggered.
+    if not plane.isAlive then
 
-    --     local endPlaneDeathTime = plane.timeOfDeath + 20
+        local endPlaneDeathTime = plane.timeOfDeath + 20
 
-    --     if endPlaneDeathTime >= GetTime() then
+        if endPlaneDeathTime >= GetTime() then
 
-    --         local fireVolumeScale = 10
+            local fireVolumeScale = 10
 
-    --         local fireLarge = clamp(((endPlaneDeathTime - GetTime()) / endPlaneDeathTime), 0, 1)
-    --         local fireSmall = clamp(1 - fireLarge, 0, 1)
+            local fireLarge = clamp(((endPlaneDeathTime - GetTime()) / endPlaneDeathTime), 0, 1)
+            local fireSmall = clamp(1 - fireLarge, 0, 1)
 
-    --         PlayLoop(sounds.fire_small, plane.tr.pos, fireSmall * fireVolumeScale)
-    --         PlayLoop(sounds.fire_large, plane.tr.pos, fireLarge * fireVolumeScale)
+            PlayLoop(sounds.fire_small, plane.tr.pos, fireSmall * fireVolumeScale)
+            PlayLoop(sounds.fire_large, plane.tr.pos, fireLarge * fireVolumeScale)
 
 
-    --         local amount = 1 - ((GetTime()/(endPlaneDeathTime)))
+            local amount = 1 - ((GetTime()/(endPlaneDeathTime)))
 
-    --         local fireRdmVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(5,7) * amount)
-    --         particle_fire(VecAdd(plane.tr.pos, fireRdmVec), math.random()*4 * amount)
+            local fireRdmVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(5,7) * amount)
+            particle_fire(VecAdd(plane.tr.pos, fireRdmVec), math.random()*4 * amount)
 
-    --         local damageAlpha = 1 - plane.health
-    --         local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5) * amount)
-    --         particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2 * amount)
+            local damageAlpha = 1 - plane.health
+            local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5) * amount)
+            particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2 * amount)
 
-    --     end
-    -- end
+        end
+    end
 
 end
 
 
 
 --[[PLANE SYSTEMS]]
+--- Accelerates towards the set thrust (simulates gradual engine wind up/down)
+function plane_SetThrustOutput(plane)
+    if plane.thrustOutput <= plane.thrust -1 then
+        plane.thrustOutput = plane.thrustOutput + plane.thrustAcc
+    elseif plane.thrustOutput >= plane.thrust + 1 then
+        plane.thrustOutput = plane.thrustOutput - plane.thrustDecc
+    end
+end
+--- Sets thrust between 0 and 1
+function plane_SetThrust(sign)
+    plane.thrust = plane.thrust + plane.thrustIncrement * sign
+end
 function plane_ProcessHealth(plane)
 
     plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)

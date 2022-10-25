@@ -1,4 +1,4 @@
-camPositions = {
+CameraPositions = {
     "Orbit",
     -- "Aligned",
     "Vehicle",
@@ -68,16 +68,16 @@ function plane_ChangeCamera()
     if InputPressed("c") then -- Iterate camera position.
 
         local camChanged = false
-        for i=1, #camPositions do
+        for i=1, #CameraPositions do
 
             if camChanged == false then
 
-                local currentCamPos = camPositions[i]
+                local currentCamPos = CameraPositions[i]
                 if SelectedCamera == currentCamPos then
 
-                    local nextCamPos = camPositions[i+1]
+                    local nextCamPos = CameraPositions[i+1]
                     if nextCamPos == nil then
-                        nextCamPos = camPositions[1] -- set next cam pos
+                        nextCamPos = CameraPositions[1] -- set next cam pos
                     else
                         nextCamPos = nextCamPos -- reset loop
                     end

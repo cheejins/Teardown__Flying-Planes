@@ -3,8 +3,6 @@ function plane_Steer_Simple(plane)
 
     local pTr = plane.tr
 
-    -- local ang = plane_getForwardVelAngle_old()/10
-
     local speed = plane.speed
     local speedClamped = (clamp(speed, 0.01, speed + 0.01))
 
@@ -85,14 +83,14 @@ function plane_Move_Simple(plane)
             plane.body,
             TransformToParentPoint(
                 plane.tr, Vec(0,0,-5)),
-            plane.getFwdPos(speed*plane.brakeImpulseAmt))
+            plane_GetFwdPos(speed*plane.brakeImpulseAmt))
         plane.status = 'Air Braking'
     end
 
     -- stall speed
     if speed < plane.topSpeed then
 
-        plane.setThrustOutput()
+        plane_SetThrustOutput(plane)
 
         local thrustSpeed = plane.thrust/100
         local thrustSpeedMult = plane.speed < plane.topSpeed * thrustSpeed
@@ -119,7 +117,7 @@ function plane_ApplyForces_Simple(plane)
 
 --[LIFT]
     -- Lift determined by AoA and speed
-    local aoa = plane.getAoA()
+    local aoa = plane_old_GetPitchAoA(plane)
     local speed = plane.speed
 
     local liftSpeedInterval = plane.topSpeed/5 * CONFIG.smallMapMode.liftMult
@@ -147,14 +145,14 @@ function plane_ApplyForces_Simple(plane)
 
 
     -- Yaw determined by AoA and speed
-    local aoa = nZero(plane.getYawAoA())
+    local aoa = nZero(plane_old_GetYawAoA(plane))
     local speed = gtZero(plane.speed)
 
     -- local yawSpeedInterval = plane.topSpeed/5
     local yawSpeed = gtZero(speed)
     local yawAmt = aoa * yawSpeed * 15 ^ 1.2
     -- DebugWatch("yawAmt", yawAmt)
-    -- DebugWatch("rollAoA", plane.getRollAoA())
+    -- DebugWatch("rollAoA", plane_old_GetRollAoA(plane))
 
     -- Add upwards velocity
     local pTr = plane.tr
@@ -218,4 +216,37 @@ function plane_GetForwardVelAngle_old(plane)
     if plane.speed < 0 then angle = 1 end
 
     return angle
+end
+
+
+
+function plane_old_GetPitchAoA(plane)
+    local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
+    local aoa =  (-(math.deg(math.atan2(lVel[3], lVel[2]))) - 90) * math.pi
+
+    if plane.speed < 0 then
+        aoa = 0.00001
+    end
+
+    return aoa
+end
+
+function plane_old_GetYawAoA(plane)
+    local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
+    local aoa =  (-(math.deg(math.atan2(lVel[1], -lVel[3])))) * math.pi
+    if plane.speed < 0 then
+        aoa = 0.00001
+    end
+    return aoa
+end
+
+function plane_old_GetRollAoA(plane)
+    local lVel = TransformToLocalVec(plane.tr, plane.vel) -- local velocity
+    local aoa =  (-(math.deg(math.atan2(lVel[1], -lVel[2])))) * math.pi
+
+    if plane.speed < 0 then
+        aoa = 0.00001
+    end
+
+    return aoa
 end

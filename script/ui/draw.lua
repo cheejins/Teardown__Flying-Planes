@@ -29,10 +29,10 @@ function draw()
                 CAMERA = {}
                 CAMERA.xy = {UiCenter(), UiMiddle()}
                 local vehicle = GetPlayerVehicle()
-                for i = 1, #planeObjectList do
-                    if vehicle == planeObjectList[i].vehicle then
+                for i = 1, #PLANES do
+                    if vehicle == PLANES[i].vehicle then
 
-                        local plane = planeObjectList[i]
+                        local plane = PLANES[i]
 
                         do UiPush()
                             planeDrawHud(plane, uiW + 200, uiH)
@@ -106,7 +106,7 @@ function draw()
     UiPop()
 
 
-    DrawPlaneIDs()
+    -- DrawPlaneIDs()
 
 end
 
@@ -535,7 +535,7 @@ function DrawPlaneIDs()
     UiAlign("center middle")
     UiFont("regular.ttf", 48)
 
-    for _, plane in ipairs(planeObjectList) do
+    for _, plane in ipairs(PLANES) do
         UiPush()
 
             local pos = AabbGetBodyCenterTopPos(plane.body)

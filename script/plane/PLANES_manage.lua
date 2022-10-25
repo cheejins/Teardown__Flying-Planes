@@ -1,10 +1,8 @@
 -- Run tick() functions for each plane.
 function PLANES_Tick()
-    for key, plane in pairs(planeObjectList) do
+    for key, plane in pairs(PLANES) do
 
-        DebugWatch(plane.id, plane.isAlive)
-
-        plane_update(plane)
+        plane_UpdateProperties(plane)
 
         if plane.isAlive then
 
@@ -80,7 +78,7 @@ function PLANES_Tick()
                     plane_Debug(plane)
                 end
 
-                if SelectedCamera ~= camPositions[2] then
+                if SelectedCamera ~= CameraPositions[2] then
                     -- AimSteerVehicle(plane.vehicle)
                 end
 
@@ -93,7 +91,7 @@ end
 
 -- Run update() functions for each plane.
 function PLANES_Update()
-    for key, plane in pairs(planeObjectList) do
+    for key, plane in pairs(PLANES) do
         if GetPlayerVehicle() == plane.vehicle then
 
             if not ShouldDrawIngameOptions then
