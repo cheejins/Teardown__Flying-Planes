@@ -182,6 +182,9 @@ function plane_CameraAimGroundSteering(plane)
     DriveVehicle(v, 0, steer, false)
 
 end
+function plane_GetFwdPos(plane, distance)
+    return TransformToParentPoint(GetBodyTransform(plane.body), Vec(0,0,distance or -500))
+end
 
 
 

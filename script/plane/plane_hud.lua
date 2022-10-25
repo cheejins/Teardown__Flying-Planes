@@ -49,7 +49,7 @@ function drawTarget(plane, vehicle)
                     UiText(sfn(distToTarget) .. ' KM')
                 UiPop()
 
-                local c = oscillate(0.9)
+                local c = Oscillate(0.9)
                 if plane.targetting.lock.locked then
 
                     UiColor(1,0,0, 1)

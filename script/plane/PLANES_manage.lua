@@ -41,7 +41,7 @@ function PLANES_Tick()
                 SetPlayerHealth(1)
 
 
-                crosshairPos = getCrosshairWorldPos({plane.body}, plane.tr.pos)
+                crosshairPos = GetCrosshairWorldPos({plane.body}, plane.tr.pos)
                 -- dbdd(crosshairPos, 1,1, 1,0,0, 1)
 
                 if InputPressed(Config.toggleHoming) then

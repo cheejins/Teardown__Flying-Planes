@@ -55,7 +55,7 @@ function uiList_Item(text, itemChainIndex, item, listH)
         local ro,go,bo,ao = 1,1,1,0 -- Button outline color
 
         local indent = listH
-        local isSelectedItem = item.type == 'camera' and item.item.id == SELECTED_CAMERA or item.type == 'event' and item.item.id == SELECTED_EVENT 
+        local isSelectedItem = item.type == 'camera' and item.item.id == SELECTED_CAMERA or item.type == 'event' and item.item.id == SELECTED_EVENT
         if isSelectedItem then
             do UiPush()
                 UiColor(0.2,0.2,1, 1)
@@ -81,9 +81,9 @@ function uiList_Item(text, itemChainIndex, item, listH)
         -- Uninitiazlied item.
         if item.type == 'uninitialized' then
             r,g,b =
-            1 - oscillate(1.5)/2,
-            1 - oscillate(1.5)/2,
-            0 - oscillate(1.5)/2
+            1 - Oscillate(1.5)/2,
+            1 - Oscillate(1.5)/2,
+            0 - Oscillate(1.5)/2
         end
 
         -- Invalid items
@@ -95,7 +95,7 @@ function uiList_Item(text, itemChainIndex, item, listH)
         local hasEvents = tableContainsComponentType(ITEM_CHAIN, 'event')
 
         if sequentialCameras and hasEvents then
-            r,g,b = oscillate(1.5)/2 + 0.5, 0.25, 0.25
+            r,g,b = Oscillate(1.5)/2 + 0.5, 0.25, 0.25
         end
 
 

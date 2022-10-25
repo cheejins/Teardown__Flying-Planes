@@ -63,7 +63,7 @@ function draw()
             UiAlign('center middle')
             UiFont('regular.ttf', font_size*1.5)
             UiTranslate(0, 190)
-            -- local c = oscillate(2)/3 + 2/3
+            -- local c = Oscillate(2)/3 + 2/3
             -- UiColor(c,c,1,1)
             -- UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
             -- UiButtonHoverColor(0.5,0.5,1,1)

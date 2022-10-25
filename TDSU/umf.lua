@@ -1,3 +1,7 @@
+-- UMF Framework by: Thomasims
+
+
+
 -- UMF Package umf_complete_c v0.9.1 generated with:
 -- build.lua -n "umf_complete_c v0.9.1" dist/umf_complete_c.lua src
 --
@@ -5264,39 +5268,39 @@ end
 -- Loading the armature from the prefab and the objects list
 local armature = LoadArmatureFromXML([[
 <prefab version="0.7.0">
-    <group id_="1196432640" open_="true" name="instance=MOD/physgun.xml" pos="-3.4 0.7 0.0" rot="0.0 0.0 0.0">
-        <vox id_="1866644736" pos="-0.125 -0.125 0.125" file="MOD/physgun.vox" object="body" scale="0.5"/>
-        <group id_="279659168" open_="true" name="core0" pos="0.0 0.0 -0.075" rot="0.0 0.0 0.0">
-            <vox id_="496006720" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_0" scale="0.5"/>
+    <group open_="true" name="instance=MOD/physgun.xml" pos="-3.4 0.7 0.0">
+        <vox pos="-0.125 -0.125 0.125" file="MOD/physgun.vox" object="body" scale="0.5"/>
+        <group open_="true" name="core0" pos="0.0 0.0 -0.075">
+            <vox pos="-0.025 -0.125 0.0" file="MOD/physgun.vox" object="core_0" scale="0.5"/>
         </group>
-        <group id_="961930560" open_="true" name="core1" pos="0.0 0.0 -0.175" rot="0.0 0.0 0.0">
-            <vox id_="1109395584" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_1" scale="0.5"/>
+        <group open_="true" name="core1" pos="0.0 0.0 -0.175">
+            <vox pos="-0.025 -0.125 0.0" file="MOD/physgun.vox" object="core_1" scale="0.5"/>
         </group>
-        <group id_="806535232" open_="true" name="core2" pos="0.0 0.0 -0.275" rot="0.0 0.0 0.0">
-            <vox id_="378362432" pos="-0.025 -0.125 0.0" rot="0.0 0.0 0.0" file="MOD/physgun.vox" object="core_2" scale="0.5"/>
+        <group open_="true" name="core2" pos="0.0 0.0 -0.275">
+            <vox pos="-0.025 -0.125 0.0" file="MOD/physgun.vox" object="core_2" scale="0.5"/>
         </group>
-        <group id_="1255943040" open_="true" name="arms_rot" pos="0.0 0.0 -0.375" rot="0.0 0.0 0.0">
-            <group id_="439970016" open_="true" name="arm0_base" pos="0.0 0.1 0.0" rot="0.0 0.0 0.0">
-                <vox id_="1925106432" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_00" scale="0.5"/>
-                <group id_="2122316288" open_="true" name="arm0_tip" pos="0.0 0.2 -0.0" rot="0.0 0.0 0.0">
-                    <vox id_="572557440" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_01" scale="0.5"/>
+        <group open_="true" name="arms_rot" pos="0.0 0.0 -0.375">
+            <group open_="true" name="arm0_base" pos="0.0 0.1 0.0">
+                <vox pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_00" scale="0.5"/>
+                <group open_="true" name="arm0_tip" pos="0.0 0.2 -0.0">
+                    <vox pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_01" scale="0.5"/>
                 </group>
             </group>
-            <group id_="516324128" open_="true" name="arm1_base" pos="0.087 -0.05 0.0" rot="180.0 180.0 -60.0">
-                <vox id_="28575440" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_10" scale="0.5"/>
-                <group id_="962454912" open_="true" name="arm1_tip" pos="0.0 0.2 0.0" rot="0.0 0.0 0.0">
-                    <vox id_="1966724352" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_11" scale="0.5"/>
+            <group open_="true" name="arm1_base" pos="0.087 -0.05 0.0" rot="180.0 180.0 -60.0">
+                <vox pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_10" scale="0.5"/>
+                <group open_="true" name="arm1_tip" pos="0.0 0.2 0.0">
+                    <vox pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_11" scale="0.5"/>
                 </group>
             </group>
-            <group id_="634361664" open_="true" name="arm2_base" pos="-0.087 -0.05 0.0" rot="180.0 180.0 60.0">
-                <vox id_="1049360960" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_20" scale="0.5"/>
-                <group id_="1428116608" open_="true" name="arm2_tip" pos="0.0 0.2 0.0" rot="0.0 0.0 0.0">
-                    <vox id_="1388661504" pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_21" scale="0.5"/>
+            <group open_="true" name="arm2_base" pos="-0.087 -0.05 0.0" rot="180.0 180.0 60.0">
+                <vox pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_20" scale="0.5"/>
+                <group open_="true" name="arm2_tip" pos="0.0 0.2 0.0">
+                    <vox pos="-0.025 0.0 0.025" file="MOD/physgun.vox" object="arm_21" scale="0.5"/>
                 </group>
             </group>
         </group>
-        <group id_="1569551872" open_="true" name="nozzle" pos="0.0 0.0 -0.475">
-            <vox id_="506099872" pos="-0.025 -0.125 0.1" file="MOD/physgun.vox" object="cannon" scale="0.5"/>
+        <group open_="true" name="nozzle" pos="0.0 0.0 -0.475">
+            <vox pos="-0.025 -0.125 0.1" file="MOD/physgun.vox" object="cannon" scale="0.5"/>
         </group>
     </group>
 </prefab>

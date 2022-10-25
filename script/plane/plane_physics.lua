@@ -51,7 +51,7 @@ function plane_ApplyAerodynamics(plane)
     plane.forces = VecScale(forces, clamp(plane.health, 0.5, 1))
 
     local impSpeedScale = 1 - (plane.speedFac / plane.topSpeed)
-    local imp = gtZero(GetBodyMass(plane.body) * impSpeedScale) * 5 * impMult
+    local imp = GTZero(GetBodyMass(plane.body) * impSpeedScale) * 5 * impMult
 
 
 
@@ -220,7 +220,7 @@ function plane_Steer(plane)
             plane.body,
             TransformToParentPoint(
                 plane.tr, Vec(0, 0, -5)),
-            plane_GetFwdPos(plane.speed * plane.brakeImpulseAmt))
+            plane_GetFwdPos(plane, plane.speed * plane.brakeImpulseAmt))
         plane.status = 'Air Braking'
     end
 

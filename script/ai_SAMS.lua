@@ -1,3 +1,5 @@
+#include "../TDSU/tdsu.lua"
+
 EnemyAAs = {}
 EnemyAAMGs = {}
 
@@ -10,6 +12,9 @@ AA_Types = {
 
 function InitEnemies()
 
+    Init_Utils()
+
+
     for _, v in ipairs(FindVehicles("AA", true)) do
 
         local AA_Type = GetTagValue(v, "AA_Type")
@@ -19,9 +24,9 @@ function InitEnemies()
             body = GetVehicleBody(v),
             type = GetTagValue(v, "AA_Type"),
 
-            timer = TimerCreate(0, AA_Types[AA_Type].rpm),
-            pauseTimer = TimerCreate(0, 60/2),
-            shootTimer = TimerCreate(0, 60/5),
+            timer = TimerCreateRPM(0, AA_Types[AA_Type].rpm),
+            pauseTimer = TimerCreateRPM(0, 60/2),
+            shootTimer = TimerCreateRPM(0, 60/5),
             shooting = true,
 
             targetPos = Vec(),
@@ -36,6 +41,9 @@ end
 
 
 function Manage_Enemies()
+
+    Tick_Utils()
+
 
     for index, AA in ipairs(EnemyAAs) do
 
@@ -53,7 +61,7 @@ function Manage_Enemies()
             if GetPlayerVehicle() ~= 0 then
 
                 local targetVel = GetBodyVelocity(GetVehicleBody(playerVehicle))
-                local targetDist = gtZero(VecDist(AA.targetPos, shootPos))/10
+                local targetDist = GTZero(VecDist(AA.targetPos, shootPos))/10
                 -- local velScale = 1 / proj.speed * targetDist / 10
                 local velScale = proj.speed/targetDist
 

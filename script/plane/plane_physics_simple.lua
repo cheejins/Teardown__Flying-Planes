@@ -83,7 +83,7 @@ function plane_Move_Simple(plane)
             plane.body,
             TransformToParentPoint(
                 plane.tr, Vec(0,0,-5)),
-            plane_GetFwdPos(speed*plane.brakeImpulseAmt))
+            plane_GetFwdPos(plane, speed*plane.brakeImpulseAmt))
         plane.status = 'Air Braking'
     end
 
@@ -146,10 +146,10 @@ function plane_ApplyForces_Simple(plane)
 
     -- Yaw determined by AoA and speed
     local aoa = nZero(plane_old_GetYawAoA(plane))
-    local speed = gtZero(plane.speed)
+    local speed = GTZero(plane.speed)
 
     -- local yawSpeedInterval = plane.topSpeed/5
-    local yawSpeed = gtZero(speed)
+    local yawSpeed = GTZero(speed)
     local yawAmt = aoa * yawSpeed * 15 ^ 1.2
     -- DebugWatch("yawAmt", yawAmt)
     -- DebugWatch("rollAoA", plane_old_GetRollAoA(plane))
@@ -169,8 +169,8 @@ function plane_ApplyForces_Simple(plane)
 -- [DRAG]
 
     -- fwdvel drag
-    local vel = gtZero(plane.totalVel)
-    local speed = gtZero(plane.speed)
+    local vel = GTZero(plane.totalVel)
+    local speed = GTZero(plane.speed)
 
     -- low fwd vel angle * speed = min drag
     local fwdDragAmt = (plane_GetForwardVelAngle_old(plane) * plane.speed+10) * vel/plane.topSpeed/2
@@ -212,7 +212,7 @@ function plane_GetForwardVelAngle_old(plane)
     local c = {VecVel[1], VecVel[2], VecVel[3]}
     local d = {VecTr[1], VecTr[2], VecTr[3]}
 
-    local angle = math.deg(math.acos(myDot(c, d) / (myMag(c) * myMag(d))))
+    local angle = math.deg(math.acos(VecDot(c, d) / (VecLength(c) * VecLength(d))))
     if plane.speed < 0 then angle = 1 end
 
     return angle

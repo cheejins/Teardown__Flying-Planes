@@ -50,8 +50,8 @@ function plane_Camera(plane)
         local camPos = TransformToParentPoint(plane.tr, Vec(0, 10, 30))
         -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(plane.forces[1], plane.forces[2], plane.forces[3]))
         -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(Vec(math.rad(plane.forces[2]), 0, 0)))
-
         local camTr = Transform(camPos, camRot)
+
         SetCameraTransform(camTr)
 
     elseif SelectedCamera == 'Orbit' then
@@ -67,28 +67,8 @@ function plane_ChangeCamera()
 
     if InputPressed("c") then -- Iterate camera position.
 
-        local camChanged = false
-        for i=1, #CameraPositions do
 
-            if camChanged == false then
 
-                local currentCamPos = CameraPositions[i]
-                if SelectedCamera == currentCamPos then
-
-                    local nextCamPos = CameraPositions[i+1]
-                    if nextCamPos == nil then
-                        nextCamPos = CameraPositions[1] -- set next cam pos
-                    else
-                        nextCamPos = nextCamPos -- reset loop
-                    end
-
-                    SelectedCamera = _campPos -- assign new camera
-                    camChanged = true
-
-                end
-
-            end
-        end
     end
 
 end

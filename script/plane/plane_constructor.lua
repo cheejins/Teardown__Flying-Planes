@@ -184,10 +184,3 @@ function _plane_SetMinAltitude(plane)
         end
     end
 end
-
-
-
--- fwd pos
-function plane_GetFwdPos(distance)
-    return TransformToParentPoint(GetBodyTransform(plane.body), Vec(0,0,distance or -500))
-end

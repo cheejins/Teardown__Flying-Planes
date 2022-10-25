@@ -294,7 +294,7 @@ function planeDrawHud(plane, uiW, uiH)
                 if plane.speed > plane.topSpeed * 0.7 then
                     UiColor(0.1, 0.1, 0.1, 0.15)
                     UiRect(w * 1.25, h * 1.25)
-                    UiColor(1,1,1, oscillate(0.5))
+                    UiColor(1,1,1, Oscillate(0.5))
                     UiImageBox("MOD/img/hud_overspeed.png", w * 1.25, h * 1.25, 1,1)
                 end
             UiPop() end
@@ -305,7 +305,7 @@ function planeDrawHud(plane, uiW, uiH)
                 if plane.speed*1.8 < plane.totalVel and (plane.speed > 1 or plane.speed < -1) then
                     UiColor(0.1, 0.1, 0.1, 0.15)
                     UiRect(w,h)
-                    UiColor(1,1,1, oscillate(0.75))
+                    UiColor(1,1,1, Oscillate(0.75))
                     UiImageBox("MOD/img/hud_stall.png", w, h, 1,1)
                 end
             UiPop() end
@@ -456,7 +456,7 @@ function planeDrawHud(plane, uiW, uiH)
 
         local a = 1
         -- if plane.health <= 0.5 and plane.health > 0 then
-        --     a = oscillate(1) + 1/2
+        --     a = Oscillate(1) + 1/2
         -- end
 
         local healthColor = VecLerp(colorVecs[1], colorVecs[2], frac)
@@ -491,7 +491,7 @@ end
 
 function drawSpeed(plane)
 
-	local display = plane.speed / gtZero(plane.topSpeed) * 100
+	local display = plane.speed / GTZero(plane.topSpeed) * 100
     UiAlign("center middle")
 
     UiColor(0.75,0.75,0.75,0.75)

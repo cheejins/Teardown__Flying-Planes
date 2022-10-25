@@ -1,4 +1,5 @@
 #include "Automatic.lua"
+#include "TDSU/tdsu.lua"
 #include "script/ai_SAMS.lua"
 #include "script/debug.lua"
 #include "script/input/controlPanel.lua"
@@ -22,8 +23,6 @@
 #include "script/ui/ui_options.lua"
 #include "script/ui/ui_textBinding.lua"
 #include "script/ui/ui_tools.lua"
-#include "script/umf.lua"
-#include "script/utility.lua"
 #include "script/weapons.lua"
 
 
@@ -40,19 +39,24 @@ ShouldDrawIngameOptions = false
 
 function init()
 
-    SelectedCamera = CameraPositions[1]
+    Init_Utils()
 
     PLANES_Init()
-
     Init_Config()
     initSounds()
     initProjectiles()
     InitEnemies()
 
+    SelectedCamera = CameraPositions[1]
+
+
 end
 
 
 function tick()
+
+    Tick_Utils()
+
 
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
