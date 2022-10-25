@@ -5,14 +5,15 @@
 #include "script/input/input.lua"
 #include "script/input/keybinds.lua"
 #include "script/particles.lua"
-#include "script/plane/camera.lua"
-#include "script/plane/managePlanes.lua"
-#include "script/plane/planeConstructor.lua"
-#include "script/plane/planeFunctions.lua"
-#include "script/plane/planeHud.lua"
-#include "script/plane/planePresets.lua"
+#include "script/plane/PLANES_manage.lua"
+#include "script/plane/plane_camera.lua"
+#include "script/plane/plane_constructor.lua"
+#include "script/plane/plane_functions.lua"
+#include "script/plane/plane_hud.lua"
 #include "script/plane/plane_physics.lua"
 #include "script/plane/plane_physics_simple.lua"
+#include "script/plane/plane_presets.lua"
+#include "script/projectiles.lua"
 #include "script/registry.lua"
 #include "script/sounds.lua"
 #include "script/ui/compass.lua"
@@ -25,7 +26,6 @@
 #include "script/ui/uiTools.lua"
 #include "script/umf.lua"
 #include "script/utility.lua"
-#include "script/projectiles.lua"
 #include "script/weapons.lua"
 
 
@@ -42,70 +42,33 @@ planeObjectList = {}
 scriptValid = false
 hintsOff = false
 isDemoMap = false
-curPlane = nil
-
 
 ShouldDrawIngameOptions = false
 
 
-function Init_Config()
-
-    FlightMode = GetString("savegame.mod.FlightMode")
-    FlightModeSet = GetBool("savegame.mod.flightmodeset")
-
-    Config = util.structured_table("savegame.mod.keybinds", {
-
-        changeTarget    = { "string", "q" },
-        toggleOptions   = { "string", "o" },
-        toggleHoming    = { "string", "h" },
-        toggleSmallMap  = { "string", "m" },
-
-        smallMapMode    = { "boolean", false },
-        showOptions     = { "boolean", false },
-
-    })
-
-    print("FlightMode", FlightMode)
-    print("FlightModeSet", FlightModeSet)
-
-
-end
-
 function init()
-
-    Init_Config()
 
     Tick = 1
 
+    SelectedCamera = camPositions[1]
 
-    -- Init core functions.
+
+    Init_Config()
     initSounds()
     initProjectiles()
-
-    SmallMapMode = false
-    config_setSmallMapMode(SmallMapMode)
-
     InitEnemies()
 
+
+    -- SmallMapMode = false
+    -- config_setSmallMapMode(SmallMapMode)
+
 end
+
+
 function tick()
-
-    DebugWatch("#planeObjectList", #planeObjectList)
-
-    local v = FindVehicles("Plane_ID", true)
-    for _, vehicle in ipairs(v) do
-        DrawBodyOutline(GetVehicleBody(vehicle), 1,1,1, 1)
-    end
 
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
-
-
-    -- if InputPressed("g") then
-    --     ClearKey("savegame.mod")
-    --     print("Reset reg...")
-    -- end
-
 
     if not FlightModeSet then
         SetString("savegame.mod.FlightMode", FlightModes.simple)
@@ -114,43 +77,38 @@ function tick()
     end
 
 
-    -- DebugWatch("FlightMode", FlightMode)
-    -- DebugWatch("FlightModeSet", FlightModeSet)
-
-
     if InputPressed(Config.toggleOptions) then
         ShouldDrawIngameOptions = not ShouldDrawIngameOptions
         SetBool("level.showedOptions", true)
     end
 
-    manageConfig()
-    manageSpawning()
-    manageActiveProjectiles()
+
+    Manage_DebugMode()
+    Manage_Spawning()
+    Manage_ActiveProjectiles()
+    Manage_Enemies()
+    Manage_SmallMapMode()
+
 
     -- Root of plane management.
     PLANES_Tick()
 
 
-    local propellers = FindJoints('planePropeller', true)
-    for key, propeller in pairs(propellers) do
-        SetJointMotor(propeller, 15)
-    end
+    plane_RunPropellers()
 
-    -- handlePlayerInWater()
-    manageDebugMode()
 
-    TickEnemies()
 
     Tick = Tick + 1
 
 end
+
 function update()
     PLANES_Update()
 end
 
 
 
-function manageSpawning()
+function Manage_Spawning()
 
     local planeVehicles = FindVehicles('planeVehicle', true)
     for key, vehicle in pairs(planeVehicles) do
@@ -168,20 +126,3 @@ function manageSpawning()
     end
 
 end
-function checkScriptValid()
-    if FindVehicle("planeVehicle", true) == 0 then
-        scriptValid = false
-    else
-        scriptValid = true
-    end
-end
-
-
-function getCurrentPlane()
-    return curPlane
-end
-
-function CompressRange(val, lower, upper)
-    return (val-lower) / (upper-lower)
-end
-

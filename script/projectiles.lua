@@ -291,7 +291,7 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
 
 end
 
-function manageActiveProjectiles()
+function Manage_ActiveProjectiles()
 
     local projectilesToRemove = {} -- projectiles iterations.
     for i, proj in ipairs(Projectiles) do

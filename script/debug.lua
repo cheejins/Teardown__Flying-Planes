@@ -1,6 +1,6 @@
 -- db = false
 
-function manageDebugMode()
+function Manage_DebugMode()
 
     db = GetBool('savegame.mod.debugMode')
     if InputDown('ctrl') and InputDown('shift') and InputPressed('d')  then

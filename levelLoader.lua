@@ -2,7 +2,7 @@
 
 function init()
 
-    checkRegInitialized()
+    CheckRegInitialized()
 
     Init_Config()
 

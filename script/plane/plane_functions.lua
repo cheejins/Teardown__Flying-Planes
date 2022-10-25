@@ -9,15 +9,16 @@ InputControls = {
 }
 
 
-function planeDebug(plane)
-
+--[[DEBUG]]
+function plane_Debug(plane)
     dbw('plane.speed', sfn(plane.speed))
     dbw("plane.idealSpeedFactor", sfn(plane.idealSpeedFactor))
     dbw("plane.speedFac", sfn(plane.speedFac))
-
 end
 
 
+
+--[[Effects]]
 function plane_Sound(plane)
 
     PlayLoop(sounds.fire_large, plane.tr.pos, 1 - plane.health + 0.25)
@@ -49,17 +50,6 @@ function plane_Sound(plane)
 
     end
 
-end
-
---[[Misc]]
-
-function plane_StateText(plane)
-    plane.status = "-"
-    if InputDown("space") then
-        plane.status = "Air-Braking"
-    end
-end
-function plane_ToggleEngine(plane)
 end
 function plane_VisualEffects(plane)
 
@@ -119,6 +109,33 @@ function plane_VisualEffects(plane)
     -- end
 
 end
+
+
+
+--[[PLANE SYSTEMS]]
+function plane_ProcessHealth(plane)
+
+    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)
+    -- plane.health = GetVehicleHealth(plane.vehicle)
+
+    if plane.isAlive and plane.health <= 0 and not plane.justDied then
+
+        plane.justDied = true
+        plane.isAlive = false
+        plane.timeOfDeath = GetTime()
+
+        PlaySound(sounds.engine_deaths[3], plane.tr.pos, 3)
+        PlaySound(sounds.engine_deaths[1], plane.tr.pos, 3)
+        Explosion(plane.tr.pos, 1)
+
+    else
+        plane.isAlive = true
+        plane.justDied = false
+    end
+
+end
+function plane_ToggleEngine(plane)
+end
 function plane_LandingGear(plane)
 
     if InputPressed("g") then
@@ -128,12 +145,38 @@ function plane_LandingGear(plane)
     end
 
 end
+function plane_RunPropellers()
+    local propellers = FindJoints('planePropeller', true)
+    for key, propeller in pairs(propellers) do
+        SetJointMotor(propeller, 15)
+    end
+end
 
+
+
+--[[MISC]]
+function plane_StateText(plane)
+    plane.status = "-"
+    if InputDown("space") then
+        plane.status = "Air-Braking"
+    end
+end
+function plane_CameraAimGroundSteering(plane)
+
+    local vTr = GetVehicleTransform(plane.tr)
+    local camFwd = TransformToParentPoint(GetCameraTransform(), Vec(0,0,-1))
+
+    local pos = TransformToLocalPoint(vTr, camFwd)
+    local steer = pos[1] / 10
+
+    DriveVehicle(v, 0, steer, false)
+
+end
 
 
 
 --[[Weapons]]
-function planeChangeWeapon(plane)
+function plane_ChangeWeapon(plane)
     -- if InputPressed("f") then
     --     PlaySound(sounds.click, GetCameraTransform().pos, 1)
     --     if plane.weapon ~= plane.weapons[#plane.weapons] then
@@ -143,7 +186,7 @@ function planeChangeWeapon(plane)
     --     end
     -- end
 end
-function planeShoot(plane)
+function plane_Shoot(plane)
 
     if plane.isArmed then
 
@@ -332,27 +375,5 @@ function planeShoot(plane)
     TimerRunTime(plane.timers.weap.primary)
     TimerRunTime(plane.timers.weap.secondary)
     TimerRunTime(plane.timers.weap.special)
-
-end
-
-function plane_ProcessHealth(plane)
-
-    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)
-    -- plane.health = GetVehicleHealth(plane.vehicle)
-
-    if plane.isAlive and plane.health <= 0 and not plane.justDied then
-
-        plane.justDied = true
-        plane.isAlive = false
-        plane.timeOfDeath = GetTime()
-
-        PlaySound(sounds.engine_deaths[3], plane.tr.pos, 3)
-        PlaySound(sounds.engine_deaths[1], plane.tr.pos, 3)
-        Explosion(plane.tr.pos, 1)
-
-    else
-        plane.isAlive = true
-        plane.justDied = false
-    end
 
 end

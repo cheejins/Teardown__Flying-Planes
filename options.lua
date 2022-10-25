@@ -14,7 +14,7 @@ font_size = 32
 
 function init()
 
-    checkRegInitialized()
+    CheckRegInitialized()
 
     Init_Config()
 

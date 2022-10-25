@@ -24,10 +24,10 @@ function PLANES_Tick()
 
         if GetPlayerVehicle() == plane.vehicle then
 
-            planeChangeCamera()
+            plane_ChangeCamera()
 
             if not ShouldDrawIngameOptions then
-                planeCamera(plane)
+                plane_Camera(plane)
             end
 
             if plane.isAlive then
@@ -43,13 +43,12 @@ function PLANES_Tick()
                     plane.targetting.lock.enabled = not plane.targetting.lock.enabled
                 end
 
-                curPlane = plane
                 plane.status = '-'
 
 
                 if not ShouldDrawIngameOptions then
 
-                    if FlightMode == FlightModes.simple and camPos ~= 'Vehicle' then
+                    if FlightMode == FlightModes.simple and SelectedCamera ~= 'Vehicle' then
                         plane_Steer_Simple(plane)
                     elseif FlightMode == FlightModes.simulation then
                         plane_Steer(plane)
@@ -72,16 +71,16 @@ function PLANES_Tick()
                 manageTargetting(plane)
 
                 if not ShouldDrawIngameOptions then
-                    planeShoot(plane)
+                    plane_Shoot(plane)
                 end
 
                 plane_LandingGear(plane)
 
                 if GetBool('savegame.mod.debugMode') then
-                    planeDebug(plane)
+                    plane_Debug(plane)
                 end
 
-                if camPos ~= camPositions[2] then
+                if SelectedCamera ~= camPositions[2] then
                     -- AimSteerVehicle(plane.vehicle)
                 end
 
@@ -98,7 +97,7 @@ function PLANES_Update()
         if GetPlayerVehicle() == plane.vehicle then
 
             if not ShouldDrawIngameOptions then
-                planeCamera(plane)
+                plane_Camera(plane)
             end
 
         end

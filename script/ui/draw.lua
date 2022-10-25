@@ -352,7 +352,7 @@ function planeDrawHud(plane, uiW, uiH)
         UiFont("bold.ttf", 24)
         UiText('Homing Missiles: ' .. ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
         UiTranslate(0, 30)
-        UiText("Camera: " .. camPos)
+        UiText("Camera: " .. SelectedCamera)
         UiTranslate(0, 30)
         UiText("Status: " .. plane.status)
 

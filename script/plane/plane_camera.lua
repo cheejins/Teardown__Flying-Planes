@@ -2,16 +2,11 @@ camPositions = {
     "Orbit",
     -- "Aligned",
     "Vehicle",
-    -- "seat"
+    -- "Seat"
 }
 
 
-camPos = camPositions[1]
-
-function setCamPos(_campPos) camPos = _campPos end
-
-
-function manageCamera(plane, disableRotation)
+function plane_ManageCamera(plane, disableRotation)
 
 	local mx, my = InputValue("mousedx"), InputValue("mousedy")
 
@@ -46,26 +41,29 @@ function manageCamera(plane, disableRotation)
 	SetCameraTransform(camera, zoomFOV)
 
 end
-function planeCamera(plane)
 
-    -- if camPos == 'Aligned' then
 
-    --     -- local camPos = TransformToParentPoint(plane.tr, Vec(0, 10, 30))
-    --     -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(plane.forces[1], plane.forces[2], plane.forces[3]))
-    --     -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(Vec(math.rad(plane.forces[2]), 0, 0)))
+function plane_Camera(plane)
 
-    --     local camTr = Transform(camPos, camRot)
-    --     SetCameraTransform(camTr)
+    if SelectedCamera == 'Aligned' then
 
-    -- elseif camPos == 'Orbit' then
-    if camPos == 'Orbit' then
+        local camPos = TransformToParentPoint(plane.tr, Vec(0, 10, 30))
+        -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(plane.forces[1], plane.forces[2], plane.forces[3]))
+        -- local camRot = QuatRotateQuat(plane.tr.rot, DirToQuat(Vec(math.rad(plane.forces[2]), 0, 0)))
 
-        manageCamera(plane)
+        local camTr = Transform(camPos, camRot)
+        SetCameraTransform(camTr)
+
+    elseif SelectedCamera == 'Orbit' then
+
+        plane_ManageCamera(plane)
 
     end
 
 end
-function planeChangeCamera()
+
+
+function plane_ChangeCamera()
 
     if InputPressed("c") then -- Iterate camera position.
 
@@ -75,7 +73,7 @@ function planeChangeCamera()
             if camChanged == false then
 
                 local currentCamPos = camPositions[i]
-                if camPos == currentCamPos then
+                if SelectedCamera == currentCamPos then
 
                     local nextCamPos = camPositions[i+1]
                     if nextCamPos == nil then
@@ -84,7 +82,7 @@ function planeChangeCamera()
                         nextCamPos = nextCamPos -- reset loop
                     end
 
-                    setCamPos(nextCamPos) -- assign new camera
+                    SelectedCamera = _campPos -- assign new camera
                     camChanged = true
 
                 end
@@ -92,17 +90,5 @@ function planeChangeCamera()
             end
         end
     end
-
-end
-
-function AimSteerVehicle(v)
-
-    local vTr = GetVehicleTransform(v)
-    local camFwd = TransformToParentPoint(GetCameraTransform(), Vec(0,0,-1))
-
-    local pos = TransformToLocalPoint(vTr, camFwd)
-    local steer = pos[1] / 10
-
-    DriveVehicle(v, 0, steer, false)
 
 end

@@ -35,7 +35,7 @@ function InitEnemies()
 end
 
 
-function TickEnemies()
+function Manage_Enemies()
 
     for index, AA in ipairs(EnemyAAs) do
 
