@@ -147,8 +147,6 @@ function createPlaneObject(ID)
     -- plane_builder.lua
     plane.parts = plane_CollectParts_Aero(plane)
 
-    PrintTable(plane.parts)
-
 
     SetTag(plane.vehicle, 'planeActive')
 

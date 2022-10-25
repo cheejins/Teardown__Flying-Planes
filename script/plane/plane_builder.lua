@@ -66,8 +66,8 @@ function plane_CollectParts_Aero(plane)
     local planeParts = DeepCopy(PlaneParts)
 
 
-    -- AllVehicles  = FindVehicles("Plane_ID", true)
-    -- AllBodies    = FindBodies("Plane_ID", true)
+    AllVehicles  = FindVehicles("Plane_ID", true)
+    AllBodies    = FindBodies("Plane_ID", true)
     AllShapes    = FindShapes("Plane_ID", true)
     -- AllLights    = FindLights("Plane_ID", true)
     -- AllLocations = FindLocations("Plane_ID", true)

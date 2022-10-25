@@ -145,7 +145,7 @@ function plane_ApplyForces_Simple(plane)
 
 
     -- Yaw determined by AoA and speed
-    local aoa = nZero(plane_old_GetYawAoA(plane))
+    local aoa = NZero(plane_old_GetYawAoA(plane))
     local speed = GTZero(plane.speed)
 
     -- local yawSpeedInterval = plane.topSpeed/5

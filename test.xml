@@ -12,7 +12,7 @@
 		<instance pos="128.99998 0.5 156.2" rot="0.0 0.0 0.0" file="MOD/prefab/AC130.xml"/>
 		<instance pos="26.2 0.5 167.5" rot="0.0 0 0.0" file="MOD/prefab/Mig29.xml"/>
 		<group name="instance=MOD/prefab/F15.xml" pos="83.3 -5.1 170.3" rot="0.0 0.0 0.0">
-			<script pos="0.0 6.1 0.0" file="MOD/prefab/checkScript.lua">
+			<script pos="0.0 6.1 0.0" file="MOD/script/plane/plane_initializer.lua">
 				<vehicle name="F15" tags="planeVehicle planeModel=mig29 planeType=jet weaponPreset=none" pos="0.0 1.4 10.8" rot="0.0 0.0 0.0" driven="true" sound="classic" spring="0.5" damping="2" topspeed="20" acceleration="5" strength="2" antispin="0" antiroll="0" difflock="1" steerassist="0">
 					<body tags="planeBody" pos="-0.2 -0.0 -8.2" rot="0.0 0.0 0.0" dynamic="true">
 						<group name="parts_main" pos="0.2 0.2 -0.1">
@@ -54,7 +54,7 @@
 								<joint pos="0.0 1.7 -0.4" rot="90.0 -90.0 0.0" type="hinge"/>
 								<light tags="pivot" pos="0.0 1.0 -0.4" rot="-90.0 -90.0 0.0" type="cone" scale="0"/>
 							</vox>
-							<vox pos="-0.2 -1.4 -0.8" texture="14" density="2" file="MOD/prefab/F15.vox" object="fuselage">
+							<vox pos="-0.2 -1.4 -0.8" texture="14" density="1.5" file="MOD/prefab/F15.vox" object="fuselage">
 								<location tags="vital" pos="0.1 1.9 -4.5" rot="-180.0 360.0 -180.0"/>
 								<location tags="player" pos="0.05 2.55 -5.15" rot="0.0 0.0 0.0"/>
 								<light name="engine thruster" tags="exhaust" pos="0.6 1.6 8.3" type="cone" color="0.0 0.0 0.0" scale="0"/>
@@ -113,10 +113,10 @@
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -300.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 		<voxbox tags="unbreakable" pos="-22.5 0.3 -500.0" texture="11" size="500 2 2000" color="0.1 0.1 0.1"/>
 	</group>
-	<instance name="ZSU MG" pos="50.0 2.1 -671.59998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
+	<instance pos="50.0 2.1 -671.59998" rot="0.0 0.0 0.0" file="MOD/ZSU_MG.xml"/>
 	<instance name="ZSU MG" pos="6.1 2.1 -746.5" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
 	<instance name="ZSU MG" pos="99.8 2.1 -747.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4/zsu_23_4.xml"/>
-	<instance name="ZSU SAM" pos="51.1 2.4 -796.20001" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
+	<instance pos="51.1 2.4 -796.20001" rot="0.0 0.0 0.0" file="MOD/ZSU_SAM.xml"/>
 	<instance name="ZSU SAM" pos="-112.4 2.4 -742.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
 	<instance name="ZSU SAM" pos="205.2 2.4 -732.0" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
 </scene>
