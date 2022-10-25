@@ -1,28 +1,36 @@
+function PLANES_Init()
+
+end
+
+
 -- Run tick() functions for each plane.
 function PLANES_Tick()
     for key, plane in pairs(PLANES) do
 
         plane_UpdateProperties(plane)
 
+
+        -- Plane move.
         if plane.isAlive then
 
             plane_ProcessHealth(plane)
-
 
             if FlightMode == FlightModes.simulation then
                 plane_Move(plane)
             end
 
-            plane_Sound(plane)
-
         end
 
+
         plane_VisualEffects(plane)
+        plane_Sound(plane)
 
 
+        -- Player in plane.
         if GetPlayerVehicle() == plane.vehicle then
 
             plane_ChangeCamera()
+
 
             if not ShouldDrawIngameOptions then
                 plane_Camera(plane)
@@ -41,6 +49,7 @@ function PLANES_Tick()
                     plane.targetting.lock.enabled = not plane.targetting.lock.enabled
                 end
 
+                plane_ManageTargetting(plane)
                 plane.status = '-'
 
 
@@ -65,8 +74,6 @@ function PLANES_Tick()
                 if FlightMode == FlightModes.simple then
                     plane_Move_Simple(plane)
                 end
-
-                manageTargetting(plane)
 
                 if not ShouldDrawIngameOptions then
                     plane_Shoot(plane)

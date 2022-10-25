@@ -250,3 +250,14 @@ function plane_old_GetRollAoA(plane)
 
     return aoa
 end
+
+
+function plane_getLiftSpeedFac(plane)
+    local x = plane.speed
+    local b = plane.speed/3
+    local result = (1/b)*(x^2)
+    if x >= b then
+        result = x
+    end
+    return result
+end

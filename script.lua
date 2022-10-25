@@ -5,7 +5,6 @@
 #include "script/input/input.lua"
 #include "script/input/keybinds.lua"
 #include "script/particles.lua"
-#include "script/plane/PLANES_manage.lua"
 #include "script/plane/plane_camera.lua"
 #include "script/plane/plane_constructor.lua"
 #include "script/plane/plane_functions.lua"
@@ -13,17 +12,16 @@
 #include "script/plane/plane_physics.lua"
 #include "script/plane/plane_physics_simple.lua"
 #include "script/plane/plane_presets.lua"
+#include "script/plane/planes_manage.lua"
 #include "script/projectiles.lua"
 #include "script/registry.lua"
 #include "script/sounds.lua"
-#include "script/ui/compass.lua"
-#include "script/ui/draw.lua"
 #include "script/ui/ui.lua"
-#include "script/ui/uiModItem.lua"
-#include "script/ui/uiOptions.lua"
-#include "script/ui/uiPanes.lua"
-#include "script/ui/uiTextBinding.lua"
-#include "script/ui/uiTools.lua"
+#include "script/ui/ui_compass.lua"
+#include "script/ui/ui_draw.lua"
+#include "script/ui/ui_options.lua"
+#include "script/ui/ui_textBinding.lua"
+#include "script/ui/ui_tools.lua"
 #include "script/umf.lua"
 #include "script/utility.lua"
 #include "script/weapons.lua"
@@ -44,6 +42,7 @@ function init()
 
     SelectedCamera = CameraPositions[1]
 
+    PLANES_Init()
 
     Init_Config()
     initSounds()
@@ -72,15 +71,14 @@ function tick()
     end
 
 
+    -- Root of plane management.
+    PLANES_Tick()
+
     Manage_DebugMode()
     Manage_Spawning()
     Manage_ActiveProjectiles()
     Manage_Enemies()
     Manage_SmallMapMode()
-
-
-    -- Root of plane management.
-    PLANES_Tick()
 
 
     plane_RunPropellers()

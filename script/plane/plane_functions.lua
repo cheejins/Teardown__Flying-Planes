@@ -127,7 +127,6 @@ end
 function plane_ProcessHealth(plane)
 
     plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)
-    -- plane.health = GetVehicleHealth(plane.vehicle)
 
     if plane.isAlive and plane.health <= 0 and not plane.justDied then
 

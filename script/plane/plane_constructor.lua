@@ -19,12 +19,12 @@ function createPlaneObject(ID)
 
         -- references
             id = ID,
-            isAlive = true,
-            model = GetTagValue(_vehicle, "planeModel"),
-
             vehicle = _vehicle,
-            engineType = GetTagValue(_vehicle, "planeType"),
             body = GetVehicleBody(_vehicle),
+            model = GetTagValue(_vehicle, "planeModel"),
+            engineType = GetTagValue(_vehicle, "planeType"),
+            health = 1,
+            isAlive = true,
 
         -- const values
             speed = 0,
@@ -81,21 +81,8 @@ function createPlaneObject(ID)
             camBack = 20,
             camUp = 8,
             camPitch = -7,
+
     }
-
-
-    plane.getLiftSpeedFac = function()
-        local x = plane.speed
-        local b = plane.speed/3
-        local result = (1/b)*(x^2)
-        if x >= b then
-            result = x
-        end
-        return result
-    end
-
-
-    plane_UpdateProperties(plane)
 
 
     plane.weap = {
@@ -147,9 +134,9 @@ function createPlaneObject(ID)
     end
 
 
-
-
-
+    plane_UpdateProperties(plane)
+    plane_ManageTargetting(plane)
+    plane_ProcessHealth(plane)
     _plane_SetMinAltitude(plane)
     _plane_AutoConvertToPreset(plane)
 
@@ -181,7 +168,7 @@ function plane_UpdateProperties(plane)
     plane.speedFac = clamp(plane.speed, 1, plane.speed) / plane.topSpeed
 
     plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), 0, 1)
-    plane.liftSpeedFac = plane.getLiftSpeedFac()
+    plane.liftSpeedFac = plane_getLiftSpeedFac(plane)
 
 end
 

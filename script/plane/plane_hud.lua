@@ -85,7 +85,7 @@ function drawTarget(plane, vehicle)
 end
 
 
-function manageTargetting(plane)
+function plane_ManageTargetting(plane)
 
     worldVehicles = FindVehicles('', true)
     plane.targetting.targetVehicles = {}
@@ -128,7 +128,7 @@ function manageTargetting(plane)
 
             if #planesInfront >= 1 then
                 changeTarget(plane, planesInfront)
-                dbp('Manually changed to forward taget: ' .. plane.targetting.target)
+                -- dbp('Manually changed to forward taget: ' .. plane.targetting.target)
                 beep()
             else
                 plane.targetting.target = nil
