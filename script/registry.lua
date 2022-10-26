@@ -32,6 +32,7 @@ function Init_Config()
 
         smallMapMode    = { "boolean", false },
         showOptions     = { "boolean", false },
+        debug           = { "boolean", false },
 
     })
 

@@ -1,8 +1,15 @@
+2022.10.26
+> Mod now supports quicksave.
+> Fixed F15 physics.
+> Added simulation speed assist.
+
+
 2022.10.25
 > Added F15-E.
-> Added animated air foil parts (ailerons, flaps, etc.)
-> Minor fixes and major code restructured.
+> Added animated parts (ailerons, flaps, etc.)
+> Minor fixes and major code restructure.
 > Added spawnable MG and SAM AA tanks.
+> Improved simulation plane agility.
 
 
 2022.10.21

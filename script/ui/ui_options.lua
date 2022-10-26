@@ -117,6 +117,18 @@ function DrawIngameOptions()
     margin(0, marginY2*2)
 
     UiPush()
+        local c = boolColor(Config.debug)
+        UiColor(c[1], c[2], c[3])
+        UiAlign('center middle')
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
+        if UiTextButton('Debug Mode', btn_w, marginY2*1.5) then
+            Config.debug = not Config.debug
+        end
+    UiPop()
+
+    margin(0, marginY2*2)
+
+    UiPush()
         local c = boolColor(Config.showOptions)
         UiColor(c[1], c[2], c[3])
         UiAlign('center middle')

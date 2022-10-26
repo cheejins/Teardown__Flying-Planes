@@ -1,9 +1,9 @@
-<prefab version="1.0.0">
-	<group name="instance=MOD/prefab/A10.xml" pos="38.0 0.2 117.89999" rot="0.0 -45.0 0.0">
+<prefab version="1.2.0">
+	<group name="instance=MOD/prefab/A10.xml" pos="30.2 0.2 168.59999" rot="0.0 0.0 0.0">
 		<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
-			<vehicle name="a10" tags="planeVehicle planeModel=a10 planeType=jet weaponPreset=none" pos="0.0 3.0 5.2" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="2" damping="2" topspeed="10" acceleration="2" strength="5" antispin="0" antiroll="0" difflock="1" steerassist="0">
-				<body tags="planeBody" pos="0 -1 -7.5" rot="0.0 0.0 0.0" dynamic="true">
-					<group name="parts_main">
+			<vehicle name="a10" tags="planeVehicle planeModel=a10 planeType=jet weaponPreset=none" pos="0.0 1.9 7.6" rot="0.0 0.0 0.0" driven="false" sound="classic" spring="2" damping="2" topspeed="10" acceleration="2" strength="5" antispin="0" antiroll="0" difflock="1" steerassist="0">
+				<body tags="planeBody" pos="0.0 0.3 -8.1" rot="0.0 0.0 0.0" dynamic="true">
+					<group name="parts_main" pos="0.0 -0.2 -1.8">
 						<vox tags="planeShape_engine explosive=1" pos="0.0 0.0 -0.7" rot="0 0 0" texture="14" density="2" strength="1" file="MOD/prefab/A10.vox" object="body_nose">
 							<location tags="vital" pos="-0.1 0.4 -1.5" rot="-180.0 360.0 -180.0"/>
 							<location tags="player" pos="0.05 1.15 -1.75" rot="0.0 0.0 0.0"/>
@@ -26,7 +26,7 @@
 							<light name="exhaust" tags="exhaust" pos="0.05 0.8 1.7" type="cone" color="0.0 0.0 0.0" scale="0"/>
 						</vox>
 					</group>
-					<group name="parts_wheels">
+					<group name="parts_wheels" pos="0.0 -0.2 -1.8">
 						<wheel name="wl_l" pos="0.1 -1.7 -2.8" drive="0" steer="1" travel="-0.2 0.2">
 							<vox pos="0.0 -0.3 0.0" rot="0 180 0" file="MOD/prefab/A10.vox" object="wheel">
 								<light name="Ground level" tags="ground" scale="0"/>

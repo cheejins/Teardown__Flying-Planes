@@ -36,10 +36,9 @@ function PLANES_Tick()
                 plane.engineOn = not plane.engineOn
             end
 
-            if InputPressed("x") then
+            if InputPressed("f") then
                 plane.flaps = not plane.flaps
             end
-
 
 
             if not ShouldDrawIngameOptions then
@@ -49,18 +48,14 @@ function PLANES_Tick()
             if plane.isAlive then
 
                 SetPlayerHealth(1)
+                plane.status = '-'
 
 
                 crosshairPos = GetCrosshairWorldPos(plane.allBodies, plane.tr.pos)
                 dbdd(crosshairPos, 1,1, 1,0,0, 1)
 
-                if InputPressed(Config.toggleHoming) then
-                    beep()
-                    plane.targetting.lock.enabled = not plane.targetting.lock.enabled
-                end
 
                 plane_ManageTargetting(plane)
-                plane.status = '-'
 
 
                 if not ShouldDrawIngameOptions then
@@ -112,7 +107,6 @@ function PLANES_Update()
     for key, plane in pairs(PLANES) do
 
         plane_Animate_AeroParts(plane)
-
 
         if GetPlayerVehicle() == plane.vehicle then
 

@@ -106,7 +106,9 @@ function draw()
     UiPop()
 
 
-    -- DrawPlaneIDs()
+    if db then
+        DrawPlaneIDs()
+    end
 
 end
 

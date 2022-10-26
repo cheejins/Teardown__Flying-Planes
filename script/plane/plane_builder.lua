@@ -56,6 +56,7 @@ function plane_BuildPart_Aero(plane, shape, side)
         Delete(joint)
     end
 
+
     return part
 
 end
@@ -69,9 +70,9 @@ function plane_CollectParts_Aero(plane)
     AllVehicles  = FindVehicles("Plane_ID", true)
     AllBodies    = FindBodies("Plane_ID", true)
     AllShapes    = FindShapes("Plane_ID", true)
-    -- AllLights    = FindLights("Plane_ID", true)
-    -- AllLocations = FindLocations("Plane_ID", true)
-    -- AllTriggers  = FindTriggers("Plane_ID", true)
+    AllLights    = FindLights("Plane_ID", true)
+    AllLocations = FindLocations("Plane_ID", true)
+    AllTriggers  = FindTriggers("Plane_ID", true)
 
 
     for _, shape in ipairs(AllShapes) do

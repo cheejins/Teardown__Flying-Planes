@@ -24,7 +24,7 @@ function plane_Sound(plane)
     PlayLoop(sounds.fire_large, plane.tr.pos, 1 - plane.health + 0.25)
 
 
-    if not plane.isAlive then
+    if not plane.isAlive or not plane.engineOn then
         return
     end
 
@@ -57,24 +57,28 @@ function plane_VisualEffects(plane)
         local tr = GetLightTransform(exhaust)
 
         local enginePower = plane.thrust/100 + 0.2
-        local damageAlpha = 1 - plane.health
+        local damageAlpha = 0.8 - plane.health
 
         local rdmSmokeVec = VecScale(Vec(math.random()-0.5,math.random()-0.5,math.random()-0.5), math.random(2,5))
         particle_blackSmoke(VecAdd(plane.tr.pos, rdmSmokeVec), damageAlpha*2, damageAlpha*2)
 
-        local rad = 0.5 - damageAlpha
-        local vel = 1.5*enginePower^2
-        local alpha = enginePower + 0.1
-        local emmissive = enginePower + 2
 
-        exhaust_particle_afterburner(tr, rad, vel, alpha, emmissive)
-        for i = 0.2, 1, 0.2 do
-            local exhaustTr = TransformCopy(tr)
-            exhaustTr.pos = TransformToParentPoint(tr, Vec(0,0,1*i))
-            exhaust_particle_afterburner(exhaustTr, rad, vel, alpha, emmissive)
+        if plane.engineOn then
+
+            local rad = 0.5 - damageAlpha
+            local vel = 1.5*enginePower^2
+            local alpha = enginePower + 0.1
+            local emmissive = enginePower + 2
+
+            exhaust_particle_afterburner(tr, rad, vel, alpha, emmissive)
+            for i = 0.2, 1, 0.2 do
+                local exhaustTr = TransformCopy(tr)
+                exhaustTr.pos = TransformToParentPoint(tr, Vec(0,0,1*i))
+                exhaust_particle_afterburner(exhaustTr, rad, vel, alpha, emmissive)
+            end
+            PointLight(tr.pos, 1,0.5,0, 3 * enginePower * math.random())
+
         end
-        PointLight(tr.pos, 1,0.5,0, 3 * enginePower * math.random())
-
 
     end
 
@@ -273,11 +277,11 @@ function plane_Shoot(plane)
             local planeTr = GetVehicleTransform(plane.vehicle)
             local targetTr = GetVehicleTransform(plane.targetting.target)
 
-            local planeDir = DirLookAt(planeTr.pos, TransformToParentPoint(planeTr, Vec(0,0,-1)))
-            local targetDir = DirLookAt(planeTr.pos, targetTr.pos)
+            local planeRot = QuatCopy(planeTr.rot)
+            local targetDir = QuatLookAt(planeTr.pos, targetTr.pos)
 
-            local ang = VecAngle(planeDir, targetDir)
-            if ang < 30 and VecDist(planeTr.pos, targetTr.pos) < 600 then -- Target in bounds.
+            local ang = QuatAngle(planeRot, targetDir)
+            if ang < 30 and VecDist(planeTr.pos, targetTr.pos) < 800 then -- Target in bounds.
 
                 if plane.targetting.lock.timer.time <= 0 then -- Target locked.
                     plane.targetting.lock.locked = true

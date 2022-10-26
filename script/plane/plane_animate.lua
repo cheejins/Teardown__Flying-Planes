@@ -23,21 +23,36 @@ function plane_Animate_AeroParts(plane, controlsVec)
                 local pivot_tr = GetLightTransform(light_pivot)
 
                 ConstrainPosition(part.body, plane.body, pivot_tr.pos, parentTr.pos)
-                SetBodyAngularVelocity(part.body, Vec(0,0,0))
-                -- SetBodyVelocity(part.body, plane.vel)
+                -- ConstrainVelocity(part.body, plane.body, pivot_tr.pos, VecNormalize(plane.vel))
+                -- ConstrainAngularVelocity(part.body, plane.body, plane.tr.)
 
 
+                -- if part.body ~= plane.body then
+                    -- SetBodyAngularVelocity(part.body, Vec(0,0,0))
+                -- end
 
-                if GetPlayerVehicle() == plane.vehicle then
+                if Config.debug then
+                    DrawShapeOutline(part.shape, 1,0.5,0, 0.5)
+                    DrawDot(pivot_tr.pos, 1/3, 1/3, 1,0,0, 1/2)
+                    DrawDot(parentTr.pos, 1/3, 1/3, 0,1,0, 1/2)
+                end
+
+
+                if not GetPlayerVehicle() == plane.vehicle then
+
+                    ConstrainPosition(part.body, plane.body, pivot_tr.pos, parentTr.pos)
+                    plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, parentTr.rot)
+
+                else
 
                     if parts_key == "rudder"then
 
                         if z then -- Yaw left
-                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
+                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
                         elseif c then -- Yaw right
-                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,angle)))
+                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,angle)))
                         else
-                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, parentTr.rot)
+                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, parentTr.rot)
                         end
 
                     end
@@ -48,19 +63,19 @@ function plane_Animate_AeroParts(plane, controlsVec)
                         if w or s or a or d then
 
                             if w then -- Pitch down
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
                             elseif s then -- Pitch up
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,angle)))
                             end
 
                             if a then -- Roll left
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * -angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * -angle)))
                             elseif d then -- Roll right
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * angle)))
                             end
 
                         else
-                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, parentTr.rot)
+                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, parentTr.rot)
                         end
 
                     end
@@ -71,19 +86,19 @@ function plane_Animate_AeroParts(plane, controlsVec)
                         if w or s or a or d then
 
                             if w then -- Pitch down
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,angle)))
                             elseif s then -- Pitch up
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
                             end
 
                             if a then -- Roll left
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * -angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * -angle)))
                             elseif d then -- Roll right
-                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * angle)))
+                                plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,GetPartSideSign(part) * angle)))
                             end
 
                         else
-                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, parentTr.rot)
+                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, parentTr.rot)
                         end
 
                     end
@@ -92,22 +107,13 @@ function plane_Animate_AeroParts(plane, controlsVec)
                     if parts_key == "flap" then
 
                         if plane.flaps then
-                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
+                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, QuatRotateQuat(parentTr.rot, QuatEuler(0,0,-angle)))
                         else
-                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, parentTr.rot)
+                            plane_Animate_AeroParts_Paralell(plane, part, pivot_tr.rot, parentTr.rot)
                         end
 
                     end
 
-                else
-
-                    ConstrainPosition(part.body, plane.body, pivot_tr.pos, parentTr.pos)
-                    plane_Animate_AeroParts_Paralell(plane, part, pivot_tr, parentTr.rot)
-
-                end
-
-                if Config.showOptions then
-                    DrawDot(pivot_tr.pos, 1/2,1/2, 1,0,0, 1)
                 end
 
             end
@@ -117,9 +123,10 @@ function plane_Animate_AeroParts(plane, controlsVec)
 end
 
 
-function plane_Animate_AeroParts_Paralell(plane, part, part_tr, target_rot)
-    ConstrainOrientation(part.body, plane.body, part_tr.rot, target_rot, 2)
+function plane_Animate_AeroParts_Paralell(part, plane, part_rot, target_rot)
+    ConstrainOrientation(part.body, plane.body, target_rot, part_rot, 2)
 end
+
 
 function GetPartSideSign(part)
     if part.side == "right" then return 1 end

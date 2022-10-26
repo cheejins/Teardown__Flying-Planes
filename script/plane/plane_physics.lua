@@ -1,20 +1,27 @@
 -- Apply engine/thrust impulse to move the plane forward.
 function plane_Move(plane)
 
-    local speed = plane.speed
+    local speed =
+
+    plane_SetThrustOutput(plane)
 
     if plane.engineOn then
 
-        -- stall speed
-        if speed < plane.topSpeed then
+        -- Slow plane speed to thrust amout.
+        if plane.speed > 1 and plane.speed/plane.topSpeed > plane.thrust/100 then
+            ApplyBodyImpulse(
+                plane.body,
+                TransformToParentPoint(
+                    plane.tr, Vec(0, 0, -5)),
+                plane_GetFwdPos(plane, plane.speed * plane.brakeImpulseAmt))
 
-            plane_SetThrustOutput(plane)
+        elseif plane.speed < plane.topSpeed then
 
-            local thrustImpulseAmt = plane.thrust * plane.thrustImpulseAmount * 2.5 * CONFIG.smallMapMode.dragMult
+            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) * 2
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
-                TransformToParentPoint(plane.tr, Vec(0,0,-thrustImpulseAmt)))
+                TransformToParentPoint(plane.tr, Vec(0, 0, thrustImpulseAmt/2)))
 
         end
 
@@ -25,6 +32,10 @@ end
 
 -- Apply aerodynamic impulses.
 function plane_ApplyAerodynamics(plane)
+
+    if plane.totalVel < 1 then
+        return
+    end
 
     local localVel = TransformToLocalVec(plane.tr, plane.vel)
     local FwdVel = (plane.topSpeed / clamp(math.abs(-localVel[3]), 1, plane.topSpeed)) * 3
@@ -42,13 +53,7 @@ function plane_ApplyAerodynamics(plane)
     force_z = GetYawAoA(plane.tr, plane.vel) / FwdVel / 4
 
 
-    local impMult = 2
-    if FlightMode == FlightModes.simple then
-        impMult = 4
-        if Config.smallMapMode then
-            impMult = 6
-        end
-    end
+    local impMult = 2.5
 
 
     local forces = Vec(force_x, force_y, force_z)
@@ -90,7 +95,7 @@ function plane_ApplyAerodynamics(plane)
     SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), angDim)) -- Diminish ang vel
 
 
-    if Config.showOptions and plane.totalVel > 1 then
+    if Config.debug and plane.totalVel > 1 then
         plane_draw_Forces(plane, x, y, z, 5, 20)
     end
 
@@ -127,7 +132,7 @@ function plane_Steer(plane)
         angDim = 0.5
     end
 
-    local imp = 500 * angDim * GetBodyMass(plane.body) / 10000 * clamp(plane.health, 0.5, 1)
+    local imp = angDim * GetBodyMass(plane.body) * clamp(plane.health, 0.5, 1) / 20
     dbw("steer angDim", sfn(angDim))
 
     local nose = TransformToParentPoint(plane.tr, Vec(0, 0, -10))
@@ -186,13 +191,13 @@ function plane_Steer(plane)
 
     if a then
         ic.a = clamp(ic.a + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp * ic.a))
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, -imp * ic.a * plane.rollVal))
     else
         ic.a = clamp(ic.a - inc, 0, 1)
     end
     if d then
         ic.d = clamp(ic.d + inc, 0, 1)
-        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp * ic.d))
+        ApplyBodyImpulse(plane.body, wing, VecScale(planeUp, imp * ic.d * plane.rollVal))
     else
         ic.d = clamp(ic.d - inc, 0, 1)
     end

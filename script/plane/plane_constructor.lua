@@ -118,7 +118,8 @@ function createPlaneObject(ID)
             timer = {time = 60/1.2, rpm = 60/1.2},
             locking = false,
             locked = false,
-        }
+        },
+        targetVehicles = {},
     }
 
     plane.camera = {
@@ -138,10 +139,10 @@ function createPlaneObject(ID)
 
 
     plane_UpdateProperties(plane)
-    plane_ManageTargetting(plane)
     plane_ProcessHealth(plane)
-    plane_SetMinAltitude(plane)
     plane_AutoConvertToPreset(plane)
+    plane_ManageTargetting(plane)
+    plane_SetMinAltitude(plane)
 
 
     -- plane_builder.lua

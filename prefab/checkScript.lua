@@ -1,14 +1,13 @@
 #include "../TDSU/tdsu.lua"
 
-
-
--- This script is ran for each plane that is spawned.
-
+-- This script is ran for each plane that is spawned and is separate from the main script.
 
 -- PLANE IDs
 -- This script is responsible for processing plane parts and assigning a global ID to collection of parts.
--- In script.lua, the parts will be found using the assigned tags.
--- The unique ID is stored in the registry. It will be applied to the vehicle entity as a tag called ID and a value of an integer eg: ID=1, ID=6
+-- In script.lua, the parts will be found using the assigned tags. The unique ID is stored in the registry.
+-- It will be applied to the vehicle entity as a tag called ID and a value of an integer eg: ID=1, ID=6
+
+------------------------------------------------------------------------------------------------------------
 
 
 function init()
@@ -17,16 +16,16 @@ function init()
     CheckScriptEnabled()
 
 
+    -- This int can always be used as the current ID.
+    ID = GetInt("level.Plane_ID")
+    if ID == 0 then
+        ID = 2
+    end
+    SetInt("level.Plane_ID", ID + 1)
+
+
     -- Tag name.
     IDTag = "Plane_ID"
-
-    -- This int can always be used as the current ID.
-    ID = GetString("level.Plane_ID")
-    if ID == "" then
-        ID = 0
-    end
-    SetString("level.Plane_ID", tonumber(ID) + 1)
-
 
     -- Apply IDs
     ApplyPlaneEntityIDs(ID)
@@ -34,20 +33,15 @@ function init()
 end
 
 
-function tick()
-
-end
-
-
 function ApplyPlaneEntityIDs(ID)
 
     AllEntities = {
-        AllVehicles  = FindVehicles("", false),
-        AllBodies    = FindBodies("", false),
-        AllShapes    = FindShapes("", false),
-        AllLights    = FindLights("", false),
-        AllLocations = FindLocations("", false),
-        AllTriggers  = FindTriggers("", false),
+        AllVehicles  = FindVehicles(""),
+        AllBodies    = FindBodies(""),
+        AllShapes    = FindShapes(""),
+        AllLights    = FindLights(""),
+        AllLocations = FindLocations(""),
+        AllTriggers  = FindTriggers(""),
     }
 
     for _, entity_group in pairs(AllEntities) do
@@ -57,13 +51,19 @@ function ApplyPlaneEntityIDs(ID)
     end
 
     -- No intercollisions, but leave world collision on.
-    local id = tonumber(ID)
-    id = clamp(id, 2, 255-2)
-    for index, shape in ipairs(AllEntities.AllShapes) do
-        SetShapeCollisionFilter(shape, id, 255-id)
+    for _, shape in ipairs(AllEntities.AllShapes) do
+        -- if not GetShapeBody(shape) == GetWorldBody() then
+            SetShapeCollisionFilter(shape, 4, 1)
+        -- end
     end
 
+end
 
+
+function tick()
+    -- for _, shape in ipairs(AllEntities.AllShapes) do
+    --     DrawShapeOutline(shape, 1,0,1, 0.5)
+    -- end
 end
 
 

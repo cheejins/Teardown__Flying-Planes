@@ -87,6 +87,11 @@ end
 
 function plane_ManageTargetting(plane)
 
+    if InputPressed(Config.toggleHoming) then
+        beep()
+        plane.targetting.lock.enabled = not plane.targetting.lock.enabled
+    end
+
     worldVehicles = FindVehicles('', true)
     plane.targetting.targetVehicles = {}
     for key, tv in pairs(worldVehicles) do
@@ -101,30 +106,34 @@ function plane_ManageTargetting(plane)
 
     if #plane.targetting.targetVehicles >= 1 then
 
-        -- Build table of targetable vehicles.
-        local planesInfront = {}
-        for key, v in pairs(plane.targetting.targetVehicles) do
+        -- Manually change target.
+        if InputPressed(Config.changeTarget) then
 
-            if v ~= plane.vehicle and v ~= plane.targetting.target then
+            -- Build table of targetable vehicles.
+            local planesInfront = {}
+            for key, v in ipairs(plane.targetting.targetVehicles) do
 
-                local camTr = GetCameraTransform()
-                local vTr = GetVehicleTransform(v)
+                if v ~= plane.vehicle and v ~= plane.targetting.target then
 
-                local camDir = DirLookAt(camTr.pos, TransformToParentPoint(camTr, Vec(0,0,-1)))
-                local vDir = DirLookAt(camTr.pos, vTr.pos)
+                    local camTr = GetCameraTransform()
+                    local vTr = GetVehicleTransform(v)
 
+                    local camRot = camTr.rot
+                    local rotToVehicle = QuatLookAt(camTr.pos, vTr.pos)
 
-                local ang = VecAngle(camDir, vDir)
-                if ang < 30 then
-                    table.insert(planesInfront, v)
+                    local ang = QuatAngle(camRot, rotToVehicle)
+                    if ang < 45 then
+                        if ang < 20 then
+                            planesInfront = {v} -- Select v looking directly at.
+                            break
+                        else
+                            table.insert(planesInfront, v) -- Select random looking near.
+                        end
+                    end
+
                 end
 
             end
-
-        end
-
-        -- Manually change target.
-        if InputPressed(Config.changeTarget) then
 
             if #planesInfront >= 1 then
                 changeTarget(plane, planesInfront)

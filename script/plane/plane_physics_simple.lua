@@ -25,12 +25,12 @@ function plane_Steer_Simple(plane)
     end
     if InputDown("z") then
         local yawSign = 1
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 2 * CONFIG.smallMapMode.turnMult
+        local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
         pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
     end
     if InputDown("c") then
         local yawSign = -1
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 2 * CONFIG.smallMapMode.turnMult
+        local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
         pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
     end
 
