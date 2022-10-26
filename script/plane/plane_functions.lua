@@ -30,8 +30,14 @@ function plane_Sound(plane)
 
     if plane.engineType == "jet" then
 
-        PlayLoop(sounds.jet_engine_loop, plane.tr.pos, 2)
-        PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
+        if plane.model == "a10" or plane.model == "f15" then
+            PlayLoop(sounds.jet_engine_loop_mig29, plane.tr.pos, 2)
+            PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
+        else
+            PlayLoop(sounds.jet_engine_loop, plane.tr.pos, 2)
+            PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
+        end
+
 
     elseif plane.engineType == "propeller" then
 

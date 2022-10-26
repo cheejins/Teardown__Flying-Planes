@@ -16,6 +16,7 @@ function initSounds()
         prop_5 = LoadLoop("MOD/snd/prop_5-5.ogg"),
 
         -- jet engine
+        jet_engine_loop_mig29 = LoadLoop("MOD/snd/jet_engine_loop_mig29.ogg"),
         jet_engine_loop = LoadLoop("MOD/snd/jet_engine_loop.ogg"),
         jet_engine_afterburner = LoadLoop("MOD/snd/jet_engine_afterburner.ogg"),
 
