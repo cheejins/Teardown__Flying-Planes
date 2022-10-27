@@ -1,27 +1,26 @@
 -- Apply engine/thrust impulse to move the plane forward.
 function plane_Move(plane)
 
-    local speed =
-
     plane_SetThrustOutput(plane)
 
     if plane.engineOn then
 
         -- Slow plane speed to thrust amout.
         if plane.speed > 1 and plane.speed/plane.topSpeed > plane.thrust/100 then
-            ApplyBodyImpulse(
-                plane.body,
-                TransformToParentPoint(
-                    plane.tr, Vec(0, 0, -5)),
-                plane_GetFwdPos(plane, plane.speed * plane.brakeImpulseAmt))
+
+            -- ApplyBodyImpulse(
+            --     plane.body,
+            --     TransformToParentPoint(
+            --         plane.tr, Vec(0, 0, -5)),
+            --     plane_GetFwdPos(plane, plane.speed * plane.brakeImpulseAmt/2))
 
         elseif plane.speed < plane.topSpeed then
 
-            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust)) * 2
+            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust))
             ApplyBodyImpulse(
                 plane.body,
                 plane.tr.pos,
-                TransformToParentPoint(plane.tr, Vec(0, 0, thrustImpulseAmt/2)))
+                TransformToParentPoint(plane.tr, Vec(0, 0, thrustImpulseAmt)))
 
         end
 
@@ -53,7 +52,7 @@ function plane_ApplyAerodynamics(plane)
     force_z = GetYawAoA(plane.tr, plane.vel) / FwdVel / 4
 
 
-    local impMult = 2.5
+    local impMult = 3
 
 
     local forces = Vec(force_x, force_y, force_z)

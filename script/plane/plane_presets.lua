@@ -12,6 +12,8 @@ function plane_AutoConvertToPreset(plane)
         convertPlaneToAC130(plane)
     elseif plane.model == "b2" then
         convertPlaneToB2(plane)
+    elseif plane.model == "f15" then
+        convertPlaneToF15(plane)
     end
 
 end
@@ -125,6 +127,24 @@ function convertPlaneToB2(plane)
     plane.pitchVal = 3
     plane.rollVal = 3
     plane.yawFac = 3
+
+    plane.camBack = 45
+    plane.camUp = 15
+    plane.camPitch = 0
+end
+
+function convertPlaneToF15(plane)
+    plane.isArmed = true
+
+    plane.topSpeed = 160
+    plane.thrustImpulseAmount = 130
+    plane.engineVol = 1
+
+    plane.brakeImpulseAmt = 250
+
+    plane.pitchVal = 1
+    plane.rollVal = 1
+    plane.yawFac = 1
 
     plane.camBack = 45
     plane.camUp = 15

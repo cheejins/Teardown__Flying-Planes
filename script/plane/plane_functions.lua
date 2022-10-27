@@ -23,7 +23,6 @@ function plane_Sound(plane)
 
     PlayLoop(sounds.fire_large, plane.tr.pos, 1 - plane.health + 0.25)
 
-
     if not plane.isAlive or not plane.engineOn then
         return
     end
