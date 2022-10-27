@@ -1,3 +1,8 @@
+2022.10.27
+> Added AI planes (no combat yet, just planes that follow basic flight paths).
+> Added sounds for distant flying planes.
+
+
 2022.10.26
 > Mod now supports quicksave.
 > Fixed F15 physics.

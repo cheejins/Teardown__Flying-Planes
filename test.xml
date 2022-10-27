@@ -2,7 +2,7 @@
 	<group name="Map Static" pos="-120.7 0.0 -50.0">
 		<script file="sandbox.lua"/>
 		<script file="main.lua"/>
-		<water pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="10000 10000" depth="10" wave="0" ripple="0.01" motion="0"/>
+		<water pos="0.0 -5.0 0.0" rot="0.0 0.0 0.0" type="box" size="10000 10000" depth="0" wave="0" ripple="0.01" motion="0"/>
 		<spawnpoint name="spawnpoint" pos="46.39999 2.9 159.69998" rot="0.0 60.0 0.0"/>
 		<environment template="sunny" skybox="sunset_in_the_chalk_quarry_2k.dds" skyboxtint="1.0 0.66 0.46" skyboxbrightness="1" fogColor="0.52 0.35 0.14" fogParams="0 0 0 0" sunBrightness="3" sunColorTint="0.15 0.26 1.0" sunSpread="0.05"/>
 	</group>

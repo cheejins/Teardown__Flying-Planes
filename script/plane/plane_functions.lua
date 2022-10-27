@@ -30,26 +30,26 @@ function plane_Sound(plane)
     if plane.engineType == "jet" then
 
         if plane.model == "a10" or plane.model == "f15" then
-            PlayLoop(sounds.jet_engine_loop_mig29, plane.tr.pos, 2)
-            PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
+            PlayLoop(sounds.jet_engine_loop_mig29, plane.tr.pos, 1.5)
+            PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/60)
         else
-            PlayLoop(sounds.jet_engine_loop, plane.tr.pos, 2)
-            PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/50)
+            PlayLoop(sounds.jet_engine_loop, plane.tr.pos, 1.5)
+            PlayLoop(sounds.jet_engine_afterburner, plane.tr.pos, plane.thrust/60)
         end
 
 
     elseif plane.engineType == "propeller" then
 
         if plane.thrust < 20 then
-            PlayLoop(sounds.prop_5, plane.tr.pos, plane.engineVol * 3)
+            PlayLoop(sounds.prop_5, plane.tr.pos, plane.engineVol * 2)
         elseif plane.thrust < 40 then
-            PlayLoop(sounds.prop_4, plane.tr.pos, plane.engineVol * 3)
+            PlayLoop(sounds.prop_4, plane.tr.pos, plane.engineVol * 2)
         elseif plane.thrust < 60 then
-            PlayLoop(sounds.prop_3, plane.tr.pos, plane.engineVol * 3)
+            PlayLoop(sounds.prop_2, plane.tr.pos, plane.engineVol * 2)
         elseif plane.thrust < 80 then
-            PlayLoop(sounds.prop_2, plane.tr.pos, plane.engineVol * 3)
+            PlayLoop(sounds.prop_2, plane.tr.pos, plane.engineVol * 2)
         elseif plane.thrust <= 100 then
-            PlayLoop(sounds.prop_1, plane.tr.pos, plane.engineVol * 3)
+            PlayLoop(sounds.prop_1, plane.tr.pos, plane.engineVol * 2)
         end
 
     end
@@ -135,9 +135,9 @@ function plane_SetThrust(sign)
 end
 function plane_ProcessHealth(plane)
 
-    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.5, 1), 0, 1)
+    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.6, 1), 0, 1)
 
-    if plane.isAlive and plane.health <= 0 and not plane.justDied then
+    if plane.isAlive and (plane.health <= 0 or IsPointInWater(plane.tr.pos)) and not plane.justDied then
 
         plane.justDied = true
         plane.isAlive = false
@@ -194,6 +194,15 @@ end
 function plane_GetFwdPos(plane, distance)
     return TransformToParentPoint(GetBodyTransform(plane.body), Vec(0,0,distance or -500))
 end
+-- function plane_isValid(plane)
+--     return IsHandleValid(plane.body)
+-- end
+-- function plane_Delete(plane)
+--     plane.isAlive = false
+--     for index, body in ipairs(plane.AllBodies) do
+
+--     end
+-- end
 
 
 

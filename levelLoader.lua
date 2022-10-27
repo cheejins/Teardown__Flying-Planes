@@ -172,7 +172,17 @@ function draw_levelSelection()
                 StartLevel('', 'MOD/test.xml', '')
             end
             UiTranslate(0, 250)
-            UiText("Sandbox Map + Enemy AA")
+            UiText("Sandbox Map + Enemy AI")
+            UiFont("regular.ttf",  22)
+            UiTranslate(0, 30)
+            UiTranslate(0, 30)
+            UiColor(1/2,1/2,1/2,1)
+            UiText("Press 'N' to enable/disable enemy ground AA.")
+            UiTranslate(0, 30)
+            UiTranslate(0, 30)
+            UiText("AI planes fly from target to target.")
+            UiTranslate(0, 30)
+            UiText("They do not chase the player or shoot yet.")
         UiPop() end
 
         UiTranslate(700, 0)
@@ -184,6 +194,7 @@ function draw_levelSelection()
             end
             UiTranslate(0, 250)
             UiText("Keltoi Airfield")
+
         UiPop() end
 
 

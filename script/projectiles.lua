@@ -149,7 +149,7 @@ function initProjectiles()
                 spread = 0,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 3.5,
+                explosionSize = 1.5,
                 rcRad = 0,
                 force = 0,
                 penetrate = false,

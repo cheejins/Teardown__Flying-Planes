@@ -16,6 +16,7 @@ function initSounds()
         prop_4 = LoadLoop("MOD/snd/prop_4-5.ogg"),
         prop_5 = LoadLoop("MOD/snd/prop_5-5.ogg"),
 
+
         -- jet engine
         jet_engine_loop_mig29 = LoadLoop("MOD/snd/jet_engine_loop_mig29.ogg"),
         jet_engine_loop = LoadLoop("MOD/snd/jet_engine_loop.ogg"),
@@ -35,4 +36,15 @@ function initSounds()
         }
 
     }
+
+
+    loops = {
+
+        jets_distant = {
+            LoadLoop("MOD/snd/jet_distant1.ogg"),
+            LoadLoop("MOD/snd/jet_distant2.ogg"),
+            LoadLoop("MOD/snd/jet_distant3.ogg"),
+        }
+    }
+
 end

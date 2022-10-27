@@ -5,7 +5,15 @@ function drawTargets(plane)
         if plane.isArmed then
             for key, vehicle in pairs(plane.targetting.targetVehicles) do
                 if vehicle ~= plane.targetting.target and GetVehicleHealth(vehicle) > 0 then
-                    drawTarget(plane, vehicle) -- Draw all targets.
+
+                    if HasTag(vehicle, "planeVehicle") then
+                        if GetVehicleHealth(vehicle) > 0.6 then
+                            drawTarget(plane, vehicle) -- Draw all targets.
+                        end
+                    else
+                        drawTarget(plane, vehicle) -- Draw all targets.
+                    end
+
                 end
             end
         end
@@ -96,8 +104,16 @@ function plane_ManageTargetting(plane)
     plane.targetting.targetVehicles = {}
     for key, tv in pairs(worldVehicles) do
 
-        if plane.vehicle ~= tv and GetVehicleHealth(tv) > 0 then
-            table.insert(plane.targetting.targetVehicles, tv)
+        if plane.vehicle ~= tv and GetVehicleHealth(tv) then
+
+            if HasTag(tv, "planeVehicle") then
+                if GetVehicleHealth(tv) > 0.6 then
+                    table.insert(plane.targetting.targetVehicles, tv)
+                end
+            else
+                table.insert(plane.targetting.targetVehicles, tv)
+            end
+
         end
 
     end
@@ -150,7 +166,7 @@ function plane_ManageTargetting(plane)
         if plane.targetting.target == nil
         or not IsHandleValid(plane.targetting.target)
         or not IsHandleValid(GetVehicleBody(plane.targetting.target))
-        or GetVehicleHealth(plane.targetting.target) <= 0
+        or GetVehicleHealth(plane.targetting.target) <= 0.6
         then
             changeTarget(plane, plane.targetting.targetVehicles)
         end
