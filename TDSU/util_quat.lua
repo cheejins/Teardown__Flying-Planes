@@ -2,7 +2,9 @@
 do
 
     -- Quat to normalized dir.
-    function QuatToDir(quat) return VecNormalize(TransformToParentPoint(Transform(Vec(0,0,0), quat), Vec(0,0,-1))) end
+    function QuatToDir(quat)
+        return TransformToParentVec(Transform(Vec(), quat), Vec(0,0,-1))
+    end
 
     -- Normalized dir to quat.
     function DirToQuat(dir) return QuatLookAt(Vec(0,0,0), dir) end

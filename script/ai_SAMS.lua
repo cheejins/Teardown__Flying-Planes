@@ -44,6 +44,9 @@ function Manage_Enemies()
 
     Tick_Utils()
 
+    if GetBool("level.enemies_disabled") then
+        return
+    end
 
     for index, AA in ipairs(EnemyAAs) do
 

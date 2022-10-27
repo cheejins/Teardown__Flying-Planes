@@ -110,6 +110,8 @@ function draw()
         DrawPlaneIDs()
     end
 
+    DrawFlightPaths()
+
 end
 
 
@@ -148,7 +150,7 @@ function DrawControlsSimulation()
         UiFont("regular.ttf", fs)
         UiAlign("left bottom")
 
-        UiText('Change camera = C')
+        UiText('Change camera = X')
         UiTranslate(0, -fs)
         UiText('Change zoom = Mouse wheel')
         UiTranslate(0, -fs)
@@ -159,7 +161,7 @@ function DrawControlsSimulation()
         UiTranslate(0, -fs)
 
 
-        UiText('Yaw = CTRL/ALT')
+        UiText('Yaw = Z/C')
         UiTranslate(0, -fs)
         UiText('Pitch = W/S')
         UiTranslate(0, -fs)
@@ -194,7 +196,7 @@ function DrawControlsSimple()
 
 
 
-        UiText('Change camera = R')
+        UiText('Change camera = X')
         UiTranslate(0, -fs)
         UiText('Change zoom = Mouse wheel')
         UiTranslate(0, -fs)
@@ -210,7 +212,7 @@ function DrawControlsSimple()
         UiTranslate(0, -fs)
         UiTranslate(0, -fs)
 
-        UiText('Air brakes = ALT')
+        UiText('Air brakes = SPACE')
         UiTranslate(0, -fs)
         UiText('Thrust = W/S')
         UiTranslate(0, -fs)
@@ -302,11 +304,16 @@ function planeDrawHud(plane, uiW, uiH)
             -- hud STALL
             do UiPush()
                 UiTranslate(0, 280)
-                if plane.speed*1.8 < plane.totalVel and (plane.speed > 1 or plane.speed < -1) then
+                if plane.speed*2 < plane.totalVel and (plane.speed > 1 or plane.speed < -1) then
                     UiColor(0.1, 0.1, 0.1, 0.15)
                     UiRect(w,h)
-                    UiColor(1,1,1, Oscillate(0.75))
+                    UiColor(1,1,1, Oscillate(1/2))
                     UiImageBox("MOD/img/hud_stall.png", w, h, 1,1)
+
+                    if Config.sounds_stall_warning then
+                        PlayLoop(sounds.loop_stall_warning, GetCameraTransform().pos, 1/5)
+                    end
+
                 end
             UiPop() end
 

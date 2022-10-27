@@ -8,7 +8,7 @@ function DrawIngameOptions()
 
     UiMakeInteractive()
 
-    UiFont("regular.ttf", 32)
+    UiFont("regular.ttf", 24)
     UiColor(1,1,1, 1)
     UiTextShadow(0,0,0, 1, 0.2)
 
@@ -17,7 +17,7 @@ function DrawIngameOptions()
     local w_center = w/2
     local btn_w = 250
     local marginY = 20
-    local marginY2 = marginY*2
+    local marginY2 = marginY*1.5
 
 
 
@@ -135,6 +135,18 @@ function DrawIngameOptions()
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
         if UiTextButton('Show Controls', btn_w, marginY2*1.5) then
             Config.showOptions = not Config.showOptions
+        end
+    UiPop()
+
+    margin(0, marginY2*2)
+
+    UiPush()
+        local c = boolColor(Config.sounds_stall_warning)
+        UiColor(c[1], c[2], c[3])
+        UiAlign('center middle')
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
+        if UiTextButton('Stall Warning Sound', btn_w, marginY2*1.5) then
+            Config.sounds_stall_warning = not Config.sounds_stall_warning
         end
     UiPop()
 

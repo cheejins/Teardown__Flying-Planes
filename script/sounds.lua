@@ -4,6 +4,7 @@ function initSounds()
         bullet = LoadSound("chopper-shoot0"),
         missile = LoadSound("MOD/snd/missile"),
         click  = LoadSound("warning-beep"),
+        loop_stall_warning  = LoadLoop("MOD/snd/loop_stall_warning.ogg"),
 
         fire_small = LoadLoop("MOD/snd/fire_small.ogg"),
         fire_large = LoadLoop("MOD/snd/fire_large.ogg"),

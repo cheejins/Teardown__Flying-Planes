@@ -141,11 +141,11 @@ function initProjectiles()
                 isActive = true, -- Active when firing, inactive after hit.
                 hit = false,
                 hitInitial = false,
-                lifeLength = 10, --Seconds
+                lifeLength = 15, --Seconds
 
                 category = 'missile',
 
-                speed = 3,
+                speed = 4,
                 spread = 0,
                 drop = 0,
                 dropIncrement = 0,
@@ -169,7 +169,7 @@ function initProjectiles()
                 },
 
                 homing = {
-                    force = 0.01,
+                    force = 0.02,
                     gain = 0,
                     max = 10,
                     targetShape = nil,

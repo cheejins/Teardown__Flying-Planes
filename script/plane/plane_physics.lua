@@ -37,7 +37,7 @@ function plane_ApplyAerodynamics(plane)
     end
 
     local localVel = TransformToLocalVec(plane.tr, plane.vel)
-    local FwdVel = (plane.topSpeed / clamp(math.abs(-localVel[3]), 1, plane.topSpeed)) * 3
+    local FwdVel = (plane.topSpeed / clamp(math.abs(-localVel[3]), 1, plane.topSpeed)) * 2
 
     local x = 0
     local y = 0
@@ -52,8 +52,7 @@ function plane_ApplyAerodynamics(plane)
     force_z = GetYawAoA(plane.tr, plane.vel) / FwdVel / 4
 
 
-    local impMult = 3
-
+    local impMult = 2
 
     local forces = Vec(force_x, force_y, force_z)
     plane.forces = VecScale(forces, clamp(plane.health, 0.5, 1))
@@ -72,6 +71,7 @@ function plane_ApplyAerodynamics(plane)
     dbw("AERO IMP", imp)
     dbw("AERO impSpeedScale", impSpeedScale)
     dbw("AERO LVEL", localVel)
+    dbw("AERO FwdVel", FwdVel)
 
 
 

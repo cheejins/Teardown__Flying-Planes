@@ -118,7 +118,7 @@ function draw_flightModeSelection()
             UiTranslate(0, 100)
             UiWordWrap(400)
             UiFont("regular.ttf",  24)
-            UiText("Aim in the direction you would like to fly using your mouse.")
+            UiText("Easy arcade style flight. Aim in the direction you would like to fly.")
 
             UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
             if UiTextButton(' ', 500, 300) then
@@ -136,7 +136,7 @@ function draw_flightModeSelection()
             UiTranslate(0, 100)
             UiWordWrap(400)
             UiFont("regular.ttf",  24)
-            UiText("Fly with realistic aerodynamics and control pitch, roll and yaw manually.")
+            UiText("Fly with realistic aerodynamics. Control pitch, roll and yaw manually.")
 
             UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
             if UiTextButton(' ', 500, 300) then

@@ -1,5 +1,5 @@
 -- Steer plane based on camera direction.
-function plane_Steer_Simple(plane)
+function plane_Steer_Simple(plane, rot, disable_input)
 
     local pTr = plane.tr
 
@@ -15,29 +15,46 @@ function plane_Steer_Simple(plane)
     end
 
 
+    if not disable_input then
 
-    -- Roll
-    if InputDown("a") or InputDown("d") then
-        local yawSign = 1
-        if InputDown("d") then yawSign = -1 end -- Determine yaw direction
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 3 * CONFIG.smallMapMode.turnMult
-        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, yawAmt))
+        if InputDown("w") and plane.thrust + plane.thrustIncrement <= 101 then
+            plane.thrust = plane.thrust + 1
+        end
+        if InputDown("s") and plane.thrust - plane.thrustIncrement >= 0 then
+            plane.thrust = plane.thrust - 1
+        end
+
+        if InputDown("space") then
+            ApplyBodyImpulse(
+                plane.body,
+                TransformToParentPoint(
+                    plane.tr, Vec(0,0,-5)),
+                plane_GetFwdPos(plane, speed*plane.brakeImpulseAmt))
+            plane.status = 'Air Braking'
+        end
+
+        -- Roll
+        if InputDown("a") or InputDown("d") then
+            local yawSign = 1
+            if InputDown("d") then yawSign = -1 end -- Determine yaw direction
+            local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 3 * CONFIG.smallMapMode.turnMult
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, yawAmt))
+        end
+        if InputDown("z") then
+            local yawSign = 1
+            local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
+        end
+        if InputDown("c") then
+            local yawSign = -1
+            local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
+        end
     end
-    if InputDown("z") then
-        local yawSign = 1
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
-        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
-    end
-    if InputDown("c") then
-        local yawSign = -1
-        local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
-        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
-    end
 
 
 
-
-    local crosshairRot = QuatLookAt(plane.tr.pos, crosshairPos)
+    local crosshairRot = rot or QuatLookAt(plane.tr.pos, crosshairPos)
 
     -- Roll plane based on crosshair
     local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
@@ -71,22 +88,6 @@ function plane_Move_Simple(plane)
 
     local speed = plane.speed
 
-    if InputDown("w") and plane.thrust + plane.thrustIncrement <= 101 then
-        plane.thrust = plane.thrust + 1
-    end
-    if InputDown("s") and plane.thrust - plane.thrustIncrement >= 0 then
-        plane.thrust = plane.thrust - 1
-    end
-
-    if InputDown("space") then
-        ApplyBodyImpulse(
-            plane.body,
-            TransformToParentPoint(
-                plane.tr, Vec(0,0,-5)),
-            plane_GetFwdPos(plane, speed*plane.brakeImpulseAmt))
-        plane.status = 'Air Braking'
-    end
-
     -- stall speed
     if speed < plane.topSpeed then
 
@@ -104,11 +105,6 @@ function plane_Move_Simple(plane)
         end
 
     end
-
-    -- local angVel = GetBodyAngularVelocity(plane.body)
-    -- local turbulence = VecScale(Vec(math.random()-0.5, math.random()-0.5, math.random()-0.5), speed/500)
-    -- turbulence = VecAdd(turbulence, angVel)
-    -- SetBodyAngularVelocity(plane.body, turbulence)
 
 end
 

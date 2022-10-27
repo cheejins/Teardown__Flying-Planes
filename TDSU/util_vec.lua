@@ -343,3 +343,8 @@ function DebugCompass(font_size)
 
     UiPop()
 end
+
+
+function IsInfrontOfTr(tr, pos)
+    return TransformToLocalPoint(tr, pos)[3] < 0
+end

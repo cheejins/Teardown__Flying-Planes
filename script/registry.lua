@@ -34,6 +34,8 @@ function Init_Config()
         showOptions     = { "boolean", false },
         debug           = { "boolean", false },
 
+        sounds_stall_warning = { "boolean", true },
+
     })
 
 end

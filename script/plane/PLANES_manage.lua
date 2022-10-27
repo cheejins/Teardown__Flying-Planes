@@ -10,6 +10,16 @@ function PLANES_Tick()
         plane_UpdateProperties(plane)
 
 
+        if FlightMode == FlightModes.simulation then
+            plane_ApplyAerodynamics(plane)
+        end
+
+        if FlightMode == FlightModes.simple then
+            plane_Move_Simple(plane)
+            plane_ApplyForces_Simple(plane)
+        end
+
+
         -- Plane move.
         if plane.isAlive then
 
@@ -30,6 +40,21 @@ function PLANES_Tick()
         if GetPlayerVehicle() == plane.vehicle then
 
             plane_ChangeCamera()
+
+            if InputPressed("f1") then
+                SetBodyVelocity(plane.body, Vec(0,0,-100))
+                SetBodyTransform(plane.body, Transform(Vec(0,300,0)))
+                SetBodyAngularVelocity(plane.body, Vec(0,0,0))
+            end
+
+            -- if InputPressed("f2") then
+            --     SetBodyTransform(plane.body, Transform(Vec(0,300,0)))
+            --     SetBodyAngularVelocity(plane.body, Vec(0,0,0))
+            -- end
+
+            -- if InputPressed("f3") then
+            --     SetBodyVelocity(plane.body, Vec(0,0,-100))
+            -- end
 
 
             if InputPressed("v") then
@@ -68,18 +93,6 @@ function PLANES_Tick()
 
                 end
 
-                if FlightMode == FlightModes.simple then
-                    plane_Move_Simple(plane)
-                    plane_ApplyForces_Simple(plane)
-                elseif FlightMode == FlightModes.simulation then
-                    plane_ApplyAerodynamics(plane)
-                    plane_ApplyTurbulence(plane)
-                end
-
-                if FlightMode == FlightModes.simple then
-                    plane_Move_Simple(plane)
-                end
-
                 if not ShouldDrawIngameOptions then
                     plane_Shoot(plane)
                 end
@@ -106,13 +119,17 @@ end
 function PLANES_Update()
     for key, plane in pairs(PLANES) do
 
-        plane_Animate_AeroParts(plane)
-
         if GetPlayerVehicle() == plane.vehicle then
+
+            plane_Animate_AeroParts(plane)
 
             if not ShouldDrawIngameOptions then
                 plane_Camera(plane)
             end
+
+        else
+
+            plane_Animate_AeroParts(plane, true)
 
         end
 

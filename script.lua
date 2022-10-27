@@ -1,6 +1,7 @@
 #include "Automatic.lua"
 #include "TDSU/tdsu.lua"
 #include "script/ai_SAMS.lua"
+#include "script/ai_planes.lua"
 #include "script/debug.lua"
 #include "script/input/controlPanel.lua"
 #include "script/input/input.lua"
@@ -78,14 +79,20 @@ function tick()
     -- Root of plane management.
     PLANES_Tick()
 
-    Manage_DebugMode()
+    Tick_aiplanes()
     Manage_Spawning()
+    aiplane_AssignPlanes()
+
+    Manage_DebugMode()
     Manage_ActiveProjectiles()
     Manage_Enemies()
     Manage_SmallMapMode()
-
-
     plane_RunPropellers()
+
+
+    if InputPressed("n") then
+        SetBool("level.enemies_disabled", not GetBool("level.enemies_disabled"))
+    end
 
 end
 
