@@ -50,6 +50,17 @@ function PLANES_Tick()
                 SetBodyDynamic(plane.body, not IsBodyDynamic(plane.body))
             end
 
+            if InputDown("f3") then
+                SetBodyTransform(plane.body, TransformAdd(plane.tr, Transform(Vec(0,3,0))))
+                SetBodyVelocity(plane.vel, Vec(0,0,0))
+            end
+
+            if InputDown("f4") then
+                SetBodyTransform(plane.body, Transform(plane.tr.pos, Quat()))
+                SetBodyAngularVelocity(plane.body, Vec())
+            end
+
+
 
             if InputPressed("v") then
                 plane.engineOn = not plane.engineOn
@@ -95,6 +106,10 @@ function PLANES_Tick()
 
                 if GetBool('savegame.mod.debugMode') then
                     plane_Debug(plane)
+                end
+
+                if InputPressed("g") then
+                    plane.landing_gear.isDown = not plane.landing_gear.isDown
                 end
 
                 if SelectedCamera ~= CameraPositions[2] then

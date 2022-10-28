@@ -4,6 +4,7 @@ function draw()
     UiTextShadow(0,0,0, 1, 0.3, 0)
     UiFont("bold.ttf", 24)
 
+    draw_debug_landing_gear()
 
     local uiW = 600
     local uiH = 650

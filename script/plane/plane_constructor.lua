@@ -26,7 +26,6 @@ function createPlaneObject(ID)
             health = 1,
             isAlive = true,
             engineOn = true,
-
             flaps = false,
 
         -- const values
@@ -84,6 +83,11 @@ function createPlaneObject(ID)
             camBack = 20,
             camUp = 8,
             camPitch = -7,
+
+        landing_gear = {
+            isDown = true,
+            rate = 1,
+        }
 
     }
 
