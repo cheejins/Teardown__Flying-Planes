@@ -1,26 +1,36 @@
 AI_PLANES = {}
 AI_PLANES_NOTSET = {}
 
-
 local flightPath = {}
-for i = 1, math.random(5,7) do
-    table.insert(flightPath, AutoVecSubsituteY(VecRandom(1000), math.random(400,700)))
+
+
+function aiplanes_CreateFlightpaths()
+
+    local radius = 1000
+    local heightRange = {400,700}
+
+    -- Initial flight pos.
+    table.insert(flightPath, AutoVecSubsituteY(VecRandom(1000), math.random(heightRange[1], heightRange[2])))
+
+    for i = 1, 4 do
+
+        local pos = AutoVecSubsituteY(VecRandom(1000), math.random(heightRange[1], heightRange[2]))
+
+        local tries = 0
+        while VecDist(flightPath[#flightPath], pos) < (radius / 4) or (tries > 5) do
+            pos = AutoVecSubsituteY(VecRandom(1000), math.random(400,700))
+            tries = tries + 1
+        end
+
+        table.insert(flightPath, pos)
+
+    end
+
 end
 
 
-
-function aiplane_BuildAiPlane(plane)
-
-    plane.ai = {
-        flight = {
-            target_reached_dist = 100,
-            targetPos = GetRandomIndex(flightPath)
-        },
-        sound_distant = GetRandomIndexValue(loops.jets_distant)
-    }
-
-    SetBodyVelocity(plane.body, VecScale(DirLookAt(plane.tr.pos, flightPath[plane.ai.flight.targetPos]), 100))
-
+function Init_aiplanes()
+    aiplanes_CreateFlightpaths()
 end
 
 
@@ -40,17 +50,13 @@ function Tick_aiplanes()
         end
     end
 
-    for i = alivePlanes, 3 do
-        local pos = AutoVecSubsituteY(VecRandom(800), math.random(400,600))
-        local tr = Transform(pos)
-        aiplane_SpawnPlane(tr)
+    if Config.spawn_aiplanes then
+        for i = alivePlanes, 3 do
+            local pos = AutoVecSubsituteY(VecRandom(800), math.random(400,600))
+            local tr = Transform(pos)
+            aiplane_SpawnPlane(tr)
+        end
     end
-
-    -- if InputPressed("f5") then
-    --     local pos = Vec(0, 300, 0)
-    --     local tr = Transform(pos)
-    --     aiplane_SpawnPlane(tr)
-    -- end
 
     for _, plane in ipairs(AI_PLANES) do
         if IsPointInWater(plane.tr.pos) then
@@ -65,79 +71,48 @@ function Tick_aiplanes()
 end
 
 
-function aiplane_sound(plane)
 
-    local velVol = CompressRange(plane.totalVel, 0, plane.topSpeed)
-    PlayLoop(plane.ai.sound_distant, plane.tr.pos, 1000 * velVol)
+function aiplane_SpawnPlane(tr)
 
-end
+    local planes = {
+        "MOD/prefab/Mig29.xml",
+        "MOD/prefab/F15.xml",
+        "MOD/prefab/A10.xml",
+        "MOD/prefab/AC130.xml",
+    }
 
+    local entities = Spawn(GetRandomIndexValue(planes), tr)
 
-function aiplane_flyto(plane, pos)
-
-    plane.thrust = 70
-    DriveVehicle(plane.vehicle, 0, 0, false)
-
-    local rot = QuatLookAt(plane.tr.pos, pos)
-
-    plane_Steer_Simple(plane, rot, true)
-
-    if VecDist(plane.tr.pos, flightPath[plane.ai.flight.targetPos]) < plane.ai.flight.target_reached_dist then
-        aiplane_nextFlightTarget(plane)
-    -- else
-        -- print("Heading to", plane.ai.flight.targetPos)
-    end
-    DebugLine(plane.tr.pos, pos, 0,1,0, 1)
-
-end
-
-
-function DrawFlightPaths()
-
-    for _, plane in ipairs(AI_PLANES) do
-        UiPush()
-
-            UiAlign("center middle")
-
-            UiColor(0,0,0, 0.5)
-            if plane.isAlive then
-                UiColor(1,0,0, 1)
-            end
-
-
-            if IsInfrontOfTr(GetCameraTransform(), plane.tr.pos) then
-                local x,y = UiWorldToPixel(plane.tr.pos)
-                UiTranslate(x,y)
-                UiImageBox("ui/common/box-outline-6.png", 50,50, 10,10)
-            end
-
-        UiPop()
-    end
-
-    for _, pos in ipairs(flightPath) do
-        DrawDot(pos, 25,25, 0,1,0, 1)
-    end
-
-end
-
-
-
-function aiplane_nextFlightTarget(plane)
-
-    print("next fucking target")
-
-    for index, _ in ipairs(flightPath) do
-        if plane.ai.flight.targetPos == index then
-            plane.ai.flight.targetPos = GetTableNextIndex(flightPath, index)
-            print("changed to next fucking target")
-            break
+    local id = nil
+    for _, entity in ipairs(entities) do
+        if GetEntityType(entity) == "vehicle" then
+            id = GetTagValue(entity, "Plane_ID")
         end
     end
 
+    aiplane = {}
+    aiplane.id = id
+    aiplane.ai_plane_set = false
+
+    table.insert(AI_PLANES_NOTSET, aiplane)
+
+    return id
+
 end
 
+function aiplane_BuildAiPlane(plane)
 
+    plane.ai = {
+        flight = {
+            target_reached_dist = 100,
+            targetPos = GetRandomIndex(flightPath)
+        },
+        sound_distant = GetRandomIndexValue(loops.jets_distant)
+    }
 
+    SetBodyVelocity(plane.body, VecScale(DirLookAt(plane.tr.pos, flightPath[plane.ai.flight.targetPos]), 100))
+
+end
 
 -- Assigns the plane the tick after it is spawned.
 function aiplane_AssignPlanes()
@@ -168,30 +143,89 @@ function aiplane_AssignPlanes()
 end
 
 
-function aiplane_SpawnPlane(tr)
 
-    local planes = {
-        "MOD/prefab/Mig29.xml",
-        "MOD/prefab/F15.xml",
-        "MOD/prefab/A10.xml",
-        "MOD/prefab/AC130.xml",
-    }
+function aiplane_sound(plane)
 
-    local entities = Spawn(GetRandomIndexValue(planes), tr)
+    local velVol = CompressRange(plane.totalVel, 0, plane.topSpeed)
+    PlayLoop(plane.ai.sound_distant, plane.tr.pos, 1000 * velVol)
 
-    local id = nil
-    for _, entity in ipairs(entities) do
-        if GetEntityType(entity) == "vehicle" then
-            id = GetTagValue(entity, "Plane_ID")
+end
+
+function aiplane_flyto(plane, pos)
+
+    plane.thrust = 70
+    DriveVehicle(plane.vehicle, 0, 0, false)
+
+    local rot = QuatLookAt(plane.tr.pos, pos)
+
+    plane_Steer_Simple(plane, rot, true)
+
+    if VecDist(plane.tr.pos, flightPath[plane.ai.flight.targetPos]) < plane.ai.flight.target_reached_dist then
+        aiplane_nextFlightTarget(plane)
+    -- else
+        -- print("Heading to", plane.ai.flight.targetPos)
+    end
+    DebugLine(plane.tr.pos, pos, 0,1,0, 1)
+
+end
+
+function aiplane_nextFlightTarget(plane)
+
+    for index, _ in ipairs(flightPath) do
+        if plane.ai.flight.targetPos == index then
+            plane.ai.flight.targetPos = GetTableNextIndex(flightPath, index)
+            break
         end
     end
 
-    aiplane = {}
-    aiplane.id = id
-    aiplane.ai_plane_set = false
+end
 
-    table.insert(AI_PLANES_NOTSET, aiplane)
 
-    return id
+
+function DrawFlightPaths()
+
+    for _, plane in ipairs(AI_PLANES) do
+        UiPush()
+
+            UiAlign("center middle")
+
+            UiColor(0,0,0, 0.5)
+            if plane.isAlive then
+                UiColor(1,0,0, 1)
+            end
+
+            if IsInfrontOfTr(GetCameraTransform(), plane.tr.pos) then
+                local x,y = UiWorldToPixel(plane.tr.pos)
+                UiTranslate(x,y)
+                UiImageBox("ui/common/box-outline-6.png", 50,50, 10,10)
+                UiTranslate(0, 30)
+                UiFont("regular.ttf", 24)
+                UiAlign("center top")
+                UiText(string.upper(plane.model))
+            end
+
+        UiPop()
+    end
+
+    for index, pos in ipairs(flightPath) do
+        UiPush()
+
+            DrawDot(pos, 30,30, 0,1,0, 1)
+
+            if IsInfrontOfTr(GetCameraTransform(), pos) then
+
+                UiFont("bold.ttf", 24)
+                UiAlign("center middle")
+                UiTextShadow(0,0,0, 1, 0.2,0.2)
+                UiColor(1,1,1, 1)
+
+                local x,y = UiWorldToPixel(pos)
+                UiTranslate(x,y)
+                UiText(index)
+
+            end
+
+        UiPop()
+    end
 
 end

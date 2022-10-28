@@ -43,6 +43,7 @@ function init()
 
 
     PLANES_Init()
+    Init_aiplanes()
     Init_Config()
     initSounds()
     initProjectiles()

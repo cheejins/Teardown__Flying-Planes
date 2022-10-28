@@ -1,7 +1,5 @@
 local versions = {
-    1,
-    2,
-    3,
+    1,2,3,4,
 }
 
 
@@ -35,6 +33,7 @@ function Init_Config()
         debug           = { "boolean", false },
 
         sounds_stall_warning = { "boolean", true },
+        spawn_aiplanes = { "boolean", true },
 
     })
 

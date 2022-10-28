@@ -110,7 +110,10 @@ function draw()
         DrawPlaneIDs()
     end
 
-    DrawFlightPaths()
+
+    if Config.spawn_aiplanes then
+        DrawFlightPaths()
+    end
 
 end
 
@@ -311,7 +314,7 @@ function planeDrawHud(plane, uiW, uiH)
                     UiImageBox("MOD/img/hud_stall.png", w, h, 1,1)
 
                     if Config.sounds_stall_warning then
-                        PlayLoop(sounds.loop_stall_warning, GetCameraTransform().pos, 1/5)
+                        PlayLoop(sounds.loop_stall_warning, GetCameraTransform().pos, 1/4)
                     end
 
                 end
