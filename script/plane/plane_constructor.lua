@@ -9,7 +9,7 @@ function createPlaneObject(ID)
     for index, v in ipairs(FindVehicles("Plane_ID", true)) do
         if GetTagValue(v, "Plane_ID") == ID then
             _vehicle = v
-            print("found plane ", ID)
+            -- print("found plane ", ID)
             break
         end
     end

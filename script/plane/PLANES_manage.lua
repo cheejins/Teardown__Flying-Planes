@@ -46,14 +46,9 @@ function PLANES_Tick()
                 SetBodyAngularVelocity(plane.body, Vec(0,0,0))
             end
 
-            -- if InputPressed("f2") then
-            --     SetBodyTransform(plane.body, Transform(Vec(0,300,0)))
-            --     SetBodyAngularVelocity(plane.body, Vec(0,0,0))
-            -- end
-
-            -- if InputPressed("f3") then
-            --     SetBodyVelocity(plane.body, Vec(0,0,-100))
-            -- end
+            if InputPressed("f2") then
+                SetBodyDynamic(plane.body, not IsBodyDynamic(plane.body))
+            end
 
 
             if InputPressed("v") then

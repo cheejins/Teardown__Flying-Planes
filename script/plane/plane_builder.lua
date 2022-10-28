@@ -11,6 +11,14 @@
         -- Each joint should have a light entity placed at the same position as it in the shape. Since the API doesn't allow you to get the transform of joints,
         -- the lights will supplement their transforms so the script knows where to angle the part from.
 
+-- LANDING GEAR
+
+    -- Each landing gear compound is a vehicle (required to use a wheel). It's parts are:
+        -- body = holds the wheel entity and the single landing gear shape.
+        -- shape = within the body and holds the light entity, similar to the aero parts. Only one shape is allowed and must contain the pivot light.
+        -- light = has the tag "pivot" with a value that represents the total degrees the landing gear contracts/expands. Example: pivot=90.
+
+
 
 PlaneParts = {
 
@@ -21,9 +29,11 @@ PlaneParts = {
         flap = {},
     },
 
-    -- system = {
-    --     engine = {}
-    -- }
+    landing_gear = {},
+
+    systems = {
+        engines = {}
+    }
 
 }
 
@@ -67,14 +77,15 @@ function plane_CollectParts_Aero(plane)
     local planeParts = DeepCopy(PlaneParts)
 
 
-    AllVehicles  = FindVehicles("Plane_ID", true)
-    AllBodies    = FindBodies("Plane_ID", true)
-    AllShapes    = FindShapes("Plane_ID", true)
-    AllLights    = FindLights("Plane_ID", true)
-    AllLocations = FindLocations("Plane_ID", true)
-    AllTriggers  = FindTriggers("Plane_ID", true)
+    local AllVehicles  = FindVehicles("Plane_ID", true)
+    local AllBodies    = FindBodies("Plane_ID", true)
+    local AllShapes    = FindShapes("Plane_ID", true)
+    local AllLights    = FindLights("Plane_ID", true)
+    local AllLocations = FindLocations("Plane_ID", true)
+    local AllTriggers  = FindTriggers("Plane_ID", true)
 
 
+    -- Aero parts
     for _, shape in ipairs(AllShapes) do
 
         for part_category_name, part_category_table in pairs(planeParts) do
@@ -95,6 +106,42 @@ function plane_CollectParts_Aero(plane)
         end
 
     end
+
+
+    -- Landing gear
+    for index, vehicle in ipairs(AllVehicles) do
+
+        local isLandingGear = HasTag(vehicle, "landing_gear")
+        local isSamePlane = GetTagValue(vehicle, "Plane_ID") == plane.id
+
+        if isLandingGear and isSamePlane then -- Find landing_gear vehicle entities.
+
+            local body = GetVehicleBody(vehicle)
+            local shape = GetBodyShapes(body)[1]
+            local light = GetShapeLights(shape)[1]
+
+            if HasTag(light, "pivot") then -- Find pivot light in landing_gear vehicle.
+
+                if vehicle == vehicle then
+
+                    local gear = {
+                        light = light,
+                        shape = shape,
+                        body = body,
+                        vehicle = vehicle,
+                        angle = GetTagValue(light, "pivot"),
+                        localTr = TransformToLocalTransform(plane.tr, GetLightTransform(light)),
+                    }
+
+                    table.insert(planeParts.landing_gear, gear)
+
+                end
+
+            end
+
+        end
+    end
+
 
     return planeParts
 
