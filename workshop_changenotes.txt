@@ -1,3 +1,8 @@
+2022.10.29
+> Added landing gear animation (landing gear is not functional yet)
+> Fixed targetting system.
+
+
 2022.10.27
 > Added AI planes (no combat yet, just planes that follow basic flight paths).
 > Added sounds for distant flying planes.
