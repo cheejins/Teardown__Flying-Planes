@@ -29,19 +29,12 @@ function aiplanes_CreateFlightpaths()
 end
 
 
-function Init_aiplanes()
+function Init_AIPLANES()
     aiplanes_CreateFlightpaths()
 end
 
 
 function Tick_aiplanes()
-
-    for index, body in ipairs(FindBodies("", true)) do
-        if IsPointInWater(GetBodyTransform(body).pos) then
-            SetBodyActive(body, false)
-            SetBodyDynamic(body, false)
-        end
-    end
 
     local alivePlanes = 1
     for index, plane in ipairs(AI_PLANES) do
@@ -60,6 +53,7 @@ function Tick_aiplanes()
 
     for _, plane in ipairs(AI_PLANES) do
         if IsPointInWater(plane.tr.pos) then
+            plane.isAlive = false
             plane.isAlive = false
         end
         if plane.isAlive then
@@ -182,7 +176,7 @@ end
 
 
 
-function DrawFlightPaths()
+function Draw_AiplanesFlightPaths()
 
     for _, plane in ipairs(AI_PLANES) do
         UiPush()

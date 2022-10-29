@@ -1,6 +1,6 @@
 Projectiles = {}
 
-function initProjectiles()
+function Init_Projectiles()
 
     ProjectilePresets = {
 

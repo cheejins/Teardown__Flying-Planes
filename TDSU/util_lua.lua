@@ -95,7 +95,14 @@ do
 
     function sfnPadZeroes(n, pad) return string.format('%0' .. tostring(pad or 2) .. 'd', n) end
 
-    function ternary ( cond , T , F ) if cond then return T else return F end end
+    function Ternary ( cond , T , F ) if cond then return T else return F end end
+
+    -- Conditionally run function.
+    function CondFunc(condition, func, tb_args)
+        if condition then
+            func(unpack(tb_args))
+        end
+    end
 
     ---A helper function to print a table's contents.
     ---@param tbl table @The table to print.

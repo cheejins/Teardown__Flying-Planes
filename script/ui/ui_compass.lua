@@ -135,7 +135,7 @@ end
 
 function drawGyroValue(sign, val, width, w, y, drawText, lineH)
 
-    local text = ternary(val == 0, 0, -sign * val)
+    local text = Ternary(val == 0, 0, -sign * val)
 
     do UiPush()
 

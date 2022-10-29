@@ -31,14 +31,14 @@ end
 function ToggleDb()
     SetBool('savegame.mod.debugMode', not GetBool('savegame.mod.debugMode'))
     db = GetBool('savegame.mod.debugMode')
-    print("db mode: " .. ternary(db, 'on\t', 'off\t') .. sfnTime())
+    print("db mode: " .. Ternary(db, 'on\t', 'off\t') .. sfnTime())
     -- ternary(db, beepOn, beepOff)()
 end
 
 function ToggleDB()
     SetBool('savegame.mod.debugModeMaster', not GetBool('savegame.mod.debugModeMaster'))
     DB = GetBool('savegame.mod.debugModeMaster')
-    print("DB mode: " .. ternary(DB, 'on\t', 'off\t') .. sfnTime())
+    print("DB mode: " .. Ternary(DB, 'on\t', 'off\t') .. sfnTime())
     -- ternary(DB, beepOn, beepOff)()
 end
 
@@ -52,7 +52,7 @@ function dbfunc(func, tb_args) if db then func(table.unpack(tb_args)) end end
 --[[DEBUG CONSOLE]]
 function dbw(str, value) if db then DebugWatch(str, value) end end -- DebugWatch()
 function dbp(str) if db then print(str .. '(' .. sfnTime() .. ')') end end -- DebugPrint()
-function dbpc(str, newLine) if db then print(str .. ternary(newLine, '\n', '')) end end -- DebugPrint() to external console window only.
+function dbpc(str, newLine) if db then print(str .. Ternary(newLine, '\n', '')) end end -- DebugPrint() to external console window only.
 function dbpt(tb) if db then PrintTable(tb) end end -- PrintTable() to external console window.
 
 

@@ -37,7 +37,7 @@ function uiTextField(w, h, tb, key)
 
         if activeNameAssignment and activeTable.tb == tb and activeTable.key == key then
             local time = math.floor(GetTime())
-            local flash = ternary(GetTime() - time > 0.5, '', '_')
+            local flash = Ternary(GetTime() - time > 0.5, '', '_')
             lab = lab..flash
         end
 
@@ -87,7 +87,7 @@ function uiNumberField(w, h, tb, key)
 
         if activeNameAssignment and activeTable.tb == tb and activeTable.key == key then
             local time = math.floor(GetTime())
-            local flash = ternary(GetTime() - time > 0.5, '', '_')
+            local flash = Ternary(GetTime() - time > 0.5, '', '_')
             lab = lab..flash
         end
 
@@ -135,7 +135,7 @@ function Ui_Option_Keybind(w, h, marginX, title, label, tb, key)
         UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
         UiButtonHoverColor(0.5,0.5,1,1)
 
-        local lab = ternary(isActiveTableKey(tb, key), 'Press key...', label) -- If active assignment key, then show "Press key" label
+        local lab = Ternary(isActiveTableKey(tb, key), 'Press key...', label) -- If active assignment key, then show "Press key" label
 
         if UiTextButton(string.upper(lab), w_key,h) then
             if not activeAssignment then

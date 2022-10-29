@@ -44,17 +44,16 @@ function init()
 
     Init_Utils()
 
-
-    PLANES_Init()
-    Init_aiplanes()
+    Init_PLANES()
+    Init_AIPLANES()
     Init_Config()
-    initSounds()
-    initProjectiles()
-    InitEnemies()
+    Init_Sounds()
+    Init_Projectiles()
+    Init_Enemies()
 
     SelectedCamera = CameraPositions[1]
 
-    SetString("hud.notification", "Note: The F-15 is still in developemt and is slightly unstable.")
+    SetString("hud.notification", "Note: The F-15 landing gear system is still in development.")
 
 end
 
@@ -81,7 +80,7 @@ function tick()
 
 
     -- Root of plane management.
-    PLANES_Tick()
+    Tick_PLANES()
 
     Tick_aiplanes()
     Manage_Spawning()
@@ -98,10 +97,24 @@ function tick()
         SetBool("level.enemies_disabled", not GetBool("level.enemies_disabled"))
     end
 
+    for index, shape in ipairs(FindShapes("sometag", true)) do
+        DrawShapeOutline(shape, 1,1,1, 1)
+    end
+
 end
 
 function update()
-    PLANES_Update()
+    Update_PLANES()
+end
+
+function draw()
+
+    UiColor(1,1,1, 1)
+    UiTextShadow(0,0,0, 1, 0.3, 0)
+    UiFont("bold.ttf", 24)
+
+    Draw_PLANES()
+
 end
 
 
@@ -143,14 +156,3 @@ function HandleQuickload(cmd)
     end
 end
 
-
-function VehicleIsPlane(vehicle)
-    return PLANES_VEHICLES[vehicle] ~= nil
-end
-
-function VehicleIsAlivePlane(vehicle)
-    if VehicleIsPlane(vehicle) then
-        return GetVehicleHealth(vehicle) >= PLANE_DEAD_HEALTH
-    end
-    return false
-end

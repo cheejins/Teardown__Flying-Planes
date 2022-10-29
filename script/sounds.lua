@@ -1,4 +1,4 @@
-function initSounds()
+function Init_Sounds()
     sounds = {
 
         bullet = LoadSound("chopper-shoot0"),

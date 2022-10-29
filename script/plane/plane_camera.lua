@@ -29,7 +29,7 @@ function plane_ManageCamera(plane, auto_center_delay)
 	plane.camera.cameraY = plane.camera.cameraY - my / 10
 	plane.camera.cameraZ = plane.camera.cameraZ or 0
 
-    if FlightMode == FlightModes.simple then
+    if IsSimpleFlight() then
         plane.camera.cameraY = clamp(plane.camera.cameraY, -89, 89)
     end
 
@@ -68,7 +68,7 @@ function plane_ManageCamera(plane, auto_center_delay)
 	local cameraPos = TransformToParentPoint(cameraT, Vec(0, camH, plane.camera.zoom))
 	local camera = Transform(VecLerp(cameraPos, GetCameraTransform().pos, 0.5), cameraRot)
 
-    local zoomFOV = ternary(InputDown("mmb"), 45 , nil)
+    local zoomFOV = Ternary(InputDown("mmb"), 45 , nil)
 
 
 	SetCameraTransform(camera, zoomFOV)
@@ -109,7 +109,7 @@ function plane_ChangeCamera()
     end
 
     -- Simple mode cannot use aligned camera since steering depends on camera rotation.
-    if SelectedCamera == "Aligned" and FlightMode == FlightModes.simple then
+    if SelectedCamera == "Aligned" and IsSimpleFlight() then
         plane_ChangeCamera()
     end
 

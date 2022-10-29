@@ -78,7 +78,7 @@ function createSlider(tb, key, title, valueText, min, max, w, h, fs)
         do UiPush()
             UiAlign('left middle')
             UiTranslate(slW + 20, 0)
-            local decimals = ternary((v/slW) * (max-min) + min < 10, 3, 1)
+            local decimals = Ternary((v/slW) * (max-min) + min < 10, 3, 1)
             UiText(sfn((v/slW) * (max-min) + min, decimals) .. ' ' .. (valueText or ''))
         UiPop() end
 

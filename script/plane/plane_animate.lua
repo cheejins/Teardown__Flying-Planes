@@ -155,7 +155,7 @@ function plane_Animate_AeroParts(plane, ignore_input)
                 local phase = TimerGetPhase(plane.landing_gear.retract_timer)
 
                 -- Which way to rotate the landing gear.
-                local angle = ternary(
+                local angle = Ternary(
                     plane.landing_gear.isDown,
                     -gear.angle * (1 - phase),
                     -gear.angle * phase)
@@ -232,39 +232,6 @@ function plane_Animate_AeroParts(plane, ignore_input)
         end
 
     end
-
-end
-
-function draw_debug_landing_gear()
-
-    UiPush()
-
-        if InputDown("b") then
-
-            UiMakeInteractive()
-
-            local fs = 32
-            UiTranslate(UiCenter()/2, UiMiddle()/2)
-            AutoContainer(UiCenter(), UiMiddle())
-
-            AutoText("v = " .. s1, 24)
-            UiTranslate(0, fs)
-            s1 = AutoSlider(s1, 0, 20, 0.1)
-            UiTranslate(0, fs)
-
-            AutoText("f = " .. s2, 24)
-            UiTranslate(0, fs)
-            s2 = AutoSlider(s2, 0, 20, 0.1)
-            UiTranslate(0, fs)
-
-            AutoText("f = " .. s3, 24)
-            UiTranslate(0, fs)
-            s3 = AutoSlider(s3, 0, 20, 0.1)
-            UiTranslate(0, fs)
-
-        end
-
-    UiPop()
 
 end
 
