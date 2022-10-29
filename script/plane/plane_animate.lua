@@ -129,7 +129,6 @@ function plane_Animate_AeroParts(plane, ignore_input)
     end
 
 
-
     local gearTimer = plane.landing_gear.retract_timer
     -- Check whether to initiate landing gear transition.
     if plane.landing_gear.startTransition then
@@ -144,7 +143,7 @@ function plane_Animate_AeroParts(plane, ignore_input)
 
         if IsHandleValid(gear.vehicle) and IsHandleValid(gear.shape) then
 
-            -- DriveVehicle(gear.vehicle, 1,0, false)
+            DriveVehicle(gear.vehicle, 0, 0, false)
 
             local parentTr = TransformToParentTransform(plane.tr, gear.localTr) -- Tr on plane body.
             local pivot_tr = GetLightTransform(gear.light)

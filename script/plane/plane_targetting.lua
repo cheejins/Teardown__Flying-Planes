@@ -5,11 +5,13 @@ function plane_ManageTargetting(plane)
     plane.targetting.targetVehicles = {} -- Reset each tick.
 
     for key, vehicle in pairs(AllVehicles) do -- All vehicles in scene.
-        if vehicle ~= plane.vehicle then
+        if vehicle ~= plane.vehicle and GetVehicleHealth(vehicle) > 0 then
 
-            if VehicleIsPlane(plane.targetting.target) and VehicleIsAlivePlane(vehicle) then -- Alive plane
+            if VehicleIsPlane(vehicle) then -- Alive planes
 
-                table.insert(plane.targetting.targetVehicles, vehicle)
+                if VehicleIsAlivePlane(vehicle) then
+                    table.insert(plane.targetting.targetVehicles, vehicle)
+                end
 
             elseif not HasTag(vehicle, "landing_gear") then -- Valid vehicle.
 
@@ -93,14 +95,19 @@ function plane_CheckTargetLocked(plane)
         local ang = QuatAngle(planeRot, targetDir)
         if ang < 30 and VecDist(planeTr.pos, targetTr.pos) < 800 then -- Target in bounds.
 
-            if plane.targetting.lock.timer.time <= 0 then -- Target locked.
+            if TimerConsumed(plane.targetting.lock.timer) then -- Target locked.
+
                 plane.targetting.lock.locked = true
                 plane.targetting.lock.locking = false
-                plane.targetting.targetShape = GetBodyShapes((GetVehicleBody(plane.targetting.target)))[1]
+                local shapes = GetBodyShapes((GetVehicleBody(plane.targetting.target)))
+                plane.targetting.targetShape = shapes[GetRandomIndex(shapes)]
+
             else
+
                 plane.targetting.lock.locking = true -- Target still locking.
-                TimerRunTime(plane.targetting.lock.timer)
                 plane.targetting.targetShape = nil
+                TimerRunTime(plane.targetting.lock.timer)
+
             end
 
         else
@@ -109,12 +116,16 @@ function plane_CheckTargetLocked(plane)
 
             plane.targetting.lock.locking = false
             plane.targetting.lock.locked = false
+            plane.targetting.targetShape = nil
+
 
         end
         dbw('Target timer', plane.targetting.lock.timer.time)
     else
         plane.targetting.lock.locked = false
         plane.targetting.lock.locking = false
+        plane.targetting.targetShape = nil
+        TimerResetTime(plane.targetting.lock.timer)
     end
 
 end
@@ -125,9 +136,7 @@ function plane_draw_Targetting(plane)
 
         -- Draw targets.
         for key, vehicle in pairs(plane.targetting.targetVehicles) do
-            if vehicle ~= plane.targetting.target
-            and not (VehicleIsPlane(vehicle) and not VehicleIsAlivePlane(vehicle))
-            then
+            if vehicle ~= plane.targetting.target then
                 plane_draw_Target(plane, vehicle) -- Draw all targets except selected target.
             end
         end
@@ -162,6 +171,7 @@ function plane_draw_Target(plane, vehicle)
                     local distToTarget = VecDist(plane.tr.pos, vehiclePos)/1000
                     UiText(sfn(distToTarget) .. ' KM')
                 UiPop()
+
 
                 local c = Oscillate(0.9)
                 if plane.targetting.lock.locked then

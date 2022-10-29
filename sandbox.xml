@@ -11,9 +11,9 @@
 		<instance pos="167.50002 0.7 163.60001" rot="0.0 0.0 0.0" file="MOD/prefab/Jet.xml"/>
 		<instance pos="128.99998 0.5 156.2" rot="0.0 0.0 0.0" file="MOD/prefab/AC130.xml"/>
 		<script pos="0.0" file="MOD/script/starting_plane.lua">
-			<group name="instance=MOD/prefab/F15.xml" pos="82.2 7.7 174.20001" rot="0.0 0.0 0.0">
-				<script pos="0.0 2.0 0.1" file="MOD/prefab/checkScript.lua">
-					<vehicle name="F15" tags="planeVehicle planeModel=f15 planeType=jet" pos="0.0 0.0 -0.2" rot="0.0 0.0 0.0" driven="false" sound="default" spring="0.75" damping="1" topspeed="0" acceleration="0" strength="0" antispin="0" antiroll="0" difflock="0" steerassist="0" friction="2">
+			<group name="instance=MOD/prefab/F15.xml" pos="82.2 2.4 174.2" rot="0.0 0.0 0.0">
+				<script pos="0.0 0.0 0.0" file="MOD/prefab/checkScript.lua">
+					<vehicle name="F15" tags="planeVehicle planeModel=f15 planeType=jet" pos="0.0 0.0 0.0" rot="0.0 0.0 0.0" driven="false" sound="default" spring="0.5" damping="0.5" topspeed="0" acceleration="0" strength="0" antispin="0" antiroll="0" difflock="0" steerassist="0" friction="2">
 						<body tags="planeBody" pos="-0.2 0.6 -1.3" rot="0.0 0.0 0.0" dynamic="true">
 							<group name="parts_main" pos="0.2 -0.4 1.6">
 								<vox tags="fuselage" pos="-0.2 -1.4 -0.8" texture="14" density="1.25" strength="2" file="MOD/prefab/F15.vox" object="fuselage">
@@ -32,6 +32,15 @@
 							</group>
 							<group name="parts_wheels" pos="0.2 -2.1 -0.3"/>
 							<group name="parts_weapons" pos="0.2 -0.5 5.8"/>
+							<wheel name="wl_c" pos="1.65 -2.0 3.2" drive="0" steer="0" travel="-0.4 0.4">
+								<vox tags="delete" pos="0.0 -0.4 0.0" texture="14" file="MOD/prefab/F15.vox" object="wheel_rear"/>
+							</wheel>
+							<wheel name="wl_c" pos="-1.55 -2.0 3.2" drive="0" steer="0" travel="-0.4 0.4">
+								<vox tags="delete" pos="0.0 -0.4 0.0" texture="14" file="MOD/prefab/F15.vox" object="wheel_rear"/>
+							</wheel>
+							<wheel name="wl_c" tags="delete" pos="-0.05 -2.15 -3.1" drive="0" steer="0" travel="-0.4 0.4">
+								<vox tags="delete" pos="-0.05 -0.35 0.05" texture="14" file="MOD/prefab/F15.vox" object="wheel_front"/>
+							</wheel>
 						</body>
 					</vehicle>
 					<group name="Aero Parts" pos="-0.2 0.2 6.5">
@@ -92,34 +101,34 @@
 					</group>
 					<group name="Landing Gear">
 						<vehicle name="landing_gear_left" tags="landing_gear" pos="-1.1 -0.3 1.7" spring="0" damping="0" topspeed="0" acceleration="0" strength="0" antispin="0" friction="0">
-							<body pos="-0.6 -1.5 0.0" dynamic="true">
-								<wheel name="wl_c" pos="-0.05 0.4 0.0" drive="0" steer="0" travel="-0.4 0.4">
-									<vox pos="0.0 -0.4 0.0" texture="14" file="MOD/prefab/F15.vox" object="wheel_rear"/>
+							<body pos="-0.6 -1.4 0.0" dynamic="true">
+								<wheel name="wl_c" pos="-0.05 0.3 0.0" drive="0" steer="0" travel="-0.4 0">
+									<vox pos="0.0 -0.4 0.0" texture="14" density="0.0001" file="MOD/prefab/F15.vox" object="wheel_rear"/>
 								</wheel>
-								<vox pos="0.4 0.4 0.0" texture="14" density="0.001" strength="2" file="MOD/prefab/F15.vox" object="gear_left">
-									<location tags="player" pos="0.0 10.0 0.0" rot="0.0 0.0 0.0"/>
+								<vox pos="0.4 0.3 0.0" texture="14" density="0.0001" strength="2" file="MOD/prefab/F15.vox" object="gear_left">
+									<location tags="player" pos="0.0 100.0 0.0"/>
 									<light tags="pivot=90" pos="0.1 1.1 0.0" rot="0.0 60.0 0.0" type="cone" scale="0"/>
 								</vox>
 							</body>
 						</vehicle>
 						<vehicle name="landing_gear_center" tags="landing_gear" pos="-0.1 -0.2 -4.4" spring="0" damping="0" topspeed="0" acceleration="0" strength="0" antispin="0" friction="0">
 							<body pos="0.0 -1.7 -0.2" dynamic="true">
-								<vox pos="-0.1 0.7 -0.2" texture="14" density="0.001" strength="2" file="MOD/prefab/F15.vox" object="gear_center">
-									<location tags="player" pos="0.0 10.0 0.0" rot="0.0 0.0 0.0"/>
+								<vox pos="-0.1 0.7 -0.2" texture="14" density="0.0001" strength="2" file="MOD/prefab/F15.vox" object="gear_center">
+									<location tags="player" pos="0.0 100.0 0.0" rot="0.0 0.0 0.0"/>
 									<light tags="pivot=90" pos="0.05 1.0 0.4" rot="0.0 90.0 0.0" type="cone" scale="0"/>
 								</vox>
-								<wheel name="wl_c" pos="-0.05 0.35 0.0" drive="0" steer="0" travel="-0.4 0.4">
-									<vox pos="-0.05 -0.35 0.05" texture="14" file="MOD/prefab/F15.vox" object="wheel_front"/>
+								<wheel name="wl_c" pos="-0.05 0.35 0.0" drive="0" steer="0" travel="-0.4 0">
+									<vox pos="-0.05 -0.35 0.05" texture="14" density="0.0001" file="MOD/prefab/F15.vox" object="wheel_front"/>
 								</wheel>
 							</body>
 						</vehicle>
 						<vehicle name="landing_gear_left" tags="landing_gear" pos="0.8 -0.3 1.7" spring="0" damping="0" topspeed="0" acceleration="0" strength="0" antispin="0" friction="0">
-							<body pos="0.7 -1.5 0.0" dynamic="true">
-								<wheel name="wl_c" pos="-0.05 0.4 0.0" drive="0" steer="0" travel="-0.4 0.4">
-									<vox pos="0.0 -0.4 0.0" texture="14" file="MOD/prefab/F15.vox" object="wheel_rear"/>
+							<body pos="0.7 -1.4 0.0" dynamic="true">
+								<wheel name="wl_c" pos="-0.05 0.3 0.0" drive="0" steer="0" travel="-0.4 0">
+									<vox pos="0.0 -0.4 0.0" texture="14" density="0.0001" file="MOD/prefab/F15.vox" object="wheel_rear"/>
 								</wheel>
-								<vox pos="-0.6 0.4 0.0" texture="14" density="0.001" strength="2" file="MOD/prefab/F15.vox" object="gear_right">
-									<location tags="player" pos="0.0 10.0 0.0" rot="0.0 0.0 0.0"/>
+								<vox pos="-0.6 0.3 0.0" texture="14" density="0.0001" strength="2" file="MOD/prefab/F15.vox" object="gear_right">
+									<location tags="player" pos="0.0 100.0 0.0" rot="0.0 0.0 0.0"/>
 									<light tags="pivot=90" pos="0.0 1.1 0.0" rot="0.0 120.0 0.0" type="cone" scale="0"/>
 								</vox>
 							</body>
@@ -163,8 +172,5 @@
 	<instance pos="51.1 2.4 -796.20001" rot="0.0 0.0 0.0" file="MOD/prefab/AA Tanks/ZSU_SAM.xml"/>
 	<instance name="ZSU SAM" pos="-112.4 2.4 -742.09998" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
 	<instance name="ZSU SAM" pos="205.2 2.4 -732.0" rot="0.0 0.0 0.0" file="MOD/avf/prefabs/ZSU_23_4_SAM.xml"/>
-	<body pos="-46.9 1.2 116.5" dynamic="true">
-		<voxbox pos="-0.5 -0.5 -0.5" size="10 10 10"/>
-	</body>
 </scene>
 
