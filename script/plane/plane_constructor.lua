@@ -86,7 +86,9 @@ function createPlaneObject(ID)
 
         landing_gear = {
             isDown = true,
+            startTransition = false,
             rate = 1,
+            retract_timer = TimerCreateRPM(0, 60/3)
         }
 
     }
@@ -117,6 +119,7 @@ function createPlaneObject(ID)
 
     plane.targetting = {
         target = 0,
+        targetShape = nil,
         lock = {
             enabled = true,
             timer = {time = 60/1.2, rpm = 60/1.2},
@@ -151,15 +154,6 @@ function createPlaneObject(ID)
 
     -- plane_builder.lua
     plane.parts = plane_CollectParts_Aero(plane)
-
-
-    plane.allBodies = {}
-    local planeShapes = FindShapes("Plane_ID", true)
-    for index, shape in ipairs(planeShapes) do
-        if GetTagValue(shape, "Plane_ID") == plane.id then
-            table.insert(plane.allBodies, GetShapeBody(shape))
-        end
-    end
 
 
     SetTag(plane.vehicle, 'planeActive')

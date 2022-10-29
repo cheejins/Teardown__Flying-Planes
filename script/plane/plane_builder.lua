@@ -121,6 +121,7 @@ function plane_CollectParts_Aero(plane)
 
     end
 
+
     -- Landing gear
     for index, vehicle in ipairs(AllVehicles) do
 
@@ -153,6 +154,25 @@ function plane_CollectParts_Aero(plane)
 
             end
 
+        end
+    end
+
+
+    -- Find shapes to delete.
+    local deleteShapes = {}
+    for index, shape in ipairs(plane.AllShapes) do
+        if HasTag(shape, "delete") then
+            table.insert(deleteShapes, shape)
+            Delete(shape)
+        end
+    end
+    -- Safe delete shapes.
+    for _, deleteShape in ipairs(deleteShapes) do
+        for index, shape in ipairs(plane.AllShapes) do
+            if shape == deleteShape then
+                table.remove(plane.AllShapes, index)
+                break
+            end
         end
     end
 

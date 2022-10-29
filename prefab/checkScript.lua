@@ -53,7 +53,7 @@ function ApplyPlaneEntityIDs(ID)
     -- No intercollisions, but leave world collision on.
     for _, shape in ipairs(AllEntities.AllShapes) do
         -- if not GetShapeBody(shape) == GetWorldBody() then
-            SetShapeCollisionFilter(shape, 4, 1)
+            SetShapeCollisionFilter(shape, 2, 1)
         -- end
     end
 
@@ -64,6 +64,8 @@ function tick()
     -- for _, shape in ipairs(AllEntities.AllShapes) do
     --     DrawShapeOutline(shape, 1,0,1, 0.5)
     -- end
+
+    -- DrawBodyOutline(GetWorldBody(), 1,0,1, 0.5)
 end
 
 

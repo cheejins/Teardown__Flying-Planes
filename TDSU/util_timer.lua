@@ -1,15 +1,13 @@
-function TimerCreateSeconds(seconds, zeroStart)
-
-    local timer = { rpm = seconds }
-    if zeroStart then timer.time = 0 else timer.time = seconds end
-
-    return timer
-
-end
+-- function TimerCreateSeconds(seconds, time)
+--     time = time or 0
+--     local timer = { time = 60/time, rpm = 60/seconds }
+--     return timer
+-- end
 
 function TimerCreateRPM(time, rpm)
 
     local timer = { time = time or 0, rpm = rpm }
+
     return timer
 
 end
@@ -32,10 +30,8 @@ function TimerRunTimer(timer, funcs_and_args, runTime)
 end
 
 -- Only runs the timer countdown if there is time left.
-function TimerRunTime(timer, stopPoint)
-    if timer.time > (stopPoint or 0) then
-        timer.time = timer.time - GetTimeStep()
-    end
+function TimerRunTime(timer)
+    timer.time = timer.time - GetTimeStep()
 end
 
 -- Set time left to 0.
@@ -50,4 +46,9 @@ end
 
 function TimerConsumed(timer)
     return timer.time <= 0
+end
+
+-- Get the timer's completion fraction between 0 and 1.0. Timer consumed = 1.
+function TimerGetPhase(timer)
+    return clamp(((60/timer.rpm) - timer.time) / (60/timer.rpm), 0, 1)
 end
