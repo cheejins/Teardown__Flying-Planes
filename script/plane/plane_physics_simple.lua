@@ -114,7 +114,7 @@ function plane_ApplyForces_Simple(plane)
 --[LIFT]
     -- Lift determined by AoA and speed
     local aoa = plane_old_GetPitchAoA(plane)
-    local speed = plane.speed
+    local speed = plane.speed or 1
 
     local liftSpeedInterval = plane.topSpeed/5 * CONFIG.smallMapMode.liftMult
     local liftSpeed = speed
@@ -165,8 +165,8 @@ function plane_ApplyForces_Simple(plane)
 -- [DRAG]
 
     -- fwdvel drag
-    local vel = GTZero(plane.totalVel)
-    local speed = GTZero(plane.speed)
+    local vel = GTZero(plane.totalVel) + 1
+    local speed = GTZero(plane.speed) + 1
 
     -- low fwd vel angle * speed = min drag
     local fwdDragAmt = (plane_GetForwardVelAngle_old(plane) * plane.speed+10) * vel/plane.topSpeed/2

@@ -50,6 +50,8 @@ function init()
     Init_Sounds()
     Init_Projectiles()
     Init_Enemies()
+    Manage_SmallMapMode()
+
 
     SelectedCamera = CameraPositions[1]
 
@@ -85,20 +87,15 @@ function tick()
     Tick_aiplanes()
     Manage_Spawning()
     aiplane_AssignPlanes()
-
     Manage_DebugMode()
+    Manage_SmallMapMode()
     Manage_ActiveProjectiles()
     Manage_Enemies()
-    Manage_SmallMapMode()
     plane_RunPropellers()
 
 
     if InputPressed("n") then
         SetBool("level.enemies_disabled", not GetBool("level.enemies_disabled"))
-    end
-
-    for index, shape in ipairs(FindShapes("sometag", true)) do
-        DrawShapeOutline(shape, 1,1,1, 1)
     end
 
 end

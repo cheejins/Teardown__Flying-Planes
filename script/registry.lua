@@ -39,30 +39,3 @@ function Init_Config()
     })
 
 end
-
-
-function Manage_SmallMapMode()
-
-    if Config.smallMapMode then
-
-        CONFIG = {
-            smallMapMode = {
-                turnMult = 1,
-                liftMult = 0.1,
-                dragMult = 2,
-            }
-        }
-
-    else
-
-        CONFIG = {
-            smallMapMode = {
-                turnMult = 1,
-                liftMult = 1,
-                dragMult = 1,
-            }
-        }
-
-    end
-
-end

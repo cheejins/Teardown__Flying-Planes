@@ -309,6 +309,19 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
     function IsSimulationFlight() return FlightMode == FlightModes.simulation end
     function IsSimpleFlight() return FlightMode == FlightModes.simple end
 
+    function Manage_SmallMapMode()
+
+        local smm = Config.smallMapMode
+
+        CONFIG = {
+            smallMapMode = {
+                turnMult = Ternary(smm, 1,   1),
+                liftMult = Ternary(smm, 0.1, 1),
+                dragMult = Ternary(smm, 2,   1),
+            }
+        }
+
+    end
 
 
 --Weapons

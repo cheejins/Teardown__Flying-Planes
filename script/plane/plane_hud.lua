@@ -138,20 +138,17 @@ function plane_draw_hud(plane, uiW, uiH)
     UiPop() end
 
 
-
-
+    -- hud STATUS
     do UiPush()
-        -- hud STATUS
         UiTranslate(960, 900)
         UiFont("bold.ttf", 24)
-        UiText("Camera: " .. SelectedCamera)
+        UiSplitText("Camera", SelectedCamera)
         UiTranslate(0, 30)
-        UiText("Landing Gear: " .. Ternary(plane.landing_gear.isDown, "DOWN", "UP"))
+        UiSplitText("Landing Gear", Ternary(plane.landing_gear.isDown, "DOWN", "UP"))
         UiTranslate(0, 30)
-        UiText('Homing Missiles: ' .. Ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
+        UiSplitText('Missile Homing', Ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
         UiTranslate(0, 30)
-        UiText("Status: " .. plane.status)
-
+        UiSplitText("Status", plane.status)
     UiPop() end
 
 

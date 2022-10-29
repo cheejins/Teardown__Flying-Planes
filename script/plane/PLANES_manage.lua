@@ -51,10 +51,8 @@ function Tick_PLANES()
                     plane_LandingGear(plane)
 
 
-
                     crosshairPos = GetCrosshairWorldPos(plane.AllBodies, plane.tr.pos)
                     dbdd(crosshairPos, 1, 1, 1, 0, 0, 1)
-
 
 
                     if not ShouldDrawIngameOptions then
