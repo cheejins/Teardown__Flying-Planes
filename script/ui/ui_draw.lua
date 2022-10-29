@@ -141,35 +141,38 @@ function Draw_ControlsSimple()
 end
 
 function Draw_MapCenter()
+    UiPush()
 
-    local pos = Vec(0,0,0)
-    local dist = VecDist(plane.tr.pos, pos)
-    local a = (dist / 800) - 0.6
+        local pos = Vec(0,0,0)
+        local dist = VecDist(plane.tr.pos, pos)
+        local a = (dist / 800) - 0.6
 
-    UiColor(0.7,0.7,0.7, a)
-    UiTextShadow(0,0,0, a)
-    UiFont("bold.ttf", 20)
+        UiColor(0.7,0.7,0.7, a)
+        UiTextShadow(0,0,0, a)
+        UiFont("bold.ttf", 20)
 
-    local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
-    if isInfront then
+        local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
+        if isInfront then
 
-        local x,y = UiWorldToPixel(pos)
+            local x,y = UiWorldToPixel(pos)
 
-        UiTranslate(x,y)
-        UiAlign("center middle")
-        UiImageBox("MOD/img/dot.png", 10, 10, 0,0)
+            UiTranslate(x,y)
+            UiAlign("center middle")
+            UiImageBox("MOD/img/dot.png", 10, 10, 0,0)
 
-        do UiPush()
-            UiTranslate(-15, 0)
-            UiAlign("right middle")
-            UiText('Map Center')
-        UiPop() end
+            do UiPush()
+                UiTranslate(-15, 0)
+                UiAlign("right middle")
+                UiText('Map Center')
+            UiPop() end
 
-        do UiPush()
-            UiTranslate(15, 0)
-            UiAlign("left middle")
-            UiText(sfn(dist, 0) .. ' m')
-        UiPop() end
+            do UiPush()
+                UiTranslate(15, 0)
+                UiAlign("left middle")
+                UiText(sfn(dist, 0) .. ' m')
+            UiPop() end
 
-    end
+        end
+
+    UiPop()
 end

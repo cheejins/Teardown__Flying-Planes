@@ -123,13 +123,13 @@
 		<instance pos="115.5 0.0 149.90002" rot="0.0 0.0 0.0" file="MOD/demo/prefab/humvee.xml"/>
 	</group>
 	<group name="Planes" pos="-70.2 0.0 -101.0">
-		<instance pos="105.7 0.2 136.5" rot="0 0 0" file="MOD/prefab/A10.xml"/>
+		<instance pos="105.7 0.4 136.5" rot="0 0 0" file="MOD/prefab/A10.xml"/>
 		<instance pos="160.3 0.7 3.60002" rot="0.0 90.0 0.0" file="MOD/prefab/Jet.xml"/>
 		<instance pos="141.29999 0.5 125.3" rot="0.0 0.0 0.0" file="MOD/prefab/AC130.xml"/>
 		<script name="Starting Plane" file="MOD/script/starting_plane.lua">
 			<instance pos="68.6 0.4 133.89999" rot="0.0 0.0 0.0" file="MOD/prefab/Mig29.xml"/>
 		</script>
-		<instance pos="87.6 0.4 134.7" rot="0.0 0.0 0.0" file="MOD/prefab/F15.xml"/>
+		<instance pos="87.6 2.3 134.7" rot="0.0 0.0 0.0" file="MOD/prefab/F15.xml"/>
 		<instance pos="179.8 -0.7 46.49999" rot="0.0 90.0 0.0" file="MOD/prefab/Spitfire.xml"/>
 		<instance pos="173.69998 2.0 28.00005" rot="0.0 -90.0 0.0" file="MOD/prefab/Cessna172/Cessna172.xml"/>
 		<instance pos="181.29999 1.8 82.89999" rot="0.0 90.0 0.0" file="MOD/prefab/B2.xml"/>

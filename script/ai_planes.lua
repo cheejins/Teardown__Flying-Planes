@@ -10,15 +10,15 @@ function aiplanes_CreateFlightpaths()
     local heightRange = {400,700}
 
     -- Initial flight pos.
-    table.insert(flightPath, AutoVecSubsituteY(VecRandom(1000), math.random(heightRange[1], heightRange[2])))
+    table.insert(flightPath, CreateFlightPos(radius, heightRange))
 
     for i = 1, 4 do
 
-        local pos = AutoVecSubsituteY(VecRandom(1000), math.random(heightRange[1], heightRange[2]))
+        local pos = CreateFlightPos(radius, heightRange)
 
         local tries = 0
         while VecDist(flightPath[#flightPath], pos) < (radius / 4) or (tries > 5) do
-            pos = AutoVecSubsituteY(VecRandom(1000), math.random(400,700))
+            pos = CreateFlightPos(radius, heightRange)
             tries = tries + 1
         end
 
@@ -28,9 +28,28 @@ function aiplanes_CreateFlightpaths()
 
 end
 
+function CreateFlightPos(radius, heightRange)
+    return VecAdd(GetMapCenter(), AutoVecSubsituteY(VecRandom(radius), math.random(heightRange[1], heightRange[2])))
+end
 
 function Init_AIPLANES()
     aiplanes_CreateFlightpaths()
+end
+
+function GetMapCenter()
+
+    local min, max = Vec(), Vec()
+    for index, shape in ipairs(FindShapes("", true)) do
+
+        local sMin, sMax = GetShapeBounds()
+
+        min = VecMin(min, sMin)
+        max = VecMax(max, sMax)
+
+    end
+
+    return AutoVecSubsituteY(VecLerp(min, max), min[2])
+
 end
 
 

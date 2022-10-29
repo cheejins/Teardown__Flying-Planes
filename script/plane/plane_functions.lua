@@ -122,7 +122,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
             end
 
 
-            if Config.debug then
+            if Config.debug or db then
 
                 if InputPressed("f1") then
                     SetBodyVelocity(plane.body, Vec(0, 0, -100))

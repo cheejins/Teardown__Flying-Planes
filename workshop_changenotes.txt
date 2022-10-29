@@ -1,6 +1,8 @@
 2022.10.29
 > Added landing gear animation (landing gear is not functional yet)
 > Fixed targetting system.
+> Fixed spawning in the void issue.
+> Fixed small map mode UI disappearing.
 
 
 2022.10.27

@@ -133,27 +133,29 @@ function Draw_PLANES()
             DrawIngameOptions()
         end
 
-        if Config.smallMapMode then
-            Draw_MapCenter()
-        end
+        UiPush()
+            for _, plane in ipairs(PLANES) do
 
+                if plane.isValid then
 
-        for _, plane in ipairs(PLANES) do
+                    if GetPlayerVehicle() == plane.vehicle then
 
-            if plane.isValid then
+                        plane_draw_hud(plane, uiW + 200, uiH)
 
-                if GetPlayerVehicle() == plane.vehicle then
+                        if plane.isAlive then
+                            plane_draw_gyro(plane, uiW, uiH)
+                        end
 
-                    plane_draw_hud(plane, uiW + 200, uiH)
-
-                    if plane.isAlive then
-                        plane_draw_gyro(plane, uiW, uiH)
                     end
 
                 end
 
             end
+        UiPop()
 
+
+        if Config.smallMapMode then
+            Draw_MapCenter()
         end
 
     UiPop()
