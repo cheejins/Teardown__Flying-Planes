@@ -40,6 +40,8 @@ function initSounds()
 
     loops = {
 
+        landing_gear = LoadLoop("MOD/snd/loop_landing_gear.ogg"),
+
         jets_distant = {
             LoadLoop("MOD/snd/jet_distant1.ogg"),
             LoadLoop("MOD/snd/jet_distant2.ogg"),

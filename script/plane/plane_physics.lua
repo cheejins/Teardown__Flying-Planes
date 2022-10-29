@@ -94,7 +94,7 @@ function plane_ApplyAerodynamics(plane)
     SetBodyAngularVelocity(plane.body, VecScale(GetBodyAngularVelocity(plane.body), angDim)) -- Diminish ang vel
 
 
-    if Config.debug and plane.totalVel > 1 then
+    if Config.debug and plane.totalVel > 2 then
         plane_draw_Forces(plane, x, y, z, 5, 20)
     end
 

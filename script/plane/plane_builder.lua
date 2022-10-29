@@ -56,8 +56,8 @@ function plane_BuildPart_Aero(plane, shape, side)
         lights = GetShapeLights(shape),
         joints = GetShapeJoints(shape),
         light_pivot = light_pivot,
-        side = side,
 
+        side = side,
         localTr = TransformToLocalTransform(plane.tr, GetLightTransform(light_pivot)),
 
     }
@@ -65,7 +65,6 @@ function plane_BuildPart_Aero(plane, shape, side)
     for index, joint in ipairs(part.joints) do
         Delete(joint)
     end
-
 
     return part
 
@@ -83,6 +82,21 @@ function plane_CollectParts_Aero(plane)
     local AllLights    = FindLights("Plane_ID", true)
     local AllLocations = FindLocations("Plane_ID", true)
     local AllTriggers  = FindTriggers("Plane_ID", true)
+
+
+    plane.AllVehicles  = ExtractAllEntitiesByTagValue(AllVehicles,   "Plane_ID", plane.id)
+    plane.AllBodies    = ExtractAllEntitiesByTagValue(AllBodies,     "Plane_ID", plane.id)
+    plane.AllShapes    = ExtractAllEntitiesByTagValue(AllShapes,     "Plane_ID", plane.id)
+    plane.AllLights    = ExtractAllEntitiesByTagValue(AllLights,     "Plane_ID", plane.id)
+    plane.AllLocations = ExtractAllEntitiesByTagValue(AllLocations,  "Plane_ID", plane.id)
+    plane.AllTriggers  = ExtractAllEntitiesByTagValue(AllTriggers,   "Plane_ID", plane.id)
+
+
+    if Config.unbreakable_planes then
+        for index, shape in ipairs(plane.AllShapes) do
+            SetTag(shape, "unbreakable")
+        end
+    end
 
 
     -- Aero parts
@@ -129,6 +143,7 @@ function plane_CollectParts_Aero(plane)
                         shape = shape,
                         body = body,
                         vehicle = vehicle,
+                        voxels = GetShapeVoxelCount(shape),
                         angle = GetTagValue(light, "pivot"),
                         localTr = TransformToLocalTransform(plane.tr, GetLightTransform(light)),
                     }
@@ -143,6 +158,62 @@ function plane_CollectParts_Aero(plane)
     end
 
 
+    -- Find shapes to delete.
+    local deleteShapes = {}
+    for index, shape in ipairs(plane.AllShapes) do
+        if HasTag(shape, "delete") then
+            table.insert(deleteShapes, shape)
+            Delete(shape)
+        end
+    end
+    -- Safe delete shapes.
+    for _, deleteShape in ipairs(deleteShapes) do
+        for index, shape in ipairs(plane.AllShapes) do
+            if shape == deleteShape then
+                table.remove(plane.AllShapes, index)
+                break
+            end
+        end
+    end
+
+
     return planeParts
 
+end
+
+
+
+
+-- Find entities of a specific type (shape, body etc...) with the relevant id tag.
+function ExtractAllEntitiesByTagValue(entity_table, tag, tag_value)
+
+    local entities = {}
+
+    for _, entity in ipairs(entity_table) do
+        if GetTagValue(entity, tag) == tag_value then
+            table.insert(entities, entity)
+        end
+    end
+
+    return entities
+
+end
+
+function ExtractAllEntitiesByTag(entities, tag)
+    local e = {}
+    for _, entity in ipairs(entities) do
+        if HasTag(entity, tag) then
+            table.insert(e, entity)
+        end
+    end
+    return e
+end
+
+function ExtractEntityByTag(entities, tag)
+    for _, entity in ipairs(entities) do
+        if HasTag(entity, tag) then
+            return entity
+        end
+    end
+    print("Entity: " .. tag .. " not found.")
 end

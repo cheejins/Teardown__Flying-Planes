@@ -283,8 +283,19 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
         ))
 
     if proj.homing.max > 0 and homingShape then
+
         proj.homing.targetShape = homingShape
-        proj.homing.targetPos = GetShapeLocalTransform(homingShape).pos
+
+        -- Find relative position.
+        local b = GetShapeBody(proj.homing.targetShape)
+        local centerPos = AabbGetBodyCenterPos(b)
+        local hit, pos = GetBodyClosestPoint(b, centerPos)
+        if hit then
+            proj.homing.targetBodyRelPos = TransformToLocalPoint(GetBodyTransform(b), pos)
+        else
+            proj.homing.targetBodyRelPos = TransformToLocalPoint(GetBodyTransform(b), centerPos)
+        end
+
     end
 
     table.insert(projectiles, proj)
@@ -374,15 +385,16 @@ function propelProjectile(proj)
     --+ Proj homing.
     if proj.homing.max > 0 and proj.homing.targetShape ~= nil then
 
-        local b = GetShapeBody(proj.homing.targetShape)
-        -- proj.homing.targetPos = VecAdd(AabbGetBodyCenterPos(b), GetBodyVelocity(b))
-        proj.homing.targetPos = VecAdd(AabbGetBodyCenterPos(b))
+        local targetBodyTr = GetBodyTransform(GetShapeBody(proj.homing.targetShape))
+        local targetPos = TransformToParentPoint(targetBodyTr, proj.homing.targetBodyRelPos)
 
-        dbl(proj.transform.pos, proj.homing.targetPos, 1,0,1, 1)
+        dbl(proj.transform.pos, targetPos, 1,0,0, 0.5)
+        dbcr(targetPos, 1,0,0, 1)
+        dbcr(proj.transform.pos, 1,0,0, 1)
         dbray(proj.transform, 30, 0,1,1, 1)
 
         proj.transform.rot = MakeQuaternion(proj.transform.rot)
-        proj.transform.rot = proj.transform.rot:Approach(QuatLookAt(proj.transform.pos, proj.homing.targetPos), proj.homing.force) -- Rotate towards homing target.
+        proj.transform.rot = proj.transform.rot:Approach(QuatLookAt(proj.transform.pos, targetPos), proj.homing.force) -- Rotate towards homing target.
 
         if proj.homing.force < proj.homing.max then -- Increment homing strength.
             proj.homing.force = proj.homing.force + proj.homing.gain

@@ -13,6 +13,7 @@
 #include "script/plane/plane_constructor.lua"
 #include "script/plane/plane_functions.lua"
 #include "script/plane/plane_hud.lua"
+#include "script/plane/plane_targetting.lua"
 #include "script/plane/plane_physics.lua"
 #include "script/plane/plane_physics_simple.lua"
 #include "script/plane/plane_presets.lua"
@@ -31,9 +32,11 @@
 
 
 
-PLANES = {}
+PLANES = {} -- plane objects.
+PLANES_VEHICLES = {} -- Find plane object by vehicle id
 
 ShouldDrawIngameOptions = false
+PLANE_DEAD_HEALTH = 0.6
 
 
 
@@ -55,11 +58,11 @@ function init()
 
 end
 
-
 function tick()
 
     Tick_Utils()
 
+    AllVehicles = FindVehicles("", true)
 
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
@@ -115,6 +118,7 @@ function Manage_Spawning()
             local plane = createPlaneObject(ID)
 
             table.insert(PLANES, plane)
+            PLANES_VEHICLES[plane.vehicle] = PLANES[#PLANES]
 
         end
 
@@ -137,4 +141,16 @@ function HandleQuickload(cmd)
         end
         break
     end
+end
+
+
+function VehicleIsPlane(vehicle)
+    return PLANES_VEHICLES[vehicle] ~= nil
+end
+
+function VehicleIsAlivePlane(vehicle)
+    if VehicleIsPlane(vehicle) then
+        return GetVehicleHealth(vehicle) >= PLANE_DEAD_HEALTH
+    end
+    return false
 end

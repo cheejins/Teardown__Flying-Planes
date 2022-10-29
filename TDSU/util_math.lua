@@ -97,8 +97,6 @@ do
         if rejectBodies ~= nil then for i = 1, #rejectBodies do QueryRejectBody(rejectBodies[i]) end end
         if rejectShapes ~= nil then for i = 1, #rejectShapes do QueryRejectShape(rejectShapes[i]) end end
 
-        returnNil = returnNil or false
-
         local direction = QuatToDir(tr.rot)
         local h, d, n, s = QueryRaycast(tr.pos, direction, dist, rad)
         if h then

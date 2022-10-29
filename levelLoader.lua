@@ -169,7 +169,7 @@ function draw_levelSelection()
             UiButtonImageBox("MOD/img/levels/sandbox.png", 10,10)
             UiButtonHoverColor(0.5,0.5,0.5, 1)
             if UiTextButton(' ', 600, 400) then
-                StartLevel('', 'MOD/test.xml', '')
+                StartLevel('', 'MOD/sandbox.xml', '')
             end
             UiTranslate(0, 250)
             UiText("Sandbox Map + Enemy AI")

@@ -153,6 +153,18 @@ function DrawIngameOptions()
     margin(0, marginY2*2)
 
     UiPush()
+        local c = boolColor(Config.unbreakable_planes)
+        UiColor(c[1], c[2], c[3])
+        UiAlign('center middle')
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
+        if UiTextButton('Unbreakable Planes', btn_w, marginY2*1.5) then
+            Config.unbreakable_planes = not Config.unbreakable_planes
+        end
+    UiPop()
+
+    margin(0, marginY2*2)
+
+    UiPush()
         local c = boolColor(Config.sounds_stall_warning)
         UiColor(c[1], c[2], c[3])
         UiAlign('center middle')

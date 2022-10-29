@@ -4,6 +4,7 @@ function draw()
     UiTextShadow(0,0,0, 1, 0.3, 0)
     UiFont("bold.ttf", 24)
 
+    draw_debug_landing_gear()
 
     local uiW = 600
     local uiH = 650
@@ -50,7 +51,7 @@ function draw()
                             UiPop() end
 
                             do UiPush()
-                                drawTargets(plane)
+                                plane_draw_Targetting(plane)
                             UiPop() end
 
                         end
@@ -172,6 +173,8 @@ function DrawControlsSimulation()
         UiTranslate(0, -fs)
         UiTranslate(0, -fs)
 
+        UiText('Landing Gear = G')
+        UiTranslate(0, -fs)
         UiText('Air brakes = SPACE')
         UiTranslate(0, -fs)
         UiText('Thrust = Shift/Ctrl')
@@ -215,6 +218,8 @@ function DrawControlsSimple()
         UiTranslate(0, -fs)
         UiTranslate(0, -fs)
 
+        UiText('Landing Gear = G')
+        UiTranslate(0, -fs)
         UiText('Air brakes = SPACE')
         UiTranslate(0, -fs)
         UiText('Thrust = W/S')
@@ -360,9 +365,11 @@ function planeDrawHud(plane, uiW, uiH)
         -- hud STATUS
         UiTranslate(960, 900)
         UiFont("bold.ttf", 24)
-        UiText('Homing Missiles: ' .. ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
-        UiTranslate(0, 30)
         UiText("Camera: " .. SelectedCamera)
+        UiTranslate(0, 30)
+        UiText("Landing Gear: " .. ternary(plane.landing_gear.isDown, "DOWN", "UP"))
+        UiTranslate(0, 30)
+        UiText('Homing Missiles: ' .. ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
         UiTranslate(0, 30)
         UiText("Status: " .. plane.status)
 

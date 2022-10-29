@@ -135,7 +135,7 @@ function plane_SetThrust(sign)
 end
 function plane_ProcessHealth(plane)
 
-    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), 0.6, 1), 0, 1)
+    plane.health = clamp(CompressRange(GetVehicleHealth(plane.vehicle), PLANE_DEAD_HEALTH, 1), 0, 1)
 
     if plane.isAlive and (plane.health <= 0 or IsPointInWater(plane.tr.pos)) and not plane.justDied then
 
@@ -223,7 +223,6 @@ function plane_Shoot(plane)
 
         local plTr = plane.tr
 
-
         if InputDown('lmb') and #plane.weap.weaponObjects.primary >= 1 then
 
             if plane.model == 'a10' then
@@ -284,44 +283,6 @@ function plane_Shoot(plane)
 
         end
 
-
-        local targetShape = nil
-        if plane.targetting.lock.enabled then
-
-            local planeTr = GetVehicleTransform(plane.vehicle)
-            local targetTr = GetVehicleTransform(plane.targetting.target)
-
-            local planeRot = QuatCopy(planeTr.rot)
-            local targetDir = QuatLookAt(planeTr.pos, targetTr.pos)
-
-            local ang = QuatAngle(planeRot, targetDir)
-            if ang < 30 and VecDist(planeTr.pos, targetTr.pos) < 800 then -- Target in bounds.
-
-                if plane.targetting.lock.timer.time <= 0 then -- Target locked.
-                    plane.targetting.lock.locked = true
-                    plane.targetting.lock.locking = false
-                    targetShape = GetBodyShapes((GetVehicleBody(plane.targetting.target)))[1]
-                else
-                    plane.targetting.lock.locking = true -- Target still locking.
-                    TimerRunTime(plane.targetting.lock.timer)
-                end
-
-            else
-
-                TimerResetTime(plane.targetting.lock.timer)
-
-                plane.targetting.lock.locking = false
-                plane.targetting.lock.locked = false
-
-            end
-            dbw('Target timer', plane.targetting.lock.timer.time)
-        else
-            plane.targetting.lock.locked = false
-            plane.targetting.lock.locking = false
-        end
-
-
-
         if InputDown('rmb') and #plane.weap.weaponObjects.secondary >= 1 then
 
             if plane.timers.weap.secondary.time <= 0 then
@@ -347,7 +308,7 @@ function plane_Shoot(plane)
                         Projectiles,
                         ProjectilePresets.missiles.standard,
                         {plane.body},
-                        targetShape)
+                        plane.targetting.targetShape)
                 end
 
 

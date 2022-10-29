@@ -39,6 +39,9 @@ function PLANES_Tick()
         if GetPlayerVehicle() == plane.vehicle then
 
             plane_ChangeCamera()
+            plane_CheckTargetLocked(plane)
+            plane_ManageTargetting(plane)
+
 
             if InputPressed("f1") then
                 SetBodyVelocity(plane.body, Vec(0,0,-100))
@@ -50,6 +53,17 @@ function PLANES_Tick()
                 SetBodyDynamic(plane.body, not IsBodyDynamic(plane.body))
             end
 
+            if InputDown("f3") then
+                SetBodyTransform(plane.body, TransformAdd(plane.tr, Transform(Vec(0,3,0))))
+                SetBodyVelocity(plane.vel, Vec(0,0,0))
+            end
+
+            if InputDown("f4") then
+                SetBodyTransform(plane.body, Transform(plane.tr.pos, Quat()))
+                SetBodyAngularVelocity(plane.body, Vec())
+            end
+
+
 
             if InputPressed("v") then
                 plane.engineOn = not plane.engineOn
@@ -59,6 +73,10 @@ function PLANES_Tick()
                 plane.flaps = not plane.flaps
             end
 
+            if InputPressed(Config.toggleHoming) then
+                beep()
+                plane.targetting.lock.enabled = not plane.targetting.lock.enabled
+            end
 
             if not ShouldDrawIngameOptions then
                 plane_Camera(plane)
@@ -70,11 +88,9 @@ function PLANES_Tick()
                 plane.status = '-'
 
 
-                crosshairPos = GetCrosshairWorldPos(plane.allBodies, plane.tr.pos)
+                crosshairPos = GetCrosshairWorldPos(plane.AllBodies, plane.tr.pos)
                 dbdd(crosshairPos, 1,1, 1,0,0, 1)
 
-
-                plane_ManageTargetting(plane)
 
 
                 if not ShouldDrawIngameOptions then
@@ -95,6 +111,12 @@ function PLANES_Tick()
 
                 if GetBool('savegame.mod.debugMode') then
                     plane_Debug(plane)
+                end
+
+                if InputPressed("g") then
+                    plane.landing_gear.startTransition = true
+                    plane.landing_gear.isDown = not plane.landing_gear.isDown
+                    beep()
                 end
 
                 if SelectedCamera ~= CameraPositions[2] then

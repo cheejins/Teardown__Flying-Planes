@@ -1,3 +1,9 @@
+local s1 = 1
+local s2 = 1
+local s3 = 1
+
+
+
 ---comment
 ---@param plane table
 ---@param controlsVec table Vec which contains data for pitch, yaw and roll.
@@ -123,35 +129,142 @@ function plane_Animate_AeroParts(plane, ignore_input)
     end
 
 
+    local gearTimer = plane.landing_gear.retract_timer
+    -- Check whether to initiate landing gear transition.
+    if plane.landing_gear.startTransition then
+        plane.landing_gear.startTransition = false
+        TimerResetTime(plane.landing_gear.retract_timer)
+    end
+    TimerRunTime(plane.landing_gear.retract_timer)
+
+
     -- Landing gear constraints.
-    for _, gear in ipairs(plane.parts.landing_gear) do
+    for index, gear in ipairs(plane.parts.landing_gear) do
 
         if IsHandleValid(gear.vehicle) and IsHandleValid(gear.shape) then
 
-            local parentTr = TransformToParentTransform(plane.tr, gear.localTr)
+            DriveVehicle(gear.vehicle, 0, 0, false)
+
+            local parentTr = TransformToParentTransform(plane.tr, gear.localTr) -- Tr on plane body.
             local pivot_tr = GetLightTransform(gear.light)
-            local gear_rate = 0.5
-
-            ConstrainPosition(gear.body, plane.body, pivot_tr.pos, parentTr.pos)
 
 
-            if Config.debug then
-                DrawShapeOutline(gear.shape, 0,1,0, 0.5)
-                DrawDot(pivot_tr.pos, 1/3, 1/3, 0,1,0, 1/2)
-                DrawDot(parentTr.pos, 1/3, 1/3, 0,1,1, 1/2)
-            end
+            local gear_alive = GetShapeVoxelCount(gear.shape)/gear.voxels > 0.5
+            if gear_alive then
+
+                local phase = TimerGetPhase(plane.landing_gear.retract_timer)
+
+                -- Which way to rotate the landing gear.
+                local angle = ternary(
+                    plane.landing_gear.isDown,
+                    -gear.angle * (1 - phase),
+                    -gear.angle * phase)
+
+                local gearRot = QuatRotateQuat(pivot_tr.rot, QuatEuler(0, 0, angle))
+
+                plane_Animate_AeroParts_Paralell(plane, gear, gearRot, parentTr.rot, math.huge)
+                ConstrainPosition(gear.body, plane.body, pivot_tr.pos, parentTr.pos)
 
 
-            if InputDown("g") then
-                local gearUpRot = QuatRotateQuat(pivot_tr.rot, QuatEuler(0,0,-gear.angle))
-                plane_Animate_AeroParts_Paralell(plane, gear, gearUpRot, parentTr.rot, gear_rate)
+                if not TimerConsumed(plane.landing_gear.retract_timer) then
+                    PlayLoop(loops.landing_gear, pivot_tr.pos, 1.5)
+                end
+
+
+                -- local vTr = GetVehicleTransform(gear.vehicle) -- Top of gear (pivot point)
+                -- local bTr = GetBodyTransform(gear.body) -- Bottom of gear (wheel)
+
+                -- local tr = Transform(parentTr.pos, QuatTrLookDown(vTr))
+                -- local dist = VecDist(vTr.pos, bTr.pos)
+                -- local rchit, rcpos, rcdist = RaycastFromTransform(tr, dist, 0.1, plane.AllBodies, plane.AllShapes, true)
+                -- if rchit then
+
+                --     local rv = dist - rcdist
+                --     local rv_totalVel = (dist - rcdist)/(plane.totalVel+1)
+                --     local rv_inverse = 1/rcdist/dist
+
+
+                --     if index == 1 then
+                --         DebugWatch("rv ", rv)
+                --         DebugWatch("rv_inverse ", rv_inverse)
+                --         DebugWatch("rv_totalVel ", rv_totalVel)
+                --     end
+
+
+                --     local gear_pos_offset = VecAdd(pivot_tr.pos,Vec(0,-rv,0))
+                --     DebugCross(gear_pos_offset, 1,0,0, 1)
+
+
+                --     -- Hold pivot point of landing gear to plane body
+                --     ConstrainPosition(gear.body, plane.body, VecAdd(pivot_tr.pos, Vec(0,-rv,0)), parentTr.pos)
+
+
+                --     -- ConstrainVelocity(plane.body, GetWorldBody(), gear_pos_offset, Vec(0,1,0), rv_totalVel, 0)
+
+
+                --     if Config.debug then
+                --         DrawDot(rcpos, 1/3,1/3, 1,1,1, 1)
+                --         DebugLine(tr.pos, rcpos, 1,1,1, 1)
+                --     end
+
+
+                -- else -- Wheels are not touching anything.
+
+                --     ConstrainPosition(gear.body, plane.body, pivot_tr.pos, parentTr.pos)
+
+                -- end
+
+
+                if Config.debug then
+                    DrawShapeOutline(gear.shape, 0,1,0, 0.5)
+                    DrawDot(pivot_tr.pos, 1/3, 1/3, 0,1,0, 1/2)
+                    DrawDot(parentTr.pos, 1/3, 1/3, 0,1,1, 1/2)
+                end
+
             else
-                plane_Animate_AeroParts_Paralell(plane, gear, pivot_tr.rot, parentTr.rot, gear_rate)
+
+                if Config.debug then
+                    DrawShapeOutline(gear.shape, 1,0,0, 0.5)
+                end
+
             end
 
         end
 
     end
+
+end
+
+function draw_debug_landing_gear()
+
+    UiPush()
+
+        if InputDown("b") then
+
+            UiMakeInteractive()
+
+            local fs = 32
+            UiTranslate(UiCenter()/2, UiMiddle()/2)
+            AutoContainer(UiCenter(), UiMiddle())
+
+            AutoText("v = " .. s1, 24)
+            UiTranslate(0, fs)
+            s1 = AutoSlider(s1, 0, 20, 0.1)
+            UiTranslate(0, fs)
+
+            AutoText("f = " .. s2, 24)
+            UiTranslate(0, fs)
+            s2 = AutoSlider(s2, 0, 20, 0.1)
+            UiTranslate(0, fs)
+
+            AutoText("f = " .. s3, 24)
+            UiTranslate(0, fs)
+            s3 = AutoSlider(s3, 0, 20, 0.1)
+            UiTranslate(0, fs)
+
+        end
+
+    UiPop()
 
 end
 
