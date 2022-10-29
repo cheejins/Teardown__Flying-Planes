@@ -35,6 +35,7 @@ function Init_Config()
 
         sounds_stall_warning = { "boolean", true },
         spawn_aiplanes = { "boolean", true },
+        draw_projectiles = { "boolean", true },
 
     })
 

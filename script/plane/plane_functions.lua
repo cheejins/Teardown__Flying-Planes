@@ -371,7 +371,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             math.deg((math.random() - 0.5) * spread)))
 
                         -- Shoot projectile.
-                        createProjectile(shootTr, Projectiles, projPreset, { plane.body })
+                        Projectiles_CreateProjectile(shootTr, Projectiles, projPreset, { plane.body })
 
 
 
@@ -412,7 +412,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                     if plane.model == 'mig29-u' then
                         Spawn("MOD/prefabs/grenade.xml", shootTr)
                     else
-                        createProjectile(
+                        Projectiles_CreateProjectile(
                             shootTr,
                             Projectiles,
                             ProjectilePresets.missiles.standard,
@@ -461,7 +461,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             local tr = GetLightTransform(weap.light)
                             local bombTr = Transform(tr.pos, QuatLookDown(tr.pos))
 
-                            createProjectile(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
+                            Projectiles_CreateProjectile(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
 
                         end
 

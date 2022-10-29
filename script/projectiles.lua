@@ -1,6 +1,6 @@
 Projectiles = {}
 
-function Init_Projectiles()
+function Projectiles_Init()
 
     ProjectilePresets = {
 
@@ -267,7 +267,7 @@ function Init_Projectiles()
 
 end
 
-function createProjectile(transform, projectiles, projPreset, ignoreBodies, homingShape) --- Instantiates a proj and adds it to the projectiles table.
+function Projectiles_CreateProjectile(transform, projectiles, projPreset, ignoreBodies, homingShape) --- Instantiates a proj and adds it to the projectiles table.
 
     local proj = DeepCopy(projPreset)
     proj.ignoreBodies = DeepCopy(ignoreBodies)
@@ -302,14 +302,14 @@ function createProjectile(transform, projectiles, projPreset, ignoreBodies, homi
 
 end
 
-function Manage_ActiveProjectiles()
+function Projectiles_Manage()
 
     local projectilesToRemove = {} -- projectiles iterations.
     for i, proj in ipairs(Projectiles) do
 
         if proj.isActive then
 
-            propelProjectile(proj)
+            Projectiles_PropelProjectile(proj)
 
         else-- if proj is inactive.
 
@@ -325,7 +325,7 @@ function Manage_ActiveProjectiles()
 
 end
 
-function propelProjectile(proj)
+function Projectiles_PropelProjectile(proj)
 
     --+ Move proj forward.
     proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
@@ -423,3 +423,39 @@ function propelProjectile(proj)
 
 end
 
+function Projectiles_Draw(minDist, maxDist)
+    UiPush()
+
+        for index, proj in ipairs(Projectiles) do
+
+            UiPush()
+
+            if IsInfrontOfTr(GetCameraTransform(), proj.transform.pos) then
+
+                local dist = VecDist(proj.transform.pos, GetCameraTransform().pos)
+
+                local a = clamp(1/dist*350, 0, 1)
+                local s = 4
+
+                -- if dist > minDist and dist < maxDist then
+
+                    -- local phase = maxDist - minDist
+
+                    -- print()
+
+                    local x,y = UiWorldToPixel(proj.transform.pos)
+                    UiTranslate(x,y)
+
+                    UiColor(1,0.75,0.25, a)
+                    UiImageBox("ui/common/dot.png", s,s, 0,0)
+
+                -- end
+
+            end
+
+            UiPop()
+
+        end
+
+    UiPop()
+end

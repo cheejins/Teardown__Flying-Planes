@@ -48,7 +48,7 @@ function init()
     Init_AIPLANES()
     Init_Config()
     Init_Sounds()
-    Init_Projectiles()
+    Projectiles_Init()
     Init_Enemies()
     Manage_SmallMapMode()
 
@@ -89,7 +89,7 @@ function tick()
     aiplane_AssignPlanes()
     Manage_DebugMode()
     Manage_SmallMapMode()
-    Manage_ActiveProjectiles()
+    Projectiles_Manage()
     Manage_Enemies()
     plane_RunPropellers()
 
@@ -111,6 +111,10 @@ function draw()
     UiFont("bold.ttf", 24)
 
     Draw_PLANES()
+
+    if Config.draw_projectiles  then
+        Projectiles_Draw(200, 500)
+    end
 
 end
 

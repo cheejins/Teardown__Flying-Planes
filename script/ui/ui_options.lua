@@ -11,11 +11,11 @@ function DrawIngameOptions()
     local w_center = w/2
     local btn_w = 250
     local marginY = 20
-    local marginY2 = marginY*1.5
+    local marginY2 = marginY*1.25
 
 
 
-    margin(UiCenter()/2, UiMiddle()/2 - 100)
+    margin(UiCenter()/2, UiMiddle()/4)
     UiPush()
         UiColor(0,0,0, 0.8)
         UiAlign("left top")
@@ -182,6 +182,20 @@ function DrawIngameOptions()
         UiPop()
     end
 
+    margin(0, marginY2*2)
+
+    if IsSimpleFlight() then
+        UiPush()
+            local c = boolColor(Config.draw_projectiles)
+            UiColor(c[1], c[2], c[3])
+            UiAlign('center middle')
+            UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
+            if UiTextButton('Draw Projectiles', btn_w, marginY2*1.5) then
+                Config.draw_projectiles = not Config.draw_projectiles
+            end
+        UiPop()
+    end
+
 UiPop()
 
 end
@@ -190,6 +204,6 @@ function boolColor(bool)
     if bool then
         return Vec(0,1,0)
     else
-        return Vec(0.5,0.5,0.5)
+        return Vec(0.75,0.75,0.75)
     end
 end

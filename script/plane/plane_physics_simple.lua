@@ -114,7 +114,7 @@ function plane_ApplyForces_Simple(plane)
 --[LIFT]
     -- Lift determined by AoA and speed
     local aoa = plane_old_GetPitchAoA(plane)
-    local speed = plane.speed or 1
+    local speed = plane.speed + 1
 
     local liftSpeedInterval = plane.topSpeed/5 * CONFIG.smallMapMode.liftMult
     local liftSpeed = speed

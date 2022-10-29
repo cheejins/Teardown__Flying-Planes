@@ -117,45 +117,50 @@ function Draw_PLANES()
         local uiH = 650
 
 
-        if Config.showOptions then
-            Draw_Controls()
-        end
 
-        if db then
-            Draw_PlaneIDs()
-        end
-
-        if Config.spawn_aiplanes then
-            Draw_AiplanesFlightPaths()
-        end
 
         if ShouldDrawIngameOptions then
+
             DrawIngameOptions()
-        end
 
-        UiPush()
-            for _, plane in ipairs(PLANES) do
+        else
 
-                if plane.isValid then
+            if Config.smallMapMode then
+                Draw_MapCenter()
+            end
 
-                    if GetPlayerVehicle() == plane.vehicle then
+            if db then
+                Draw_PlaneIDs()
+            end
 
-                        plane_draw_hud(plane, uiW + 200, uiH)
+            if Config.spawn_aiplanes then
+                Draw_AiplanesFlightPaths()
+            end
 
-                        if plane.isAlive then
-                            plane_draw_gyro(plane, uiW, uiH)
+            UiPush()
+                for _, plane in ipairs(PLANES) do
+
+                    if plane.isValid then
+
+                        if GetPlayerVehicle() == plane.vehicle then
+
+                            plane_draw_hud(plane, uiW + 200, uiH)
+
+                            if plane.isAlive then
+                                plane_draw_gyro(plane, uiW, uiH)
+                            end
+
                         end
 
                     end
 
                 end
+            UiPop()
 
-            end
-        UiPop()
+        end
 
-
-        if Config.smallMapMode then
-            Draw_MapCenter()
+        if ShouldDrawIngameOptions or Config.showOptions then
+            Draw_Controls()
         end
 
     UiPop()
