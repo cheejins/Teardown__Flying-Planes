@@ -222,6 +222,52 @@ function Projectiles_Init()
 
         },
 
+        rockets = {
+
+            standard = {
+
+                isActive = true, -- Active when firing, inactive after hit.
+                hit = false,
+                hitInitial = false,
+                lifeLength = 10, --Seconds
+
+                category = 'rocket',
+
+                speed = 2,
+                spread = 0.02,
+                drop = 0,
+                dropIncrement = 0,
+                explosionSize = 2,
+                rcRad = 0,
+                force = 0,
+                penetrate = false,
+                holeSize = 0,
+
+                effects = {
+                    particle = 'smoke',
+                    color = Vec(1,0.5,0.3),
+                    sprite = 'MOD/img/rocket.png',
+                    sprite_dimensions = {4, 0.8},
+                    sprite_facePlayer = false,
+                },
+
+                sounds = {
+                    -- hit = Sounds.weap_secondary.hit,
+                    hit_vol = 5,
+                },
+
+                homing = {
+                    force = 0.0,
+                    gain = 0,
+                    max = 0,
+                    targetShape = nil,
+                    targetPos = Vec(),
+                    targetPosRadius = 0,
+                }
+            },
+
+        },
+
         bombs = {
 
             standard = {
@@ -260,8 +306,9 @@ function Projectiles_Init()
                     targetPosRadius = 0,
                 }
 
+            },
+
         }
-    }
 
     }
 
@@ -415,6 +462,8 @@ function Projectiles_PropelProjectile(proj)
     --+ Particles
     if proj.category == 'missile' then
         particle_missileSmoke(proj.transform, proj.speed)
+    elseif proj.category == 'rocket' then
+        particle_rocketSmoke(proj.transform, proj.speed)
     end
 
 

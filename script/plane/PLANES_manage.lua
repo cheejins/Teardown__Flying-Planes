@@ -9,19 +9,16 @@ function Tick_PLANES()
             plane_UpdateProperties(plane)
             plane_Input(plane)
 
-            if IsSimulationFlight() then
-                plane_ApplyAerodynamics(plane)
-            end
 
             if IsSimpleFlight() then
                 plane_Move_Simple(plane)
-                plane_ApplyForces_Simple(plane)
             end
 
 
             -- Plane move.
             if plane.isAlive then
 
+                plane_ApplyAerodynamics(plane)
                 plane_ProcessHealth(plane)
 
                 if IsSimulationFlight() then
@@ -115,8 +112,6 @@ function Draw_PLANES()
 
         local uiW = 600
         local uiH = 650
-
-
 
 
         if ShouldDrawIngameOptions then

@@ -112,7 +112,7 @@ function draw()
 
     Draw_PLANES()
 
-    if Config.draw_projectiles  then
+    if Config.draw_projectiles then
         Projectiles_Draw(200, 500)
     end
 

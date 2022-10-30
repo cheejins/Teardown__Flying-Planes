@@ -87,3 +87,29 @@ function particle_missileSmoke(tr, speed)
     SpawnParticle(pos, vel, 10)
 
 end
+
+function particle_rocketSmoke(tr, speed)
+
+    ParticleReset()
+
+    ParticleType("smoke")
+    ParticleRadius(0.5, 1)
+    ParticleAlpha(0.5, 0.3)
+    ParticleGravity(-0.5)
+    ParticleDrag(0.25)
+    ParticleStretch(1, 1)
+
+    local offset = math.random()/7
+    ParticleColor(
+        1-(0.8) + (offset),
+        1-(0.8) + (offset),
+        1-(0.8) + (offset),
+        1-(0.8) + (offset),
+        1-(0.8) + (offset),
+        1-(0.8) + (offset))
+
+    local vel = VecScale(QuatToDir(tr.rot), -speed)
+    local pos = VecAdd(tr.pos, VecRdm(0.1))
+    SpawnParticle(pos, vel, 2)
+
+end

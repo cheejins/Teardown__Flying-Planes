@@ -33,9 +33,13 @@ function Init_Sounds()
             LoadSound("MOD/snd/engine_die2.ogg"),
             LoadSound("MOD/snd/engine_die3.ogg"),
             LoadSound("MOD/snd/engine_die4.ogg"),
-        }
+        },
+
+        rockets = Sounds_GetPathSounds("MOD/snd/rocket", 8),
+        rocket_launches = Sounds_GetPathSounds("MOD/snd/rocket_launch", 8),
 
     }
+
 
 
     loops = {
@@ -49,4 +53,12 @@ function Init_Sounds()
         }
     }
 
+end
+
+function Sounds_GetPathSounds(path, count)
+    local sounds = {}
+    for i = 1, count do
+        table.insert(sounds, LoadSound(path .. i .. ".ogg"))
+    end
+    return sounds
 end

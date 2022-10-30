@@ -159,6 +159,18 @@ function DrawIngameOptions()
     margin(0, marginY2*2)
 
     UiPush()
+        local c = boolColor(Config.draw_projectiles)
+        UiColor(c[1], c[2], c[3])
+        UiAlign('center middle')
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
+        if UiTextButton('Draw Projectiles', btn_w, marginY2*1.5) then
+            Config.draw_projectiles = not Config.draw_projectiles
+        end
+    UiPop()
+
+    margin(0, marginY2*2)
+
+    UiPush()
         local c = boolColor(Config.sounds_stall_warning)
         UiColor(c[1], c[2], c[3])
         UiAlign('center middle')
@@ -178,20 +190,6 @@ function DrawIngameOptions()
             UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
             if UiTextButton('Small Map Mode', btn_w, marginY2*1.5) then
                 Config.smallMapMode = not Config.smallMapMode
-            end
-        UiPop()
-    end
-
-    margin(0, marginY2*2)
-
-    if IsSimpleFlight() then
-        UiPush()
-            local c = boolColor(Config.draw_projectiles)
-            UiColor(c[1], c[2], c[3])
-            UiAlign('center middle')
-            UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
-            if UiTextButton('Draw Projectiles', btn_w, marginY2*1.5) then
-                Config.draw_projectiles = not Config.draw_projectiles
             end
         UiPop()
     end

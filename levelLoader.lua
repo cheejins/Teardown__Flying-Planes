@@ -61,9 +61,6 @@ function tick()
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
 
-    -- DebugWatch("FlightMode", FlightMode)
-    -- DebugWatch("FlightModeSet", FlightModeSet)
-
 end
 
 

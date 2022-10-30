@@ -418,12 +418,20 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             ProjectilePresets.missiles.standard,
                             { plane.body },
                             plane.targetting.targetShape)
+                        PlaySound(sounds.missile, shootTr.pos, 10)
                     end
 
 
-                    PlaySound(sounds.missile, shootTr.pos, 10)
-                    -- PlayRandomSound(Sounds.weap_secondary.shoot, bodyTr.pos)
-                    -- PlayRandomSound(Sounds.weap_secondary.hit, bodyTr.pos, 0.5)
+                -- elseif plane.model == "a10" then
+                --     for i = 1, 3 do
+                --         Projectiles_CreateProjectile(
+                --             shootTr,
+                --             Projectiles,
+                --             ProjectilePresets.rockets.standard,
+                --             { plane.body })
+                --         end
+                --     PlaySound(GetRandomIndexValue(sounds.rockets), shootTr.pos, 20)
+
 
                 end
 
