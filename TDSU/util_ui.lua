@@ -139,22 +139,34 @@ function UiLine(p1, p2, w, r,g,b, a) -- Draw a straight line.
 end
 
 function UiSplitText(title, value)
+    UiPush()
 
-	UiAlign("right top")
-	UiText(title .. " = ")
-	UiAlign("left top")
+        UiAlign("right top")
+        UiText(title .. " = ")
+        UiAlign("left top")
 
-	if type(value) == "boolean" then
-		UiPush()
-			UiColorBool(value)
-			UiText(value)
-		UiPop()
-	elseif type(value) == "number" then
-		UiText(sfn(value))
-	else
-		UiText(value)
-	end
+        if type(value) == "number" then
+            UiText(sfn(value))
+        else
+            UiText(value)
+        end
 
+    UiPop()
+end
+
+function UiSplitTextBool(title, value, text_true, text_false)
+    UiPush()
+
+        UiAlign("right top")
+        UiText(title .. " = ")
+        UiAlign("left top")
+
+        UiPush()
+            UiColorBool(value)
+            UiText(Ternary(value, text_true, text_false))
+        UiPop()
+
+    UiPop()
 end
 
 function UiColorBool(bool, white_false)

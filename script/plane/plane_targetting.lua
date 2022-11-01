@@ -84,7 +84,7 @@ end
 
 function plane_CheckTargetLocked(plane)
 
-    if plane.targetting.lock.enabled then
+    if plane.targetting.lock.enabled and plane.targetting.homingCapable then
 
         local planeTr = GetVehicleTransform(plane.vehicle)
         local targetTr = GetVehicleTransform(plane.targetting.target)

@@ -30,7 +30,7 @@ function plane_Steer_Simple(plane, rot, disable_input)
                 TransformToParentPoint(
                     plane.tr, Vec(0,0,-5)),
                 plane_GetFwdPos(plane, speed*plane.brakeImpulseAmt))
-            plane.status = 'Air Braking'
+                plane_StatusAppend(plane, "Air-Braking")
         end
 
         -- Roll
@@ -53,33 +53,49 @@ function plane_Steer_Simple(plane, rot, disable_input)
     end
 
 
+    local steerMult = 1
+    if IsSimpleFlight() then
+        if Config.smallMapMode then
+            steerMult = 2
+        end
+    end
+
 
     local crosshairRot = rot or QuatLookAt(plane.tr.pos, crosshairPos)
 
-    -- Roll plane based on crosshair
-    local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
-    rollAmt[1] = rollAmt[1] * turnAmt * -350 / (plane.rollVal or 1)
-    pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
+    if plane_IsVtolCapable(plane) then
 
+        if plane.vtol.isDown then
 
-    -- local crosshairRot = QuatLookAt(plane.tr.pos, crosshairPos)
+            pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
+            pTr.rot = pTr.rot:Approach(crosshairRot, 0.012)
 
-    -- local camDir = QuatToDir(QuatEuler(plane.camera.cameraY, plane.camera.cameraX, 0))
-    -- local planeDir = QuatToDir(plane.tr.rot)
+        else
 
-    -- -- Roll plane based on crosshair
-    -- local rollAmt = VecNormalize(TransformToLocalPoint(planeDir, camDir))
-    -- rollAmt[1] = rollAmt[1] * -5
-    -- dbw('rollAmt[1]', rollAmt[1])
-    -- pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
+            -- Roll plane based on crosshair
+            local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
+            rollAmt[1] = rollAmt[1] * turnAmt * -350 / (plane.rollVal or 1)
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
 
+            pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
+            pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / (plane.yawFac or 1) * steerMult)
 
-    -- Align with crosshair pos
-    pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
-    pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / (plane.yawFac or 1) * CONFIG.smallMapMode.turnMult)
+        end
+
+    else
+
+        -- Roll plane based on crosshair
+        local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
+        rollAmt[1] = rollAmt[1] * turnAmt * -350 / (plane.rollVal or 1)
+        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
+
+        -- Align with crosshair pos
+        pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
+        pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / (plane.yawFac or 1) * steerMult)
+
+    end
 
     SetBodyTransform(plane.body, pTr)
-
 
 end
 

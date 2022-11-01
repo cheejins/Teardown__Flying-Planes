@@ -14,6 +14,8 @@ function plane_AutoConvertToPreset(plane)
         convertPlaneToB2(plane)
     elseif plane.model == "f15" then
         convertPlaneToF15(plane)
+    elseif plane.model == "harrier" then
+        convertPlaneToHarrier(plane)
     end
 
 end
@@ -28,18 +30,14 @@ function convertPlaneToSpitfire(plane)
     plane.rollVal = 1
     plane.yawFac = 1
 
-    plane.seatPosOffset = Vec(0,0,-12)
-    plane.brakeImpulseAmt = 300
-
     plane.gunPosOffset = Vec(-1.7, -0.2, -15)
     plane.gunPosOffset2 = Vec(1.7, -0.2, -15) -- opposite wing mg
 
     plane.bullets.type = "mg"
     plane.bullets.rpm = 1400
 
-    plane.camBack = 10
-    plane.camUp = 5
-    plane.camPitch = -7
+    plane.targetting.homingCapable = false
+
 end
 
 
@@ -52,13 +50,19 @@ function convertPlaneToA10(plane)
     plane.rollVal = 0.8
     plane.yawFac = 0.8
 
-    plane.seatPosOffset = Vec(0,0,-12)
-    plane.camPullUp = 9
-
     plane.gunPosOffset = Vec(0,-0.2,-15)
     plane.missiles.rpm = 50
     plane.bullets.type = "emg"
     plane.bullets.rpm = 600
+
+    plane.timers = {
+        weap = {
+            primary = {time = 0, rpm = 800},
+            secondary = {time = 0, rpm = 90},
+            special = {time = 0, rpm = 1},
+        }
+    }
+
 end
 
 
@@ -73,9 +77,8 @@ function convertPlaneToBombardierJet(plane)
     plane.rollVal = 2
     plane.yawFac = 2
 
-    plane.camBack = 45
-    plane.camUp = 15
-    plane.camPitch = 0
+    plane.targetting.homingCapable = false
+
 end
 
 function convertPlaneToCessna172(plane)
@@ -92,9 +95,6 @@ function convertPlaneToCessna172(plane)
     plane.rollVal = 1
     plane.yawFac = 1
 
-    plane.camBack = 45
-    plane.camUp = 15
-    plane.camPitch = 0
 end
 
 function convertPlaneToAC130(plane)
@@ -110,9 +110,8 @@ function convertPlaneToAC130(plane)
     plane.rollVal = 3
     plane.yawFac = 3
 
-    plane.camBack = 45
-    plane.camUp = 15
-    plane.camPitch = 0
+    plane.targetting.homingCapable = false
+
 end
 
 function convertPlaneToB2(plane)
@@ -128,9 +127,8 @@ function convertPlaneToB2(plane)
     plane.rollVal = 3
     plane.yawFac = 3
 
-    plane.camBack = 45
-    plane.camUp = 15
-    plane.camPitch = 0
+    plane.targetting.homingCapable = false
+
 end
 
 function convertPlaneToF15(plane)
@@ -146,7 +144,28 @@ function convertPlaneToF15(plane)
     plane.rollVal = 1
     plane.yawFac = 1
 
-    plane.camBack = 45
-    plane.camUp = 15
-    plane.camPitch = 0
+end
+function convertPlaneToHarrier(plane)
+    plane.isArmed = true
+
+    plane.topSpeed = 120
+    plane.thrustImpulseAmount = 70
+    plane.engineVol = 1
+
+    plane.brakeImpulseAmt = 100
+
+    plane.pitchVal = 1
+    plane.rollVal = 1
+    plane.yawFac = 1
+
+    plane.timers = {
+        weap = {
+            primary = {time = 0, rpm = 750},
+            secondary = {time = 0, rpm = 900},
+            special = {time = 0, rpm = 1},
+        }
+    }
+
+    plane.targetting.homingCapable = false
+
 end

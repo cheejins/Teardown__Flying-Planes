@@ -48,8 +48,9 @@ function init()
     Init_AIPLANES()
     Init_Config()
     Init_Sounds()
-    Projectiles_Init()
+    Init_Projectiles()
     Init_Enemies()
+    Init_Draw()
     Manage_SmallMapMode()
 
 
@@ -60,6 +61,10 @@ function init()
 end
 
 function tick()
+
+    if InputDown("y") then
+        PrintEnv()
+    end
 
     Tick_Utils()
 
@@ -74,10 +79,17 @@ function tick()
         print("backup flightmode simple")
     end
 
+    dbw("PlayerInPlane", PlayerInPlane)
 
-    if InputPressed(Config.toggleOptions) then
+    if PlayerInPlane and InputPressed(Config.toggleOptions) then
+
         ShouldDrawIngameOptions = not ShouldDrawIngameOptions
         SetBool("level.showedOptions", true)
+
+    elseif not PlayerInPlane then
+
+        ShouldDrawIngameOptions = false
+
     end
 
 
@@ -94,7 +106,7 @@ function tick()
     plane_RunPropellers()
 
 
-    if InputPressed("n") then
+    if InputPressed("m") then
         SetBool("level.enemies_disabled", not GetBool("level.enemies_disabled"))
     end
 

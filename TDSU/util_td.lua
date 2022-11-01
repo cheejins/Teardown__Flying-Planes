@@ -15,7 +15,7 @@ end
 
 
 function RejectAllBodies(bodies) for i = 1, #bodies do QueryRejectBody(bodies[i]) end end
-function RejectAllShapes(shapes) for i = 1, #shapes do QueryRejectBody(shapes[i]) end end
+function RejectAllShapes(shapes) for i = 1, #shapes do QueryRejectShape(shapes[i]) end end
 
 
 -- function CheckExplosions(cmd)
@@ -63,4 +63,26 @@ function RejectAllShapes(shapes) for i = 1, #shapes do QueryRejectBody(shapes[i]
 --         end
 --     end
 
+-- end
+
+
+-- function SetShapeCollision()
+    -- LAYER_A = 1 -- Default
+    -- LAYER_B = 2
+    -- LAYER_C = 4
+    -- LAYER_D = 8
+    -- LAYER_E = 16
+    -- LAYER_F = 32
+    -- LAYER_G = 64
+    -- LAYER_H = 128
+    -- EVERY_LAYER = 255
+
+    -- -- shape in layer D, collide only with layer B and C
+    -- SetShapeCollisionFilter(shape1, LAYER_D, LAYER_B + LAYER_C)
+    -- -- shape in layer E, do not collide with layer B and C
+    -- SetShapeCollisionFilter(shape2, LAYER_E, EVERY_LAYER - LAYER_B - LAYER_C)
+
+    -- -- Example
+    -- SetShapeCollisionFilter(engine, LAYER_B, EVERY_LAYER - LAYER_B)
+    -- SetShapeCollisionFilter(propeller, LAYER_B, EVERY_LAYER - LAYER_B)
 -- end

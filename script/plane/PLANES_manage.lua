@@ -2,7 +2,15 @@ function Init_PLANES()
 end
 
 function Tick_PLANES()
+
+    PlayerInPlane = false
+
     for key, plane in pairs(PLANES) do
+
+        -- No intercollisions, but leave world collision on.
+        for _, shape in ipairs(plane.AllShapes) do
+            SetShapeCollisionFilter(shape, 4, 1)
+        end
 
         if plane.isValid then
 
@@ -10,20 +18,12 @@ function Tick_PLANES()
             plane_Input(plane)
 
 
-            if IsSimpleFlight() then
-                plane_Move_Simple(plane)
-            end
-
-
             -- Plane move.
             if plane.isAlive then
 
                 plane_ApplyAerodynamics(plane)
                 plane_ProcessHealth(plane)
-
-                if IsSimulationFlight() then
-                    plane_Move(plane)
-                end
+                plane_Move(plane)
 
             end
 
@@ -35,6 +35,10 @@ function Tick_PLANES()
             -- Player in plane.
             if GetPlayerVehicle() == plane.vehicle then
 
+                crosshairPos = GetCrosshairWorldPos(plane.AllBodies, true, plane.tr.pos)
+
+                PlayerInPlane = true
+
                 plane_ChangeCamera()
                 plane_CheckTargetLocked(plane)
                 plane_ManageTargetting(plane)
@@ -44,13 +48,6 @@ function Tick_PLANES()
                 end
 
                 if plane.isAlive then
-
-                    plane_LandingGear(plane)
-
-
-                    crosshairPos = GetCrosshairWorldPos(plane.AllBodies, plane.tr.pos)
-                    dbdd(crosshairPos, 1, 1, 1, 0, 0, 1)
-
 
                     if not ShouldDrawIngameOptions then
 
@@ -66,6 +63,9 @@ function Tick_PLANES()
                         plane_ManageShooting(plane)
                     end
 
+                    if plane.brakeOn then
+                        DriveVehicle(plane.vehicle, 0, 0, true)
+                    end
 
                     if GetBool('savegame.mod.debugMode') then
                         plane_Debug(plane)

@@ -31,6 +31,8 @@ PlaneParts = {
 
     landing_gear = {},
 
+    vtol = {},
+
     systems = {
         engines = {}
     }
@@ -158,6 +160,36 @@ function plane_CollectParts_Aero(plane)
     end
 
 
+    -- VTOL thrusters
+    for index, shape in ipairs(AllShapes) do
+
+        if GetTagValue(shape, "Plane_ID") == plane.id and HasTag(shape, "vtol") then
+
+            local body = GetShapeBody(shape)
+
+            local light_pivot = nil
+            for index, light in ipairs(GetShapeLights(shape)) do
+                if HasTag(light, "pivot") then
+                    light_pivot = light
+                    break
+                end
+            end
+
+            local vtol = {
+                body = body,
+                shape = shape,
+                light = light_pivot,
+                localTr = TransformToLocalTransform(plane.tr, GetLightTransform(light_pivot)),
+                angle = GetTagValue(light_pivot, "pivot"),
+                voxels = GetShapeVoxelCount(shape),
+            }
+
+            table.insert(planeParts.vtol, vtol)
+
+        end
+    end
+
+
     -- Find shapes to delete.
     local deleteShapes = {}
     for index, shape in ipairs(plane.AllShapes) do
@@ -176,8 +208,7 @@ function plane_CollectParts_Aero(plane)
         end
     end
 
-
-    return planeParts
+    plane.parts = planeParts
 
 end
 

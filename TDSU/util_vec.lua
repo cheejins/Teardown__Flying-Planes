@@ -256,16 +256,19 @@ do
 end
 
 
-GetCrosshairWorldPos = function(rejectBodies, fwdPos, ignoreBehind)
+GetCrosshairWorldPos = function(rejectBodies, fwdPos, pos)
 
     for key, b in pairs(rejectBodies) do QueryRejectBody(b) end
 
     local crosshairTr = GetCrosshairCameraTr()
-    local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 300)
+    if pos then
+        crosshairTr.pos = pos
+    end
+    local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 500)
     if crosshairHit then
         return crosshairHitPos
     elseif not crosshairHit or fwdPos then
-        return TransformToParentPoint(GetCameraTransform(), Vec(0,0,-300))
+        return TransformToParentPoint(GetCameraTransform(), Vec(0,0,-500))
     end
 
 end

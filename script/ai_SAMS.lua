@@ -6,7 +6,7 @@ EnemyAAMGs = {}
 
 AA_Types = {
     SAM = { title = "SAM", rpm = 20 },
-    MG = { title = "MG", rpm = 1200 },
+    MG = { title = "MG", rpm = 800 },
 }
 
 
@@ -116,7 +116,7 @@ function Manage_Enemies()
 
                 -- Shoot
                 TimerRunTime(AA.timer)
-                if playerVehicle and GetVehicleTransform(playerVehicle).pos[2] > 10 then
+                if playerVehicle and GetVehicleTransform(playerVehicle).pos[2] > 25 then
 
                     if TimerConsumed(AA.timer) then
                         TimerResetTime(AA.timer)

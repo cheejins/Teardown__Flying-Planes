@@ -30,6 +30,8 @@ function init()
     -- Apply IDs
     ApplyPlaneEntityIDs(ID)
 
+    print("checkScript")
+
 end
 
 
@@ -50,31 +52,26 @@ function ApplyPlaneEntityIDs(ID)
         end
     end
 
-    -- No intercollisions, but leave world collision on.
-    for _, shape in ipairs(AllEntities.AllShapes) do
-        -- if not GetShapeBody(shape) == GetWorldBody() then
-            SetShapeCollisionFilter(shape, 2, 1)
-        -- end
-    end
-
 end
 
 
 function tick()
-    -- for _, shape in ipairs(AllEntities.AllShapes) do
-    --     DrawShapeOutline(shape, 1,0,1, 0.5)
-    -- end
+    for _, shape in ipairs(AllEntities.AllShapes) do
+        -- DrawShapeOutline(shape, 1,0,1, 0.5)
 
-    -- DrawBodyOutline(GetWorldBody(), 1,0,1, 0.5)
+        if GetShapeBody(shape) == GetWorldBody() then
+            DebugCross(AabbGetShapeCenterPos(shape), 1,0,0, 1)
+        end
+
+    end
+
+    -- DrawBodyOutline(GetWorldBody(), 1,0,0, 0.5)
 end
 
 
 function CheckScriptEnabled()
-
     if GetBool('level.planeScriptActive') == false then
         Spawn('MOD/prefab/script.xml', Transform())
         SetBool('level.planeScriptActive', true)
-        print("Created script.lua")
     end
-
 end

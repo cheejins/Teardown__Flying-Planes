@@ -3,11 +3,18 @@ AI_PLANES_NOTSET = {}
 
 local flightPath = {}
 
+local plane_prefabs = {
+    "MOD/prefab/Mig29.xml",
+    "MOD/prefab/F15.xml",
+    "MOD/prefab/A10.xml",
+    "MOD/prefab/Harrier.xml",
+}
+
 
 function aiplanes_CreateFlightpaths()
 
     local radius = 1000
-    local heightRange = {400,700}
+    local heightRange = {800,1000}
 
     -- Initial flight pos.
     table.insert(flightPath, CreateFlightPos(radius, heightRange))
@@ -87,14 +94,7 @@ end
 
 function aiplane_SpawnPlane(tr)
 
-    local planes = {
-        "MOD/prefab/Mig29.xml",
-        "MOD/prefab/F15.xml",
-        "MOD/prefab/A10.xml",
-        "MOD/prefab/AC130.xml",
-    }
-
-    local entities = Spawn(GetRandomIndexValue(planes), tr)
+    local entities = Spawn(GetRandomIndexValue(plane_prefabs), tr)
 
     local id = nil
     for _, entity in ipairs(entities) do
@@ -142,6 +142,10 @@ function aiplane_AssignPlanes()
                     print("Found AI plane", plane.id)
                     aiplane.ai_plane_set = true
                     aiplane_BuildAiPlane(plane)
+
+                    if plane.model == "harrier" then
+                        plane.vtol.isDown = false
+                    end
 
                     table.insert(AI_PLANES, plane)
 

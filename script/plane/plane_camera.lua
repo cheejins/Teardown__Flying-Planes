@@ -4,8 +4,8 @@ local timer_auto_center = { time = 0, rpm = 60/3 } -- Time before beginning auto
 CameraPositions = {
     "Orbit",
     "Aligned",
-    "Vehicle",
-    -- "Seat"
+    -- "Vehicle",
+    "Seat"
 }
 
 
@@ -16,7 +16,7 @@ function plane_ManageCamera(plane, auto_center_delay)
 
 
     -- Reset auto center delay if mouse input.
-    if auto_center_delay ~= nil and (math.abs(mx) > 1 or math.abs(my) > 1) then
+    if auto_center_delay ~= nil and (math.abs(mx) > 10 or math.abs(my) > 10) then
 
         timer_auto_center.rpm = 60/auto_center_delay
         TimerResetTime(timer_auto_center)
@@ -24,9 +24,11 @@ function plane_ManageCamera(plane, auto_center_delay)
     end
     TimerRunTime(timer_auto_center)
 
+    local zoomFOV = Ternary(InputDown("mmb"), 45 , nil)
 
-	plane.camera.cameraX = plane.camera.cameraX - mx / 10
-	plane.camera.cameraY = plane.camera.cameraY - my / 10
+
+	plane.camera.cameraX = plane.camera.cameraX - mx / (zoomFOV or 10)
+	plane.camera.cameraY = plane.camera.cameraY - my / (zoomFOV or 10)
 	plane.camera.cameraZ = plane.camera.cameraZ or 0
 
     if IsSimpleFlight() then
@@ -56,20 +58,17 @@ function plane_ManageCamera(plane, auto_center_delay)
     local scale = 1
 
 	plane.camera.zoom = plane.camera.zoom - InputValue("mousewheel") * plane.camera.zoom/5
-	plane.camera.zoom = clamp(plane.camera.zoom, 10, 500) * scale
+	plane.camera.zoom = clamp(plane.camera.zoom, 1, 500) * scale
 
 
     local camAddHeight = 2
     if plane.model == 'ac130' then
         camAddHeight = 12
     end
-    camH = camAddHeight * scale + plane.camera.zoom/10
+    camH = camAddHeight * scale + clamp(plane.camera.zoom/10, 1, math.huge)
 
 	local cameraPos = TransformToParentPoint(cameraT, Vec(0, camH, plane.camera.zoom))
 	local camera = Transform(VecLerp(cameraPos, GetCameraTransform().pos, 0.5), cameraRot)
-
-    local zoomFOV = Ternary(InputDown("mmb"), 45 , nil)
-
 
 	SetCameraTransform(camera, zoomFOV)
 
@@ -86,6 +85,10 @@ function plane_Camera(plane)
 
         plane_ManageCamera(plane)
         plane.camera.cameraZ = 0
+
+    -- elseif SelectedCamera == 'Seat' then
+
+    --     plane_ManageCamera(plane)
 
     end
 

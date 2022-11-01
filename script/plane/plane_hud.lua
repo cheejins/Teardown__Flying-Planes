@@ -59,10 +59,22 @@ function plane_draw_hud(plane, uiW, uiH)
 
         local isInfront = TransformToLocalPoint(GetCameraTransform(), pos)[3] < 0
         if isInfront then
-            local x,y = UiWorldToPixel(pos)
-            UiTranslate(x,y)
-            UiImageBox("MOD/img/dot.png", 20, 20, 0,0)
+
+            local hit, hitPos = RaycastFromTransform(TransformToParentTransform(plane.tr, Transform(Vec(0,0,-10))), 1000, 0, plane.AllBodies)
+            if hit then
+                local x,y = UiWorldToPixel(hitPos)
+                UiTranslate(x,y)
+                UiColor(1,0,0, 1)
+                UiImageBox("MOD/img/hud_crosshair_shootpos.png", 25, 25, 0,0)
+            else
+                local x,y = UiWorldToPixel(pos)
+                UiTranslate(x,y)
+                UiImageBox("MOD/img/dot.png", 15, 15, 0,0)
+            end
+
+
         end
+
 
     UiPop() end
 
@@ -80,7 +92,7 @@ function plane_draw_hud(plane, uiW, uiH)
             -- hud OVERSPEED
             do UiPush()
                 UiTranslate(0, 400)
-                if plane.speed > plane.topSpeed * 0.7 then
+                if plane.speed > plane.topSpeed * 0.9 then
                     UiColor(0.1, 0.1, 0.1, 0.15)
                     UiRect(w * 1.25, h * 1.25)
                     UiColor(1,1,1, Oscillate(0.5))
@@ -97,7 +109,7 @@ function plane_draw_hud(plane, uiW, uiH)
                     UiColor(1,1,1, Oscillate(1/2))
                     UiImageBox("MOD/img/hud_stall.png", w, h, 1,1)
 
-                    if Config.sounds_stall_warning then
+                    if not plane.vtol.isDown and Config.sounds_stall_warning then
                         PlayLoop(sounds.loop_stall_warning, GetCameraTransform().pos, 1/4)
                     end
 
@@ -140,15 +152,23 @@ function plane_draw_hud(plane, uiW, uiH)
 
     -- hud STATUS
     do UiPush()
-        UiTranslate(960, 900)
-        UiFont("bold.ttf", 24)
+        UiTranslate(960, 850)
+        UiFont("bold.ttf", 22)
         UiSplitText("Camera", SelectedCamera)
         UiTranslate(0, 30)
-        UiSplitText("Landing Gear", Ternary(plane.landing_gear.isDown, "DOWN", "UP"))
-        UiTranslate(0, 30)
-        UiSplitText('Missile Homing', Ternary(plane.targetting.lock.enabled, 'ON', 'OFF'))
-        UiTranslate(0, 30)
         UiSplitText("Status", plane.status)
+        UiTranslate(0, 30)
+        UiSplitTextBool('Engine', plane.engineOn, 'ON', 'OFF')
+        UiTranslate(0, 30)
+        UiSplitTextBool("Landing Gear", plane.landing_gear.isDown, "DOWN", "UP")
+        UiTranslate(0, 30)
+        UiSplitTextBool('Wheel Brake', plane.brakeOn, 'Engaged', 'Released')
+        UiTranslate(0, 30)
+        UiSplitTextBool('Missile Homing', plane.targetting.lock.enabled, 'ON', 'OFF')
+        if plane_IsVtolCapable(plane) then
+            UiTranslate(0, 30)
+            UiSplitText('VTOL', Ternary(plane.vtol.isDown, 'DOWN', 'FORWARD'))
+        end
     UiPop() end
 
 

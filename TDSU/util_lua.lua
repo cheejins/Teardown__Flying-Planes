@@ -153,8 +153,8 @@ do
 end
 
 
-function string_append(s, str, separator)
-    return s .. (separator or " ") .. str
+function string_append(str, str_append, separator)
+    return str .. Ternary(str == "" or str == nil, "", (separator or ", ")) .. str_append
 end
 
 function string_enclose(s, str_left, str_right)

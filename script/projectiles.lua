@@ -1,6 +1,7 @@
 Projectiles = {}
 
-function Projectiles_Init()
+
+function Init_Projectiles()
 
     ProjectilePresets = {
 
@@ -57,11 +58,11 @@ function Projectiles_Init()
 
                 category = 'bullet',
 
-                speed = 9,
+                speed = 14,
                 spread = 0.015,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 0.8,
+                explosionSize = 0.75,
                 rcRad = 0,
                 force = 0,
                 penetrate = false,
@@ -103,7 +104,7 @@ function Projectiles_Init()
                 spread = 0.025,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 2.5,
+                explosionSize = 1.75,
                 rcRad = 0,
                 force = 0,
                 penetrate = false,
@@ -113,7 +114,7 @@ function Projectiles_Init()
                     -- particle = 'aeon_secondary',
                     color = Vec(1,0,0),
                     sprite = 'MOD/img/bullet_emg.png',
-                    sprite_dimensions = {9, 1.5},
+                    sprite_dimensions = {9, 1},
                     sprite_facePlayer = false,
                 },
 
@@ -149,7 +150,7 @@ function Projectiles_Init()
                 spread = 0,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 1.5,
+                explosionSize = 2,
                 rcRad = 0,
                 force = 0,
                 penetrate = false,
@@ -211,7 +212,7 @@ function Projectiles_Init()
                 },
 
                 homing = {
-                    force = 0.01,
+                    force = 0.005,
                     gain = 0.0,
                     max = 0.01,
                     targetShape = nil,
@@ -233,11 +234,11 @@ function Projectiles_Init()
 
                 category = 'rocket',
 
-                speed = 2,
-                spread = 0.02,
+                speed = 3,
+                spread = 0.035,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 2,
+                explosionSize = 2.25,
                 rcRad = 0,
                 force = 0,
                 penetrate = false,
@@ -247,7 +248,7 @@ function Projectiles_Init()
                     particle = 'smoke',
                     color = Vec(1,0.5,0.3),
                     sprite = 'MOD/img/rocket.png',
-                    sprite_dimensions = {4, 0.8},
+                    sprite_dimensions = {2.2, 0.4},
                     sprite_facePlayer = false,
                 },
 
@@ -279,9 +280,9 @@ function Projectiles_Init()
 
                 category = 'bomb',
 
-                speed = 0.55,
-                spread = 0.22,
-                drop = 0.25,
+                speed = 0.6,
+                spread = 0.4,
+                drop = 1,
                 dropIncrement = 0,
                 explosionSize = 4,
                 rcRad = 0,
@@ -468,7 +469,7 @@ function Projectiles_PropelProjectile(proj)
 
 
     local c = proj.effects.color
-    PointLight(proj.transform.pos, c[1], c[2], c[3], 2)
+    PointLight(proj.transform.pos, c[1], c[2], c[3], math.random()+1)
 
 end
 

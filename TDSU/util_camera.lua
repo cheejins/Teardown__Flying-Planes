@@ -37,27 +37,27 @@ function Camera_manage(self, body, height)
 end
 
 
-function GetCrosshairWorldPos(rejectBodies)
+-- function GetCrosshairWorldPos(pos, rejectBodies)
 
-    local crosshairTr = GetCrosshairWorldPos()
-    RejectAllBodies(rejectBodies)
-    local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 200)
-    if crosshairHit then
-        return crosshairHitPos
-    else
-        return nil
-    end
+--     local crosshairTr = GetCrosshairWorldPos()
+--     RejectAllBodies(rejectBodies)
+--     local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 500)
+--     if crosshairHit then
+--         return crosshairHitPos
+--     else
+--         return nil
+--     end
 
-end
+-- end
 
-function GetCrosshairCameraTr(pos, x, y)
+-- function GetCrosshairCameraTr(pos, x, y)
 
-    pos = pos or GetCameraTransform()
+--     pos = pos or GetCameraTransform()
 
-    local crosshairDir = UiPixelToWorld(x or UiCenter(), y or UiMiddle())
-    local crosshairQuat = DirToQuat(crosshairDir)
-    local crosshairTr = Transform(GetCameraTransform().pos, crosshairQuat)
+--     local crosshairDir = UiPixelToWorld(x or UiCenter(), y or UiMiddle())
+--     local crosshairQuat = DirToQuat(crosshairDir)
+--     local crosshairTr = Transform(GetCameraTransform().pos, crosshairQuat)
 
-    return crosshairTr
+--     return crosshairTr
 
-end
+-- end

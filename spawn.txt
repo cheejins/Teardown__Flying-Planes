@@ -1,12 +1,13 @@
-prefab/A10.xml : Planes Military/A-10 Warthog
-prefab/AC130.xml : Planes Military/AC-130
-prefab/B2.xml : Planes Military/B2
-prefab/F15.xml : Planes Military/F15-C
-prefab/Mig29.xml : Planes Military/MiG-29 Fulcrum
-prefab/Spitfire.xml : Planes Military/Spitfire Mk.I
+prefab/A10.xml      : PLANES (USAF)/A-10 Warthog
+prefab/AC130.xml    : PLANES (USAF)/AC-130
+prefab/B2.xml       : PLANES (USAF)/B2
+prefab/F15.xml      : PLANES (USAF)/F15-C
+prefab/Harrier.xml  : PLANES (USAF)/Harrier
+prefab/Mig29.xml    : PLANES (VVS)/MiG-29 Fulcrum
+prefab/Spitfire.xml : PLANES (RAF)/Spitfire Mk.I
 
-prefab/Jet.xml : Planes Commercial/Bombardier Jet
-prefab/Cessna172/Cessna172.xml : Planes Commercial/Cessna 172 Skyhawk
+prefab/Jet.xml                  : PLANES (Airliners)/Bombardier Jet
+prefab/Cessna172/Cessna172.xml  : PLANES (Airliners)/Cessna 172 Skyhawk
 
-prefab/AA Tanks/ZSU_MG.xml : Enemy AA/ZSU MG
+prefab/AA Tanks/ZSU_MG.xml  : Enemy AA/ZSU MG
 prefab/AA Tanks/ZSU_SAM.xml : Enemy AA/ZSU SAM

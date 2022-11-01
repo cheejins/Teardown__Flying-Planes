@@ -1,6 +1,7 @@
 #include "umf.lua"
 #include "util_color.lua"
 #include "util_debug.lua"
+#include "util_env.lua"
 #include "util_lua.lua"
 #include "util_math.lua"
 #include "util_quat.lua"
@@ -28,6 +29,8 @@ function Init_Utils()
     InitDebug()
     InitColor()
     InitTool(Tool)
+    InitEnv()
+
 
     print("TDSU initialized.")
 

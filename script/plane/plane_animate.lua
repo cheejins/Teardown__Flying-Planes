@@ -40,9 +40,9 @@ function plane_Animate_AeroParts(plane, ignore_input)
                 -- end
 
                 if Config.debug then
-                    DrawShapeOutline(part.shape, 1,0.5,0, 0.5)
-                    DrawDot(pivot_tr.pos, 1/3, 1/3, 1,0,0, 1/2)
-                    DrawDot(parentTr.pos, 1/3, 1/3, 0,1,0, 1/2)
+                    DrawShapeOutline(part.shape, 1,0.5,0, 1)
+                    DebugCross(pivot_tr.pos, 1,0,0, 1)
+                    DebugCross(parentTr.pos, 0,1,0, 1)
                 end
 
 
@@ -129,7 +129,6 @@ function plane_Animate_AeroParts(plane, ignore_input)
     end
 
 
-    local gearTimer = plane.landing_gear.retract_timer
     -- Check whether to initiate landing gear transition.
     if plane.landing_gear.startTransition then
         plane.landing_gear.startTransition = false
@@ -138,10 +137,17 @@ function plane_Animate_AeroParts(plane, ignore_input)
     TimerRunTime(plane.landing_gear.retract_timer)
 
 
+    if plane.vtol.startTransition then
+        plane.vtol.startTransition = false
+        TimerResetTime(plane.vtol.retract_timer)
+    end
+    TimerRunTime(plane.vtol.retract_timer)
+
+
     -- Landing gear constraints.
     for index, gear in ipairs(plane.parts.landing_gear) do
 
-        if IsHandleValid(gear.vehicle) and IsHandleValid(gear.shape) then
+        if IsHandleValid(gear.vehicle) and IsHandleValid(gear.body) and IsHandleValid(gear.shape) then
 
             DriveVehicle(gear.vehicle, 0, 0, false)
 
@@ -216,18 +222,61 @@ function plane_Animate_AeroParts(plane, ignore_input)
 
 
                 if Config.debug then
-                    DrawShapeOutline(gear.shape, 0,1,0, 0.5)
-                    DrawDot(pivot_tr.pos, 1/3, 1/3, 0,1,0, 1/2)
-                    DrawDot(parentTr.pos, 1/3, 1/3, 0,1,1, 1/2)
+                    DrawShapeOutline(gear.shape, 0,1,0, 1)
+                    DebugCross(pivot_tr.pos, 0,1,0, 1)
+                    DebugCross(parentTr.pos, 0,1,1, 1)
                 end
 
             else
 
                 if Config.debug then
-                    DrawShapeOutline(gear.shape, 1,0,0, 0.5)
+                    DrawShapeOutline(gear.shape, 1,0,0, 1)
                 end
 
             end
+
+        end
+
+    end
+
+
+    -- VTOL constraints.
+    for index, vtol in ipairs(plane.parts.vtol) do
+
+        if IsHandleValid(vtol.body) and IsHandleValid(vtol.shape) then
+
+            local parentTr = TransformToParentTransform(plane.tr, vtol.localTr) -- Tr on plane body.
+            local pivot_tr = GetLightTransform(vtol.light)
+
+
+            -- local vtol_alive = GetShapeVoxelCount(vtol.shape)/vtol.voxels > 0.5
+            -- if vtol_alive then
+
+                local phase = TimerGetPhase(plane.vtol.retract_timer)
+
+                -- Which way to rotate the landing gear.
+                local angle = Ternary(
+                    plane.vtol.isDown,
+                    -vtol.angle * (1 - phase),
+                    -vtol.angle * phase)
+
+                local gearRot = QuatRotateQuat(pivot_tr.rot, QuatEuler(0, 0, angle))
+
+                plane_Animate_AeroParts_Paralell(plane, vtol, gearRot, parentTr.rot, math.huge)
+                ConstrainPosition(vtol.body, plane.body, pivot_tr.pos, parentTr.pos)
+
+
+                if not TimerConsumed(plane.vtol.retract_timer) then
+                    PlayLoop(loops.landing_gear, pivot_tr.pos, 1.5)
+                end
+
+                if Config.debug then
+                    DrawShapeOutline(vtol.shape, 0,0,1, 1)
+                    DebugCross(pivot_tr.pos, 0,0,1, 1)
+                    DebugCross(parentTr.pos, 0,0,1, 1)
+                end
+
+            -- end
 
         end
 

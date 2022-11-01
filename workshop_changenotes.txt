@@ -1,3 +1,11 @@
+2022.10.30
+> Added plane: Harrier Jump Jet.
+> Added VTOL functionality.
+> Added rocket barrage weapon (Harrier secondary weapon)
+> Added distant projectiles UI dots.
+> Fixed spawned plane airfoil part collisions.
+
+
 2022.10.29
 > Added landing gear animation (landing gear is not functional yet)
 > Fixed targetting system.

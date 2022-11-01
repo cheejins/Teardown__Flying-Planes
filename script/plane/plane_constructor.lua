@@ -9,7 +9,6 @@ function createPlaneObject(ID)
     for index, v in ipairs(FindVehicles("Plane_ID", true)) do
         if GetTagValue(v, "Plane_ID") == ID then
             _vehicle = v
-            -- print("found plane ", ID)
             break
         end
     end
@@ -26,6 +25,7 @@ function createPlaneObject(ID)
             health = 1,
             isAlive = true,
             engineOn = true,
+            brakeOn = false,
             flaps = false,
 
         -- const values
@@ -84,13 +84,6 @@ function createPlaneObject(ID)
             camUp = 8,
             camPitch = -7,
 
-        landing_gear = {
-            isDown = true,
-            startTransition = false,
-            rate = 1,
-            retract_timer = TimerCreateRPM(0, 60/3)
-        }
-
     }
 
 
@@ -107,19 +100,11 @@ function createPlaneObject(ID)
         }
     }
 
-    if plane.model == 'a10' then
-        plane.timers = {
-            weap = {
-                primary = {time = 0, rpm = 800},
-                secondary = {time = 0, rpm = 90},
-                special = {time = 0, rpm = 1},
-            }
-        }
-    end
 
     plane.targetting = {
         target = 0,
         targetShape = nil,
+        homingCapable = true,
         lock = {
             enabled = true,
             timer = {time = 60/1.2, rpm = 60/1.2},
@@ -135,25 +120,42 @@ function createPlaneObject(ID)
         zoom = 20,
     }
 
+
+    plane_UpdateProperties(plane)
+    plane_CollectParts_Aero(plane)
+    plane_ProcessHealth(plane)
+    plane_ManageTargetting(plane)
+    plane_SetMinAltitude(plane)
+    plane_AutoConvertToPreset(plane)
+
+
+    plane.landing_gear = {
+        isDown = true,
+        startTransition = false,
+        rate = 1,
+        retract_timer = TimerCreateRPM(0, 60/3)
+    }
+
+    plane.vtol = {
+        isDown = plane_IsVtolCapable(plane),
+        startTransition = false,
+        rate = 1,
+        retract_timer = TimerCreateRPM(0, 60/2)
+    }
+
+
     plane.exhausts = {}
-    local exhaustLights = FindLights('exhaust', true)
-    for index, light in ipairs(exhaustLights) do
-        local lightBody = GetShapeBody(GetLightShape(light))
-        if lightBody == plane.body then
+    for index, light in ipairs(plane.AllLights) do
+        if HasTag(light, "exhaust") then
             table.insert(plane.exhausts, light)
         end
     end
 
 
-    plane_UpdateProperties(plane)
-    plane_ProcessHealth(plane)
-    plane_AutoConvertToPreset(plane)
-    plane_ManageTargetting(plane)
-    plane_SetMinAltitude(plane)
-
-
-    -- plane_builder.lua
-    plane.parts = plane_CollectParts_Aero(plane)
+    -- No intercollisions, but leave world collision on.
+    for _, shape in ipairs(plane.AllShapes) do
+        SetShapeCollisionFilter(shape, 4, 1)
+    end
 
 
     SetTag(plane.vehicle, 'planeActive')

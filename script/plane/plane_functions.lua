@@ -14,9 +14,8 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
         plane.isValid = plane_isValid(plane)
 
-        plane.tr = GetBodyTransform(plane.body)
 
-        -- Velocity
+        plane.tr = GetBodyTransform(plane.body)
         plane.vel = GetBodyVelocity(plane.body)
         plane.lvel = TransformToLocalVec(plane.tr, plane.vel)
         plane.speed = plane.lvel[3] * -1
@@ -30,11 +29,10 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
         plane.forces = plane.forces or Vec(0,0,0)
         plane.speedFac = clamp(plane.speed, 1, plane.speed) / plane.topSpeed
-
-        plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), 0, 1)
+        plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), -1, 1)
         plane.liftSpeedFac = plane_getLiftSpeedFac(plane)
 
-        plane.status = ''
+        plane.status = ""
 
     end
 
@@ -76,15 +74,6 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
     function plane_ToggleEngine(plane)
     end
 
-    function plane_LandingGear(plane)
-
-        if InputPressed("g") then
-            for index, shape in ipairs(FindShapes("gear", true)) do
-                Delete(shape)
-            end
-        end
-
-    end
 
     function plane_RunPropellers()
         local propellers = FindJoints('planePropeller', true)
@@ -97,21 +86,29 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
         if GetPlayerVehicle() == plane.vehicle then
 
-            if InputPressed("v") then
-                plane.engineOn = not plane.engineOn
-            end
-
-            if InputPressed("f") then
-                plane.flaps = not plane.flaps
-            end
-
-            if InputPressed(Config.toggleHoming) then
-                plane.targetting.lock.enabled = not plane.targetting.lock.enabled
-                beep()
-            end
-
-
             if plane.isAlive then
+
+                if InputPressed("n") then
+                    plane.engineOn = not plane.engineOn
+                end
+
+                if InputPressed("v") then
+                    plane.vtol.startTransition = true
+                    plane.vtol.isDown = not plane.vtol.isDown
+                end
+
+                if InputPressed("b") then
+                    plane.brakeOn = not plane.brakeOn
+                end
+
+                if InputPressed("f") then
+                    plane.flaps = not plane.flaps
+                end
+
+                if InputPressed(Config.toggleHoming) then
+                    plane.targetting.lock.enabled = not plane.targetting.lock.enabled
+                    beep()
+                end
 
                 if InputPressed("g") then
                     plane.landing_gear.startTransition = true
@@ -122,7 +119,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
             end
 
 
-            if Config.debug or db then
+            if Config.debug then
 
                 if InputPressed("f1") then
                     SetBodyVelocity(plane.body, Vec(0, 0, -100))
@@ -218,8 +215,8 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
             if plane.engineOn then
 
-                local rad = 0.5 - damageAlpha
-                local vel = 1.5 * enginePower ^ 2
+                local rad = 0.1 - damageAlpha
+                local vel = clamp(1.5 * enginePower ^ 2, 10, math.huge)
                 local alpha = enginePower + 0.1
                 local emmissive = enginePower + 2
 
@@ -274,7 +271,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
     function plane_StateText(plane)
         plane.status = "-"
         if InputDown("space") then
-            plane.status = "Air-Braking"
+            plane_StatusAppend(plane, "Air-Braking")
         end
     end
 
@@ -323,6 +320,19 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
     end
 
+    function plane_IsVtolCapable(plane)
+        return Ternary(#plane.parts.vtol >= 1, true, false)
+    end
+
+    function plane_StatusAppend(plane, str)
+        plane.status = string_append(plane.status, str)
+    end
+
+    function plane_ProcessStatus()
+    end
+
+
+
 
 --Weapons
 
@@ -363,16 +373,8 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             projPreset = ProjectilePresets.bullets.emg
                         end
 
-                        local spread = projPreset.spread
-
-                        shootTr.rot = QuatRotateQuat(shootTr.rot, QuatEuler(
-                            math.deg((math.random() - 0.5) * spread),
-                            math.deg((math.random() - 0.5) * spread),
-                            math.deg((math.random() - 0.5) * spread)))
-
                         -- Shoot projectile.
                         Projectiles_CreateProjectile(shootTr, Projectiles, projPreset, { plane.body })
-
 
 
                         ParticleReset()
@@ -409,7 +411,17 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                     shootTr.rot = QuatLookAt(plTr.pos, TransformToParentPoint(plTr, Vec(0, 0, -300)))
 
 
-                    if plane.model == 'mig29-u' then
+                    if plane.model == "harrier" then
+
+                        Projectiles_CreateProjectile(
+                            shootTr,
+                            Projectiles,
+                            ProjectilePresets.rockets.standard,
+                            { plane.body })
+
+                        PlaySound(GetRandomIndexValue(sounds.rockets), shootTr.pos, 20)
+
+                    elseif plane.model == 'mig29-u' then
                         Spawn("MOD/prefabs/grenade.xml", shootTr)
                     else
                         Projectiles_CreateProjectile(
@@ -420,18 +432,6 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             plane.targetting.targetShape)
                         PlaySound(sounds.missile, shootTr.pos, 10)
                     end
-
-
-                -- elseif plane.model == "a10" then
-                --     for i = 1, 3 do
-                --         Projectiles_CreateProjectile(
-                --             shootTr,
-                --             Projectiles,
-                --             ProjectilePresets.rockets.standard,
-                --             { plane.body })
-                --         end
-                --     PlaySound(GetRandomIndexValue(sounds.rockets), shootTr.pos, 20)
-
 
                 end
 
@@ -499,7 +499,6 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
 
 --DEBUG
-
     function plane_Debug(plane)
 
     end
