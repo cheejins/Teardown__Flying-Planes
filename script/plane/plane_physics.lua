@@ -17,7 +17,7 @@ function plane_Move(plane)
         elseif plane.speed < plane.topSpeed then
 
 
-            if plane.exhausts then
+            if #plane.exhausts >= 1 then
 
                 local exhaust_count = #plane.exhausts
 
@@ -29,7 +29,6 @@ function plane_Move(plane)
 
                     local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust))
                     thrustImpulseAmt = thrustImpulseAmt / exhaust_count * vtolImpulseMult -- Spread force evenly.
-
 
                     ApplyBodyImpulse(
                         plane.body,

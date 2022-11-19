@@ -95,7 +95,9 @@ function plane_Steer_Simple(plane, rot, disable_input)
 
     end
 
-    SetBodyTransform(plane.body, pTr)
+    if plane.totalVel > 2 then
+        SetBodyTransform(plane.body, pTr)
+    end
 
 end
 

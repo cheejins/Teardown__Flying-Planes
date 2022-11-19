@@ -62,10 +62,6 @@ end
 
 function tick()
 
-    if InputDown("y") then
-        PrintEnv()
-    end
-
     Tick_Utils()
 
     AllVehicles = FindVehicles("", true)

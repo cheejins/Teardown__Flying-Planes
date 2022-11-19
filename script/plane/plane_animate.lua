@@ -1,21 +1,33 @@
-local s1 = 1
-local s2 = 1
-local s3 = 1
-
-
-
 ---comment
 ---@param plane table
 ---@param controlsVec table Vec which contains data for pitch, yaw and roll.
 function plane_Animate_AeroParts(plane, ignore_input)
 
+    local sub_dir = Vec(0,0,0)
+    if IsSimpleFlight() and plane.camera then
+        if plane.camera.tr then
 
-    local w = InputDown("w")
-    local s = InputDown("s")
-    local a = InputDown("a")
-    local d = InputDown("d")
-    local c = InputDown("c")
-    local z = InputDown("z")
+            local cam_dir = Vec(GetQuatEuler(plane.camera.tr.rot or Quat()))
+            local plane_dir = Vec(GetQuatEuler(plane.tr.rot))
+            sub_dir = VecSub(plane_dir, cam_dir)
+
+            if plane.vehicle == GetPlayerVehicle() then
+                DebugWatch("sub_dir", sub_dir)
+            end
+
+        end
+    end
+
+    local dead_zone = 5
+    local w = InputDown("w") or (sub_dir[1] > dead_zone)
+    local s = InputDown("s") or (sub_dir[1] < -dead_zone)
+
+    local a = InputDown("a") or (sub_dir[3] > dead_zone)
+    local d = InputDown("d") or (sub_dir[3] < -dead_zone)
+
+    local c = InputDown("c") or (sub_dir[2] > dead_zone)
+    local z = InputDown("z") or (sub_dir[2] < -dead_zone)
+
 
     -- Aero part animations.
     for parts_key, parts in pairs(plane.parts.aero) do

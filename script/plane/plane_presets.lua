@@ -149,7 +149,7 @@ function convertPlaneToHarrier(plane)
     plane.isArmed = true
 
     plane.topSpeed = 120
-    plane.thrustImpulseAmount = 70
+    plane.thrustImpulseAmount = 90
     plane.engineVol = 1
 
     plane.brakeImpulseAmt = 100

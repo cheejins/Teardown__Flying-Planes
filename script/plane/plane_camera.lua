@@ -35,6 +35,7 @@ function plane_ManageCamera(plane, auto_center_delay)
         plane.camera.cameraY = clamp(plane.camera.cameraY, -89, 89)
     end
 
+
     -- Lerp camera towards plane rot
     if auto_center_delay and TimerConsumed(timer_auto_center) then
 
@@ -70,6 +71,8 @@ function plane_ManageCamera(plane, auto_center_delay)
 	local cameraPos = TransformToParentPoint(cameraT, Vec(0, camH, plane.camera.zoom))
 	local camera = Transform(VecLerp(cameraPos, GetCameraTransform().pos, 0.5), cameraRot)
 
+    plane.camera.tr = TransformCopy(camera)
+
 	SetCameraTransform(camera, zoomFOV)
 
 end
@@ -88,7 +91,7 @@ function plane_Camera(plane)
 
     -- elseif SelectedCamera == 'Seat' then
 
-    --     plane_ManageCamera(plane)
+        -- plane_ManageCamera(plane)
 
     end
 
@@ -112,7 +115,7 @@ function plane_ChangeCamera()
     end
 
     -- Simple mode cannot use aligned camera since steering depends on camera rotation.
-    if SelectedCamera == "Aligned" and IsSimpleFlight() then
+    if IsSimpleFlight() and (SelectedCamera == "Aligned" or SelectedCamera == "Seat") then
         plane_ChangeCamera()
     end
 

@@ -212,9 +212,9 @@ function Init_Projectiles()
                 },
 
                 homing = {
-                    force = 0.005,
+                    force = 0.02,
                     gain = 0.0,
-                    max = 0.01,
+                    max = 0.02,
                     targetShape = nil,
                     targetPos = Vec(),
                     targetPosRadius = 0,

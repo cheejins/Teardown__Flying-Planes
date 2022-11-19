@@ -24,9 +24,11 @@ function aiplanes_CreateFlightpaths()
         local pos = CreateFlightPos(radius, heightRange)
 
         local tries = 0
-        while VecDist(flightPath[#flightPath], pos) < (radius / 4) or (tries > 5) do
+        while VecDist(flightPath[#flightPath], pos) < (radius / 4) or (tries < 5) do
+
             pos = CreateFlightPos(radius, heightRange)
             tries = tries + 1
+
         end
 
         table.insert(flightPath, pos)

@@ -64,6 +64,10 @@ function Init_Draw()
                         simple      = "G",
                         simulation  = "G"},
 
+            { title = "Wheel Brake ",
+                        simple      = "B",
+                        simulation  = "B"},
+
             { title = "VTOL",
                         simple      = "V",
                         simulation  = "V"},
