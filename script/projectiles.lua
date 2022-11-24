@@ -16,7 +16,7 @@ function Init_Projectiles()
 
                 category = 'bullet',
 
-                speed = 3,
+                speed = 5,
                 spread = 0.05,
                 drop = 0,
                 dropIncrement = 0,
@@ -212,9 +212,9 @@ function Init_Projectiles()
                 },
 
                 homing = {
-                    force = 0.02,
+                    force = 0.015,
                     gain = 0.0,
-                    max = 0.02,
+                    max = 0.015,
                     targetShape = nil,
                     targetPos = Vec(),
                     targetPosRadius = 0,

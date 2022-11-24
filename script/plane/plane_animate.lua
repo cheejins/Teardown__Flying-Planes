@@ -11,9 +11,9 @@ function plane_Animate_AeroParts(plane, ignore_input)
             local plane_dir = Vec(GetQuatEuler(plane.tr.rot))
             sub_dir = VecSub(plane_dir, cam_dir)
 
-            if plane.vehicle == GetPlayerVehicle() then
-                DebugWatch("sub_dir", sub_dir)
-            end
+            -- if plane.vehicle == GetPlayerVehicle() then
+            --     DebugWatch("sub_dir", sub_dir)
+            -- end
 
         end
     end
@@ -33,7 +33,7 @@ function plane_Animate_AeroParts(plane, ignore_input)
     for parts_key, parts in pairs(plane.parts.aero) do
         for part_key, part in ipairs(parts) do
 
-            if IsHandleValid(part.shape) then
+            if IsHandleValid(part.shape) and IsHandleValid(part.body) and IsHandleValid(part.light_pivot) then
 
                 local aero_rate = 1.5
                 local angle = 30
@@ -42,10 +42,9 @@ function plane_Animate_AeroParts(plane, ignore_input)
                 local light_pivot = part.light_pivot
                 local pivot_tr = GetLightTransform(light_pivot)
 
-                ConstrainPosition(part.body, plane.body, pivot_tr.pos, parentTr.pos)
+                -- ConstrainPosition(part.body, plane.body, pivot_tr.pos, parentTr.pos)
                 -- ConstrainVelocity(part.body, plane.body, pivot_tr.pos, VecNormalize(plane.vel))
                 -- ConstrainAngularVelocity(part.body, plane.body, plane.tr.)
-
 
                 -- if part.body ~= plane.body then
                     -- SetBodyAngularVelocity(part.body, Vec(0,0,0))

@@ -53,8 +53,8 @@ function Manage_Enemies()
         if GetVehicleHealth(AA.vehicle) > 0 then
 
             local proj = DeepCopy(ProjectilePresets.bullets.aa)
-
             local shootPos = VecAdd(AabbGetBodyCenterTopPos(AA.body), Vec(0,4,0))
+
 
             -- Set target
             AA.targetPos = GetPlayerTransform().pos
@@ -64,30 +64,30 @@ function Manage_Enemies()
             if GetPlayerVehicle() ~= 0 then
 
                 local targetVel = GetBodyVelocity(GetVehicleBody(playerVehicle))
-                local targetDist = GTZero(VecDist(AA.targetPos, shootPos))/10
-                -- local velScale = 1 / proj.speed * targetDist / 10
-                local velScale = proj.speed/targetDist
+                local targetDist = VecDist(AA.targetPos, shootPos)/10
+                local velScale = targetDist / proj.speed
 
-                AA.targetPos = VecAdd(
-                    GetBodyTransform(GetVehicleBody(playerVehicle)).pos,
-                    VecScale(targetVel, velScale))
+                local bodyTr = GetBodyTransform(GetVehicleBody(playerVehicle))
+
+
+                AA.targetPos = VecAdd(bodyTr.pos, VecScale(targetVel, velScale/10))
+
 
             end
 
 
+
             -- Set up shooting.
             local shootTr = Transform(shootPos, QuatLookAt(shootPos, AA.targetPos))
+
             shootTr.rot = QuatRotateQuat(
                 shootTr.rot,
                 QuatEuler(
-                    (math.random()+0.5)*12,
-                    (math.random()+0.5)*12,
-                    (math.random()+0.5)*12
+                    (math.random()+0.5),
+                    (math.random()+0.5),
+                    (math.random()+0.5)
                 ))
 
-            -- if AA.type == AA_Types.SAM.title then
-            --     shootTr.rot = QuatLookAt()
-            -- end
 
 
             local targetShape = nil
@@ -116,7 +116,7 @@ function Manage_Enemies()
 
                 -- Shoot
                 TimerRunTime(AA.timer)
-                if playerVehicle and GetVehicleTransform(playerVehicle).pos[2] > 25 then
+                if GetVehicleTransform(playerVehicle).pos[2] > 25 then
 
                     if TimerConsumed(AA.timer) then
                         TimerResetTime(AA.timer)
@@ -130,7 +130,6 @@ function Manage_Enemies()
                         PointLight(shootTr.pos, 1,0.25,1, 3)
 
                     end
-
 
                     if AA.type == AA_Types.MG.title then
                         PlayLoop(sounds.mg3, shootTr.pos, 100)
