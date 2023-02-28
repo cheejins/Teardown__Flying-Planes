@@ -273,7 +273,7 @@ function plane_Animate_AeroParts(plane, ignore_input)
 
                 local gearRot = QuatRotateQuat(pivot_tr.rot, QuatEuler(0, 0, angle))
 
-                plane_Animate_AeroParts_Paralell(plane, vtol, gearRot, parentTr.rot, math.huge)
+                plane_Animate_AeroParts_Paralell(plane, vtol, gearRot, QuatSlerp(parentTr.rot, QuatLookDown(), 0.1), math.huge)
                 ConstrainPosition(vtol.body, plane.body, pivot_tr.pos, parentTr.pos)
 
 

@@ -179,34 +179,16 @@ function plane_Steer(plane)
     local inc = InputControlIncrement
 
 
+    -- local camPlaneRelDir = TransformToLocalVec(GetCameraTransform(), QuatToDir(plane.tr.rot))
+
+    -- DebugWatch("camPlaneRelDir", camPlaneRelDir)
+
     local w = InputDown("w")
     local s = InputDown("s")
     local a = InputDown("a")
     local d = InputDown("d")
     local c = InputDown("c")
     local z = InputDown("z")
-
-
-    -- if camPos == "aligned" then
-
-    --     if InputValue("mousedy") > 1 then
-    --         s = true
-    --         ic.s = InputValue("mousedy")/10
-    --     end
-    --     if InputValue("mousedy") < -1 then
-    --         w = true
-    --         ic.w = -InputValue("mousedy")/10
-    --     end
-    --     if InputValue("mousedx") > 1 then
-    --         c = true
-    --         ic.c = InputValue("mousedx")/10
-    --     end
-    --     if InputValue("mousedx") < -1 then
-    --         z = true
-    --         ic.z = -InputValue("mousedx")/10
-    --     end
-
-    -- end
 
 
     if w then
@@ -267,6 +249,8 @@ function plane_Steer(plane)
             plane_GetFwdPos(plane, plane.speed * plane.brakeImpulseAmt))
         plane_StatusAppend(plane, "Air-Braking")
     end
+
+    dbw("angvel", GetBodyAngularVelocity(plane.body))
 
 end
 

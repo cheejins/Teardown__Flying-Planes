@@ -2,10 +2,10 @@ local timer_auto_center = { time = 0, rpm = 60/3 } -- Time before beginning auto
 
 
 CameraPositions = {
-    "Orbit",
     "Aligned",
+    "Seat",
+    "Orbit"
     -- "Vehicle",
-    "Seat"
 }
 
 
@@ -13,6 +13,8 @@ function plane_ManageCamera(plane, auto_center_delay)
 
     -- Get mouse input.
 	local mx, my = InputValue("mousedx"), InputValue("mousedy")
+
+    local planeEuler = Vec(GetQuatEuler(plane.tr.rot))
 
 
     -- Reset auto center delay if mouse input.
@@ -31,6 +33,8 @@ function plane_ManageCamera(plane, auto_center_delay)
 	plane.camera.cameraY = plane.camera.cameraY - my / (zoomFOV or 10)
 	plane.camera.cameraZ = plane.camera.cameraZ or 0
 
+
+
     if IsSimpleFlight() then
         plane.camera.cameraY = clamp(plane.camera.cameraY, -89, 89)
     end
@@ -44,12 +48,12 @@ function plane_ManageCamera(plane, auto_center_delay)
             plane.camera.cameraX,
             plane.camera.cameraZ)
 
-        local rotDiff = QuatSlerp(camRot, plane.tr.rot, 0.05)
+        -- local rotDiff = QuatSlerp(camRot, plane.tr.rot, 0.02)
 
-        local x,y,z = GetQuatEuler(rotDiff)
-        plane.camera.cameraX = y
-        plane.camera.cameraY = x
-        plane.camera.cameraZ = z
+        -- local x,y,z = GetQuatEuler(rotDiff)
+        -- plane.camera.cameraX = y
+        -- plane.camera.cameraY = x
+        -- plane.camera.cameraZ = z
 
     end
 
@@ -95,6 +99,11 @@ function plane_Camera(plane)
 
     end
 
+    -- Simple mode cannot use aligned camera since steering depends on camera rotation.
+    if IsSimpleFlight() and (SelectedCamera == "Aligned" or SelectedCamera == "Seat") then
+        plane_ChangeCamera()
+    end
+
 end
 
 
@@ -112,11 +121,6 @@ function plane_ChangeCamera()
 
         SelectedCamera = CameraPositions[index]
 
-    end
-
-    -- Simple mode cannot use aligned camera since steering depends on camera rotation.
-    if IsSimpleFlight() and (SelectedCamera == "Aligned" or SelectedCamera == "Seat") then
-        plane_ChangeCamera()
     end
 
 end

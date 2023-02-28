@@ -1,39 +1,59 @@
 Actions = {
-    shoot_primary,
-    shoot_secondary,
-    homing,
-    thrust_increase,
-    thrust_decrease,
-    pitch_up,
-    pitch_down,
-    roll_left,
-    roll_right,
-    yaw_left,
-    yaw_right,
-    airbrake,
-    freecam,
-    change_camera,
-    next_target,
-    disable_input,
+    shoot_primary   = "shoot_primary",
+    shoot_secondary = "shoot_secondary",
+    homing_enabled  = "homing_enabled",
+    thrust_increase = "thrust_increase",
+    thrust_decrease = "thrust_decrease",
+    pitch_up        = "pitch_up",
+    pitch_down      = "pitch_down",
+    roll_left       = "roll_left",
+    roll_right      = "roll_right",
+    yaw_left        = "yaw_left",
+    yaw_right       = "yaw_right",
+    airbrake        = "airbrake",
+    freecam         = "freecam",
+    change_camera   = "change_camera",
+    next_target     = "next_target",
+    disable_input   = "disable_input",
 }
 
+Controls = {
+    shoot_primary   = "shoot_primary",
+    shoot_secondary = "shoot_secondary",
+    homing_enabled  = "homing_enabled",
+    thrust_increase = "thrust_increase",
+    thrust_decrease = "thrust_decrease",
+    pitch_up        = "pitch_up",
+    pitch_down      = "pitch_down",
+    roll_left       = "roll_left",
+    roll_right      = "roll_right",
+    yaw_left        = "yaw_left",
+    yaw_right       = "yaw_right",
+    airbrake        = "airbrake",
+    freecam         = "freecam",
+    change_camera   = "change_camera",
+    next_target     = "next_target",
+    disable_input   = "disable_input",
+}
+
+KeysPath = "savegame.mod.options.keybinds"
 
 Keys = {
 
     Weapons = {
         {
             key =     "lmb",
-            action =  "shoot_primary",
-            title =   "Shoot primary",
+            action =  Actions.shoot_primary,
+            title =   "Shoot primary.",
         },
         {
             key =     "rmb",
-            action =  "shoot_secondary",
-            title =   "Shoot secondary",
+            action =  Actions.shoot_secondary,
+            title =   "Shoot secondary.",
         },
         {
             key =     "h",
-            action =  "homing",
+            action =  Actions.homing_enabled,
             title =   "Toggle missile homing on/off",
         },
     },
@@ -41,47 +61,47 @@ Keys = {
     Movement = {
         {
             key =     "shift",
-            action =  "thrust_increase",
+            action =  Actions.thrust_increase,
             title =   "Thrust increase",
         },
         {
             key =     "ctrl",
-            action =  "thrust_decrease",
+            action =  Actions.thrust_decrease,
             title =   "Thrust decrease",
         },
         {
             key =     "s",
-            action =  "pitch_up",
+            action =  Actions.pitch_up,
             title =   "Pitch up",
         },
         {
             key =     "w",
-            action =  "pitch_down",
+            action =  Actions.pitch_down,
             title =   "Pitch down",
         },
         {
             key =     "a",
-            action =  "roll_left",
+            action =  Actions.roll_left,
             title =   "Roll left",
         },
         {
             key =     "d",
-            action =  "roll_right",
+            action =  Actions.roll_right,
             title =   "Roll right",
         },
         {
             key =     "z",
-            action =  "yaw_left",
+            action =  Actions.yaw_left,
             title =   "Yaw left",
         },
         {
             key =     "c",
-            action =  "yaw_right",
+            action =  Actions.yaw_right,
             title =   "Yaw right",
         },
         {
             key =     "space",
-            action =  "airbrake",
+            action =  Actions.airbrake,
             title =   "Airbrake",
         },
     },
@@ -89,12 +109,12 @@ Keys = {
     Camera = {
         {
             key =     "x",
-            action =  "freecam",
+            action =  Actions.freecam,
             title =   "Free camera (hold)",
         },
         {
             key =     "r",
-            action =  "change_camera",
+            action =  Actions.change_camera,
             title =   "Switch to the next camera view",
         },
     },
@@ -102,7 +122,7 @@ Keys = {
     Targeting = {
         {
             key =     "q",
-            action =  "next_target",
+            action =  Actions.next_target,
             title =   "Select next target",
         },
     },
@@ -110,7 +130,7 @@ Keys = {
     Misc = {
         {
             key =     "k",
-            action =  "disable_input",
+            action =  Actions.disable_input,
             title =   "Temporarily disable all plane inputs.",
         },
     },

@@ -1,6 +1,6 @@
-name = Flying Planes + New Aerodynamics
+name = Flying Planes
 author = Cheejins
-description =[noupload] The new "simualtion" flight mode calculates realistic aerodynamics (work in progress).
+description =[noupload]The new "simualtion" flight mode calculates realistic aerodynamics (work in progress).
 tags=Map,Vehicle
 
 # If description contains [noupload] the description on Steam workshop will not be overwritten.

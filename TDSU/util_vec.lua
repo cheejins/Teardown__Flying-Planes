@@ -351,3 +351,62 @@ end
 function IsInfrontOfTr(tr, pos)
     return TransformToLocalPoint(tr, pos)[3] < 0
 end
+
+
+
+-- Source: OpenAi
+function quat_to_dir(q)
+    local dir_x = 2 * (q[1] * q[3] - q[4] * q[2])
+    local dir_y = 2 * (q[2] * q[3] + q[4] * q[1])
+    local dir_z = 1 - 2 * (q[1] * q[1] + q[2] * q[2])
+    local magnitude = math.sqrt(dir_x * dir_x + dir_y * dir_y + dir_z * dir_z)
+    return Vec(dir_x / magnitude, dir_y / magnitude, dir_z / magnitude)
+end
+
+
+-- Source: OpenAi
+function dir_to_quat(dir)
+    dir = VecNormalize(dir)
+    local angle = math.acos(dir.z)
+    local axis = VecNormalize(Vec(-dir.y, dir.x, 0))
+    local s = math.sin(angle/2)
+    local c = math.cos(angle/2)
+    return Quat(c, axis.x*s, axis.y*s, axis.z*s)
+end
+
+
+-- Source: OpenAi
+function euler_to_dir(euler)
+    local dir = VecNormalize(Vec(
+        math.sin(euler.y) * math.cos(euler.x),
+        math.sin(euler.x),
+        math.cos(euler.y) * math.cos(euler.x)))
+    return dir
+end
+
+
+-- Source: OpenAi
+function dir_to_euler(dir)
+    return Vec(math.asin(dir.y), math.atan2(dir.x, dir.z), 0)
+end
+
+
+-- Source: OpenAi
+function vec_angle(v1, v2)
+    local dotProduct = VecDot(v1, v2)
+    local mag1 = VecLength(v1)
+    local mag2 = VecLength(v2)
+    local cosAngle = dotProduct / (mag1 * mag2)
+    local angle = math.acos(cosAngle)
+    return angle
+end
+
+
+-- Source: OpenAi
+function quat_angle(q1, q2)
+    local dir1 = quat_to_dir(q1)
+    local dir2 = quat_to_dir(q2)
+    local cosAngle = VecDot(dir1, dir2) / (VecLength(dir1) * VecLength(dir2))
+    local angle = math.acos(cosAngle)
+    return angle
+end
