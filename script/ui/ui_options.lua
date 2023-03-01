@@ -159,6 +159,18 @@ function DrawIngameOptions()
     margin(0, marginY2*2)
 
     UiPush()
+        local c = boolColor(Config.enemy_aa)
+        UiColor(c[1], c[2], c[3])
+        UiAlign('center middle')
+        UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
+        if UiTextButton('Enemy AA', btn_w, marginY2*1.5) then
+            Config.enemy_aa = not Config.enemy_aa
+        end
+    UiPop()
+
+    margin(0, marginY2*2)
+
+    UiPush()
         local c = boolColor(Config.draw_projectiles)
         UiColor(c[1], c[2], c[3])
         UiAlign('center middle')

@@ -126,7 +126,7 @@ function Manage_Enemies()
                             PlaySound(sounds.missile, shootTr.pos, 100)
                         end
 
-                        Projectiles_CreateProjectile(shootTr, Projectiles, proj, {AA.body}, targetShape)
+                        projectile_create(shootTr, Projectiles, proj, {AA.body}, targetShape)
                         PointLight(shootTr.pos, 1,0.25,1, 3)
 
                     end

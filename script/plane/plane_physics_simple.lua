@@ -66,14 +66,13 @@ end
 -- Steer plane based on camera direction.
 function plane_Steer_Simple(plane, rot, disable_input)
 
-    SOS = SOS or AutoBatchCreateSOS(Vec(0,0,0), 0.9, 0.9, 0.9)
-    AutoBatchSOSUpdate(SOS, Vec(plane.camera.cameraX,plane.camera.cameraY,plane.camera.cameraZ), GetTime())
+    -- SOS = SOS or AutoBatchCreateSOS(Vec(0,0,0), 0.9, 0.9, 0.9)
+    -- AutoBatchSOSUpdate(SOS, Vec(plane.camera.cameraX,plane.camera.cameraY,plane.camera.cameraZ), GetTime())
 
-
-    if plane.vehicle == GetPlayerVehicle() then
-        DebugWatch("pcam", Vec(plane.camera.cameraX, plane.camera.cameraY, plane.camera.cameraZ))
-        DebugWatch("SOS", Vec(SOS[1].value, SOS[2].value, SOS[3].value))
-    end
+    -- if plane.vehicle == GetPlayerVehicle() then
+    --     DebugWatch("pcam", Vec(plane.camera.cameraX, plane.camera.cameraY, plane.camera.cameraZ))
+    --     DebugWatch("SOS", Vec(SOS[1].value, SOS[2].value, SOS[3].value))
+    -- end
 
 
     local speed = plane.speed
@@ -171,7 +170,7 @@ function plane_Steer_Simple(plane, rot, disable_input)
     end
 
 
-    if plane.totalVel > 1  then
+    if plane.totalVel > 5  then
 
         -- local plane_cam_angle = QuatAngle(plane.tr.rot, GetCameraTransform().rot)
 
@@ -180,7 +179,10 @@ function plane_Steer_Simple(plane, rot, disable_input)
         SetBodyTransform(plane.body, plane.tr)
         ConstrainOrientation(plane.body, 0, plane.tr.rot, GetCameraTransform().rot, turnAmt * 5)
 
-    end
+    -- else
 
+        -- plane_CameraAimGroundSteering(plane)
+
+    end
 
 end

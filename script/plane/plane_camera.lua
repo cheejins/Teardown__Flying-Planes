@@ -48,12 +48,12 @@ function plane_ManageCamera(plane, auto_center_delay)
             plane.camera.cameraX,
             plane.camera.cameraZ)
 
-        -- local rotDiff = QuatSlerp(camRot, plane.tr.rot, 0.02)
+        local rotDiff = QuatSlerp(camRot, plane.tr.rot, 0.02)
 
-        -- local x,y,z = GetQuatEuler(rotDiff)
-        -- plane.camera.cameraX = y
-        -- plane.camera.cameraY = x
-        -- plane.camera.cameraZ = z
+        local x,y,z = GetQuatEuler(rotDiff)
+        plane.camera.cameraX = y
+        plane.camera.cameraY = x
+        plane.camera.cameraZ = z
 
     end
 

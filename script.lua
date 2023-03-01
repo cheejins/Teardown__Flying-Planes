@@ -48,7 +48,7 @@ function init()
     Init_AIPLANES()
     Init_Config()
     Init_Sounds()
-    Init_Projectiles()
+    init_projectiles()
     Init_Enemies()
     Init_Draw()
     Manage_SmallMapMode()
@@ -95,16 +95,14 @@ function tick()
     Tick_aiplanes()
     Manage_Spawning()
     aiplane_AssignPlanes()
-    Manage_DebugMode()
+    debug_manage()
     Manage_SmallMapMode()
-    Projectiles_Manage()
+    projectiles_manage()
     Manage_Enemies()
     plane_RunPropellers()
 
 
-    if InputPressed("m") then
-        SetBool("level.enemies_disabled", not GetBool("level.enemies_disabled"))
-    end
+    SetBool("level.enemies_disabled", Config.enemy_aa)
 
 end
 
@@ -121,7 +119,7 @@ function draw()
     Draw_PLANES()
 
     if Config.draw_projectiles then
-        Projectiles_Draw(200, 500)
+        projectiles_draw(200, 500)
     end
 
 end

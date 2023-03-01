@@ -167,7 +167,7 @@ function plane_Steer(plane)
 
     end
 
-    local imp = math.abs(idealSpeedFactor * GetBodyMass(plane.body) * clamp(plane.health, 0.5, 1) / 20)
+    local imp = math.abs(idealSpeedFactor * GetBodyMass(plane.body) * clamp(plane.health, 0.7, 1) / 20)
 
     local nose = TransformToParentPoint(plane.tr, Vec(0, 0, -10))
     local wing = TransformToParentPoint(plane.tr, Vec(-10, 0, 0))
@@ -179,9 +179,6 @@ function plane_Steer(plane)
     local inc = InputControlIncrement
 
 
-    -- local camPlaneRelDir = TransformToLocalVec(GetCameraTransform(), QuatToDir(plane.tr.rot))
-
-    -- DebugWatch("camPlaneRelDir", camPlaneRelDir)
 
     local w = InputDown("w")
     local s = InputDown("s")
@@ -189,6 +186,7 @@ function plane_Steer(plane)
     local d = InputDown("d")
     local c = InputDown("c")
     local z = InputDown("z")
+
 
 
     if w then

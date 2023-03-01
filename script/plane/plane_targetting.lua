@@ -132,18 +132,20 @@ end
 
 
 function plane_draw_Targetting(plane)
-    if #plane.targetting.targetVehicles >= 1 then
+    UiPush()
+        if #plane.targetting.targetVehicles >= 1 then
 
-        -- Draw targets.
-        for key, vehicle in pairs(plane.targetting.targetVehicles) do
-            if vehicle ~= plane.targetting.target then
-                plane_draw_Target(plane, vehicle) -- Draw all targets except selected target.
+            -- Draw targets.
+            for key, vehicle in pairs(plane.targetting.targetVehicles) do
+                if vehicle ~= plane.targetting.target then
+                    plane_draw_Target(plane, vehicle) -- Draw all targets except selected target.
+                end
             end
+
+            plane_draw_Target(plane, plane.targetting.target) -- Draw selected target on top level of ui
+
         end
-
-        plane_draw_Target(plane, plane.targetting.target) -- Draw selected target on top level of ui
-
-    end
+    UiPop()
 end
 
 

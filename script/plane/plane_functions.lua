@@ -31,6 +31,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
         plane.speedFac = clamp(plane.speed, 1, plane.speed) / plane.topSpeed
         plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), -1, 1)
         plane.liftSpeedFac = plane_getLiftSpeedFac(plane)
+        plane.isStalling = plane.speed*2 < plane.totalVel
 
         plane.status = ""
 
@@ -374,7 +375,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                         end
 
                         -- Shoot projectile.
-                        Projectiles_CreateProjectile(shootTr, Projectiles, projPreset, { plane.body })
+                        projectile_create(shootTr, Projectiles, projPreset, { plane.body })
 
 
                         ParticleReset()
@@ -413,7 +414,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
                     if plane.model == "harrier" then
 
-                        Projectiles_CreateProjectile(
+                        projectile_create(
                             shootTr,
                             Projectiles,
                             ProjectilePresets.rockets.standard,
@@ -424,7 +425,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                     elseif plane.model == 'mig29-u' then
                         Spawn("MOD/prefabs/grenade.xml", shootTr)
                     else
-                        Projectiles_CreateProjectile(
+                        projectile_create(
                             shootTr,
                             Projectiles,
                             ProjectilePresets.missiles.standard,
@@ -469,7 +470,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             local tr = GetLightTransform(weap.light)
                             local bombTr = Transform(tr.pos, QuatLookDown(tr.pos))
 
-                            Projectiles_CreateProjectile(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
+                            projectile_create(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
 
                         end
 

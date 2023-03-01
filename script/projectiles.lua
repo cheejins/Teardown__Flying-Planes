@@ -1,7 +1,7 @@
 Projectiles = {}
 
 
-function Init_Projectiles()
+function init_projectiles()
 
     ProjectilePresets = {
 
@@ -315,7 +315,8 @@ function Init_Projectiles()
 
 end
 
-function Projectiles_CreateProjectile(transform, projectiles, projPreset, ignoreBodies, homingShape) --- Instantiates a proj and adds it to the projectiles table.
+
+function projectile_create(transform, projectiles, projPreset, ignoreBodies, homingShape) --- Instantiates a proj and adds it to the projectiles table.
 
     local proj = DeepCopy(projPreset)
     proj.ignoreBodies = DeepCopy(ignoreBodies)
@@ -350,14 +351,14 @@ function Projectiles_CreateProjectile(transform, projectiles, projPreset, ignore
 
 end
 
-function Projectiles_Manage()
+function projectiles_manage()
 
     local projectilesToRemove = {} -- projectiles iterations.
     for i, proj in ipairs(Projectiles) do
 
         if proj.isActive then
 
-            Projectiles_PropelProjectile(proj)
+            projectile_propel(proj)
 
         else-- if proj is inactive.
 
@@ -373,7 +374,7 @@ function Projectiles_Manage()
 
 end
 
-function Projectiles_PropelProjectile(proj)
+function projectile_propel(proj)
 
     --+ Move proj forward.
     proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
@@ -483,7 +484,7 @@ function Projectiles_PropelProjectile(proj)
 
 end
 
-function Projectiles_Draw(minDist, maxDist)
+function projectiles_draw(minDist, maxDist)
     UiPush()
 
         for index, proj in ipairs(Projectiles) do
@@ -519,7 +520,6 @@ function Projectiles_Draw(minDist, maxDist)
 
     UiPop()
 end
-
 
 
 -- Source: OpenAI
