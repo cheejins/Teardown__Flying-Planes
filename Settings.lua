@@ -122,9 +122,10 @@ end
 ---@param title string
 ---@param tb_values table Array of valid keys.
 ---@return table
-function st_object_keybind(tb_values, title)
+function st_object_keybind(action, tb_values, title)
 
     return {
+        action = action,
         title = title,
         type  = struct_table_types.keybind,
 
