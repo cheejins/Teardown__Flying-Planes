@@ -56,34 +56,34 @@ function draw()
         UiPop() end
 
 
-        -- -- Button : Start Demo Map
-        -- do UiPush()
+        -- Button : Start Demo Map
+        do UiPush()
 
-        --     UiAlign('center middle')
-        --     UiFont('regular.ttf', font_size*1.5)
-        --     UiTranslate(0, 190)
-        --     -- local c = Oscillate(2)/3 + 2/3
-        --     -- UiColor(c,c,1,1)
-        --     -- UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
-        --     -- UiButtonHoverColor(0.5,0.5,1,1)
-        --     -- if UiTextButton('Start Demo Map', 350, font_size*2.5) then
-        --     --     StartLevel('', 'demo.xml', '')
-        --     -- end
+            UiAlign('center middle')
+            UiFont('regular.ttf', font_size*1.5)
+            UiTranslate(0, 190)
+            -- local c = Oscillate(2)/3 + 2/3
+            -- UiColor(c,c,1,1)
+            -- UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
+            -- UiButtonHoverColor(0.5,0.5,1,1)
+            -- if UiTextButton('Start Demo Map', 350, font_size*2.5) then
+            --     StartLevel('', 'demo.xml', '')
+            -- end
 
-        --     UiTranslate(0, 80)
-        --     UiColor(1,1,1,1)
+            UiTranslate(0, 80)
+            UiColor(1,1,1,1)
 
-        --     UiTranslate(0, font_size*2.5)
-        --     Ui_Option_Keybind(250, font_size*2, 0, "Change Target", Config.changeTarget, Config, "changeTarget")
+            UiTranslate(0, font_size*2.5)
+            Ui_Option_Keybind(250, font_size*2, 0, "Change Target", Config.changeTarget, Config, "changeTarget")
 
-        --     UiTranslate(0, font_size*2.5)
-        --     Ui_Option_Keybind(250, font_size*2, 0, "Toggle Missile Homing", Config.toggleHoming, Config, "toggleHoming")
+            UiTranslate(0, font_size*2.5)
+            Ui_Option_Keybind(250, font_size*2, 0, "Toggle Missile Homing", Config.toggleHoming, Config, "toggleHoming")
 
-        --     UiFont('regular.ttf', 32)
-        --     UiTranslate(0, font_size*3)
-        --     UiText("More keybinds coming soon.")
+            UiFont('regular.ttf', 32)
+            UiTranslate(0, font_size*3)
+            UiText("More keybinds coming soon.")
 
-        -- UiPop() end
+        UiPop() end
 
 
     UiPop() end

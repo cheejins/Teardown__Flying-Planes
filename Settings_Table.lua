@@ -12,7 +12,7 @@ local kbcats = { -- Keybind categories. Used for display order.
 
 function Init_Settings_Table()
 
-	-- Default is simple mode becase everyone uses it.
+	-- Default is simple mode because everyone uses it.
 	Settings_Table = {
 
 		keybinds = {
