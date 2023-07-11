@@ -15,26 +15,40 @@ function init()
     end
 
     ui = {
+
         text = {
             size = {
-                s = 24,
-                m = 48,
-                l = 64,
+                s = 12,
+                m = 24,
+                l = 48,
             },
         },
-    }
 
-    Pad = 10
-    Pad2 = Pad*2
+        container = {
+            width = 1440,
+            height = 240,
+            margin = 240,
+        },
+
+        padding = {
+            container = {
+                width = UiWidth() * 0.2,
+                height = UiHeight() * 0.1,
+            },
+        },
+
+        bgColor = 0.12,
+        fgColor = 0.4,
+    }
 
 end
 
 function tick()
 
-    -- if InputPressed("g") then
-    --     ClearKey("savegame.mod")
-    --     print("Reset reg level loader...")
-    -- end
+    if InputPressed("g") then
+        ClearKey("savegame.mod")
+        print("Reset reg level loader...")
+    end
 
     if GetBool('savegame.mod.debugMode') then
         if GetBool('savegame.mod.testMap') then
@@ -47,22 +61,28 @@ function tick()
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
 
-    if InputPressed("pause") then
-        Menu()
-    end
-
 end
 
 
 function draw()
 
-    UiColor(1,1,1,1)
+    UiColor(0,0,0,1)
     UiRect(UiWidth(), UiHeight())
     UiMakeInteractive()
 
-    uiSetFont(ui.text.size.m)
+    do UiPush()
+        UiTranslate(UiCenter(), 50)
 
-    draw_mainmenu_banner()
+        UiColor(1, 1, 1)
+        UiFont("regular.ttf", 50)
+
+        -- Title
+        UiAlign("center middle")
+        UiFont("bold.ttf", ui.text.size.m * 2)
+        UiText("Flying Planes + New Aerodynamics")
+
+    UiPop() end
+
 
     if not FlightModeSet then
         draw_flightModeSelection()
@@ -72,34 +92,6 @@ function draw()
 
 end
 
-
-function draw_mainmenu_banner(w, h)
-    UiPush()
-
-        h = h or ui.text.size.l * 2
-        w = w or UiWidth()
-
-        -- BG
-        UiAlign("top left")
-        UiColor(0, 0, 0, 0.8)
-        UiRect(w, h + Pad2)
-
-        -- Thumbnail
-        UiTranslate(Pad, Pad)
-        UiColor(1, 1, 1, 1)
-        UiImageBox("MOD/img/Preview.png", h,h, 0,0)
-        UiTranslate(h+ Pad, 0)
-
-
-        uiSetFont(ui.text.size.l)
-        UiText("Flying Planes")
-
-        UiTranslate(0, ui.text.size.l)
-        uiSetFont(ui.text.size.m)
-        UiText("By: Cheejins")
-
-    UiPop()
-end
 
 
 function draw_flightModeSelection()
@@ -124,7 +116,7 @@ function draw_flightModeSelection()
             UiWordWrap(400)
             UiFont("regular.ttf",  24)
             UiAlign("center middle")
-            UiText("Easy arcade style flight but less realistic. Aim in the direction you would like to fly.")
+            UiText("Easy arcade style flight. Aim in the direction you would like to fly.")
 
             UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
             if UiTextButton(' ', 500, 300) then
@@ -167,7 +159,7 @@ function draw_levelSelection()
         UiTranslate(UiCenter(), UiMiddle())
 
         local c = 1
-        UiColor(0,0,0,1)
+        UiColor(c,1,c,1)
         UiFont("regular.ttf",  48)
         UiAlign('center middle')
 
@@ -179,13 +171,13 @@ function draw_levelSelection()
                 StartLevel('', 'MOD/sandbox.xml', '')
             end
             UiTranslate(0, 250)
-            UiText("Sandbox Map + Enemy Ground AA")
+            UiText("Sandbox Map + Enemy AI")
             UiFont("regular.ttf",  22)
             UiTranslate(0, 30)
-            -- UiTranslate(0, 30)
-            -- UiColor(1/2,1/2,1/2,1)
-            -- UiText("Press 'M' to enable/disable enemy ground AA.")
-            -- UiTranslate(0, 30)
+            UiTranslate(0, 30)
+            UiColor(1/2,1/2,1/2,1)
+            UiText("Press 'M' to enable/disable enemy ground AA.")
+            UiTranslate(0, 30)
             UiTranslate(0, 30)
             UiText("AI planes fly from target to target.")
             UiTranslate(0, 30)

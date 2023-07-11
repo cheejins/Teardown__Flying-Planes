@@ -17,7 +17,7 @@ end
 function plane_draw_hud(plane, uiW, uiH)
     do UiPush()
 
-        plane_draw_hud_control_panel(plane)
+    -- plane_draw_hud_control_panel(plane)
 
 
     local c = Vec(0.5,1,0.5)
@@ -154,7 +154,7 @@ function plane_draw_hud(plane, uiW, uiH)
 
     -- hud STATUS
     do UiPush()
-        UiTranslate(960, 850)
+        UiTranslate(UiCenter(), 850)
         UiFont("bold.ttf", 22)
         UiSplitText("Camera", SelectedCamera)
         UiTranslate(0, 30)

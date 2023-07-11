@@ -110,7 +110,7 @@ end
 function Draw_PLANES()
     UiPush()
 
-        local uiW = 600
+        local uiW = 800
         local uiH = 650
 
 
