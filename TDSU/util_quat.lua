@@ -33,4 +33,13 @@ do
     function QuatTrLookRight(tr) return QuatLookAt(tr.pos, TransformToParentPoint(tr, Vec(1,0,0))) end -- Quat look right of tr.
     function QuatTrLookBack(tr) return QuatLookAt(tr.pos, TransformToParentPoint(tr, Vec(0,0,1))) end -- Quat look behind tr.
 
+    function quat_add(q1, q2)
+        local q = {}
+        q[1] = q1[1] + q2[1]
+        q[2] = q1[2] + q2[2]
+        q[3] = q1[3] + q2[3]
+        q[4] = q1[4] + q2[4]
+        return q
+    end
+
 end

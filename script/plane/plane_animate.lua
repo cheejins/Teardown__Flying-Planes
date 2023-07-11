@@ -4,7 +4,7 @@
 function plane_Animate_AeroParts(plane, ignore_input)
 
     local sub_dir = Vec(0,0,0)
-    if IsSimpleFlight() and plane.camera then
+    if IsSimpleFlight and plane.camera then
         if plane.camera.tr then
 
             local cam_dir = Vec(GetQuatEuler(plane.camera.tr.rot or Quat()))

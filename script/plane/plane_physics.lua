@@ -79,7 +79,7 @@ function plane_ApplyAerodynamics(plane)
 
     local impMult = 2
 
-    if IsSimpleFlight() then
+    if IsSimpleFlight then
         impMult = 3
         if Config.smallMapMode then
             impMult = 4

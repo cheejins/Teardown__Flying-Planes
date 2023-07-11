@@ -10,7 +10,7 @@ AA_Types = {
 }
 
 
-function Init_Enemies()
+function init_enemies()
 
     Init_Utils()
 

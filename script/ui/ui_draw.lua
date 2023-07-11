@@ -1,4 +1,4 @@
-function Init_Draw()
+function init_draw()
     Controls = {
 
         { title = "Flight Mode",
@@ -136,7 +136,7 @@ function Draw_Controls()
     UiFont("regular.ttf", fs)
     UiAlign("left bottom")
 
-    local key = Ternary (IsSimpleFlight(), "simple", "simulation")
+    local key = Ternary (IsSimpleFlight, "simple", "simulation")
 
     for i=#Controls, 1, -1 do
 

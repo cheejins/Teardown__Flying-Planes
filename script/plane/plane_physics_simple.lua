@@ -127,7 +127,7 @@ function plane_Steer_Simple(plane, rot, disable_input)
 
 
     local steerMult = 1
-    if IsSimpleFlight() then
+    if IsSimpleFlight then
         if Config.smallMapMode then
             steerMult = 2
         end

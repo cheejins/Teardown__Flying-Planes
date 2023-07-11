@@ -127,6 +127,7 @@ function createPlaneObject(ID)
     plane_ManageTargetting(plane)
     plane_SetMinAltitude(plane)
     plane_AutoConvertToPreset(plane)
+    plane_init_camera(plane)
 
 
     plane.landing_gear = {

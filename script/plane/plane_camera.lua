@@ -2,14 +2,53 @@ local timer_auto_center = { time = 0, rpm = 60/3 } -- Time before beginning auto
 
 
 CameraPositions = {
-    "Aligned",
-    "Seat",
-    "Orbit"
-    -- "Vehicle",
+    -- "Aligned",    -- 3rd person, stays aligned with plane's rotation.
+    -- "Orbit",      -- 3rd person, free look cam with no restrictions. Do not use with simple flight mode.
+    "Seat",       -- Head position of the pilot. Custom vehicle camera which can look around.
+    "Vehicle",    -- Built-in vehicle camera. Do not use with simple flight mode.
 }
 
+function plane_init_camera(plane)
 
-function plane_ManageCamera(plane, auto_center_delay)
+    local planeEuler = Vec(GetQuatEuler(plane.tr.rot))
+
+    plane.camera = {
+        positions = {
+            seat = {
+                camera      = camera_create(planeEuler[1], planeEuler[2], 0, 0),
+                transform   = GetVehicleTransform(plane.vehicle)
+            }
+        }
+    }
+
+end
+
+
+function plane_camera_manage(plane, dt)
+
+    -- if SelectedCamera == 'Aligned' then
+    --     plane_camera_view(plane, 2)
+    -- elseif SelectedCamera == 'Orbit' then
+    --     plane_camera_view(plane)
+    --     plane.camera.cameraZ = 0
+    -- elseif SelectedCamera == 'Seat' then
+        -- plane_camera_view_seat(plane, false)
+    -- end
+
+
+    -- -- Simple mode cannot use aligned camera since steering depends on camera rotation.
+    -- if IsSimpleFlight and (SelectedCamera == "Aligned" or SelectedCamera == "Seat") then
+    --     plane_camera_change_next()
+    -- end
+
+
+    if SelectedCamera == "Seat" then
+        plane_camera_view_seat(plane, dt, false)
+    end
+
+end
+
+function plane_camera_view(plane, auto_center_delay)
 
     -- Get mouse input.
 	local mx, my = InputValue("mousedx"), InputValue("mousedy")
@@ -35,7 +74,7 @@ function plane_ManageCamera(plane, auto_center_delay)
 
 
 
-    if IsSimpleFlight() then
+    if IsSimpleFlight then
         plane.camera.cameraY = clamp(plane.camera.cameraY, -89, 89)
     end
 
@@ -81,33 +120,25 @@ function plane_ManageCamera(plane, auto_center_delay)
 
 end
 
+function plane_camera_view_seat(plane, dt, isLocked)
 
-function plane_Camera(plane)
+    local seatPos = TransformToParentPoint(
+        GetVehicleTransform(plane.vehicle),
+        GetVehicleDriverPos(plane.vehicle))
 
-    if SelectedCamera == 'Aligned' then
-
-        plane_ManageCamera(plane, 2)
-
-    elseif SelectedCamera == 'Orbit' then
-
-        plane_ManageCamera(plane)
-        plane.camera.cameraZ = 0
-
-    -- elseif SelectedCamera == 'Seat' then
-
-        -- plane_ManageCamera(plane)
-
+    local mdx, mdy = 0,0
+    if InputDown("mmb") then
+        mdx = InputValue("mousedx")
+        mdy = InputValue("mousedy")
     end
 
-    -- Simple mode cannot use aligned camera since steering depends on camera rotation.
-    if IsSimpleFlight() and (SelectedCamera == "Aligned" or SelectedCamera == "Seat") then
-        plane_ChangeCamera()
-    end
+    camera_manage(plane, plane.camera.positions.seat.camera, dt, seatPos, plane.tr.rot, mdx, mdy, 0, 0)
 
 end
 
 
-function plane_ChangeCamera()
+
+function plane_camera_change_next()
 
     if InputPressed("x") then -- Iterate camera position.
 
@@ -122,9 +153,5 @@ function plane_ChangeCamera()
         SelectedCamera = CameraPositions[index]
 
     end
-
-end
-
-function camera_LerpToRot()
 
 end

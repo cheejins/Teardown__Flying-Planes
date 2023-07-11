@@ -44,30 +44,35 @@ function init()
 
     Init_Utils()
 
-    Init_PLANES()
-    Init_AIPLANES()
+    init_planes()
+    init_ai_planes()
     Init_Config()
     Init_Sounds()
     init_projectiles()
-    Init_Enemies()
-    Init_Draw()
-    Manage_SmallMapMode()
+    init_enemies()
+    init_draw()
+    manage_small_map_mode()
 
 
     SelectedCamera = CameraPositions[1]
 
-    SetString("hud.notification", "Note: The F-15 landing gear system is still in development.")
+    -- SetString("hud.notification", "Note: The F-15 landing gear system is still in development.")
 
 end
 
-function tick()
+function tick(dt)
 
-    Tick_Utils()
 
+    -- Globals
     AllVehicles = FindVehicles("", true)
+    IsSimpleFlight = FlightMode == FlightModes.simple
 
     FlightMode = GetString("savegame.mod.FlightMode")
     FlightModeSet = GetBool("savegame.mod.flightmodeset")
+
+
+    Tick_Utils()
+
 
     if not FlightModeSet then
         SetString("savegame.mod.FlightMode", FlightModes.simple)
@@ -90,24 +95,24 @@ function tick()
 
 
     -- Root of plane management.
-    Tick_PLANES()
+    Tick_PLANES(dt)
+
 
     Tick_aiplanes()
     Manage_Spawning()
     aiplane_AssignPlanes()
     debug_manage()
-    Manage_SmallMapMode()
+    manage_small_map_mode()
     projectiles_manage()
     Manage_Enemies()
     plane_RunPropellers()
-
 
     SetBool("level.enemies_disabled", Config.enemy_aa)
 
 end
 
-function update()
-    Update_PLANES()
+function update(dt)
+    Update_PLANES(dt)
 end
 
 function draw()

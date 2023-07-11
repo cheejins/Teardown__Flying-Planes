@@ -41,7 +41,7 @@ function CreateFlightPos(radius, heightRange)
     return VecAdd(GetMapCenter(), AutoVecSubsituteY(VecRandom(radius), math.random(heightRange[1], heightRange[2])))
 end
 
-function Init_AIPLANES()
+function init_ai_planes()
     aiplanes_CreateFlightpaths()
 end
 

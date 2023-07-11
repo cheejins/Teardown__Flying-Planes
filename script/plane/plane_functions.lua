@@ -305,9 +305,8 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
     function VehicleIsAlivePlane(vehicle) return VehicleIsPlane(vehicle) and GetVehicleHealth(vehicle) >= PLANE_DEAD_HEALTH end
 
     function IsSimulationFlight() return FlightMode == FlightModes.simulation end
-    function IsSimpleFlight() return FlightMode == FlightModes.simple end
 
-    function Manage_SmallMapMode()
+    function manage_small_map_mode()
 
         local smm = Config.smallMapMode
 
