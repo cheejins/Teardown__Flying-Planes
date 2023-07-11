@@ -1,5 +1,18 @@
-function init_controls()
-
-
-
-end
+Actions = {
+    shoot_primary   = "shoot_primary",
+    shoot_secondary = "shoot_secondary",
+    homing_enabled  = "homing_enabled",
+    thrust_increase = "thrust_increase",
+    thrust_decrease = "thrust_decrease",
+    pitch_up        = "pitch_up",
+    pitch_down      = "pitch_down",
+    roll_left       = "roll_left",
+    roll_right      = "roll_right",
+    yaw_left        = "yaw_left",
+    yaw_right       = "yaw_right",
+    airbrake        = "airbrake",
+    freecam         = "freecam",
+    change_camera   = "change_camera",
+    next_target     = "next_target",
+    disable_input   = "disable_input",
+}

@@ -10,16 +10,15 @@ CameraPositions = {
 
 function plane_init_camera(plane)
 
-    local planeEuler = Vec(GetQuatEuler(plane.tr.rot))
-
-    plane.camera = {
-        positions = {
-            seat = {
-                camera      = camera_create(planeEuler[1], planeEuler[2], 0, 0),
-                transform   = GetVehicleTransform(plane.vehicle)
-            }
-        }
-    }
+    -- local planeEuler = Vec(GetQuatEuler(plane.tr.rot))
+    -- plane.camera = {
+    --     positions = {
+    --         seat = {
+    --             camera      = camera_create(planeEuler[1], planeEuler[2], 0, 0),
+    --             transform   = GetVehicleTransform(plane.vehicle)
+    --         }
+    --     }
+    -- }
 
 end
 
@@ -27,12 +26,18 @@ end
 function plane_camera_manage(plane, dt)
 
     -- if SelectedCamera == 'Aligned' then
+
     --     plane_camera_view(plane, 2)
+
     -- elseif SelectedCamera == 'Orbit' then
-    --     plane_camera_view(plane)
-    --     plane.camera.cameraZ = 0
+
+        plane_camera_view(plane)
+        plane.camera.cameraZ = 0
+
     -- elseif SelectedCamera == 'Seat' then
-        -- plane_camera_view_seat(plane, false)
+
+    --     plane_camera_view_seat(plane, false)
+
     -- end
 
 
@@ -42,9 +47,9 @@ function plane_camera_manage(plane, dt)
     -- end
 
 
-    if SelectedCamera == "Seat" then
-        plane_camera_view_seat(plane, dt, false)
-    end
+    -- if SelectedCamera == "Seat" then
+    --     plane_camera_view_seat(plane, dt, false)
+    -- end
 
 end
 
@@ -52,8 +57,6 @@ function plane_camera_view(plane, auto_center_delay)
 
     -- Get mouse input.
 	local mx, my = InputValue("mousedx"), InputValue("mousedy")
-
-    local planeEuler = Vec(GetQuatEuler(plane.tr.rot))
 
 
     -- Reset auto center delay if mouse input.

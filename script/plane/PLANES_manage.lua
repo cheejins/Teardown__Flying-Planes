@@ -21,9 +21,9 @@ function Tick_PLANES(dt)
             -- Plane move.
             if plane.isAlive then
 
-                plane_ApplyAerodynamics(plane)
                 plane_ProcessHealth(plane)
                 plane_Move(plane)
+                plane_ApplyAerodynamics(plane)
 
             end
 

@@ -10,6 +10,7 @@
 #include "script/plane/plane_animate.lua"
 #include "script/plane/plane_builder.lua"
 #include "script/plane/plane_camera.lua"
+#include "script/plane/plane_systems.lua"
 #include "script/plane/plane_constructor.lua"
 #include "script/plane/plane_functions.lua"
 #include "script/plane/plane_hud.lua"
