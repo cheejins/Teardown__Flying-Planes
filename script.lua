@@ -10,7 +10,6 @@
 #include "script/plane/plane_animate.lua"
 #include "script/plane/plane_builder.lua"
 #include "script/plane/plane_camera.lua"
-#include "script/plane/plane_systems.lua"
 #include "script/plane/plane_constructor.lua"
 #include "script/plane/plane_functions.lua"
 #include "script/plane/plane_hud.lua"
@@ -45,35 +44,30 @@ function init()
 
     Init_Utils()
 
-    init_planes()
-    init_ai_planes()
+    Init_PLANES()
+    Init_AIPLANES()
     Init_Config()
     Init_Sounds()
-    init_projectiles()
-    init_enemies()
-    init_draw()
-    manage_small_map_mode()
+    Init_Projectiles()
+    Init_Enemies()
+    Init_Draw()
+    Manage_SmallMapMode()
 
 
     SelectedCamera = CameraPositions[1]
 
-    -- SetString("hud.notification", "Note: The F-15 landing gear system is still in development.")
+    SetString("hud.notification", "Note: The F-15 landing gear system is still in development.")
 
 end
 
-function tick(dt)
-
-
-    -- Globals
-    AllVehicles = FindVehicles("", true)
-    IsSimpleFlight = FlightMode == FlightModes.simple
-
-    FlightMode = GetString("savegame.mod.FlightMode")
-    FlightModeSet = GetBool("savegame.mod.flightmodeset")
-
+function tick()
 
     Tick_Utils()
 
+    AllVehicles = FindVehicles("", true)
+
+    FlightMode = GetString("savegame.mod.FlightMode")
+    FlightModeSet = GetBool("savegame.mod.flightmodeset")
 
     if not FlightModeSet then
         SetString("savegame.mod.FlightMode", FlightModes.simple)
@@ -96,24 +90,26 @@ function tick(dt)
 
 
     -- Root of plane management.
-    Tick_PLANES(dt)
-
+    Tick_PLANES()
 
     Tick_aiplanes()
     Manage_Spawning()
     aiplane_AssignPlanes()
-    debug_manage()
-    manage_small_map_mode()
-    projectiles_manage()
+    Manage_DebugMode()
+    Manage_SmallMapMode()
+    Projectiles_Manage()
     Manage_Enemies()
     plane_RunPropellers()
 
-    SetBool("level.enemies_disabled", Config.enemy_aa)
+
+    if InputPressed("m") then
+        SetBool("level.enemies_disabled", not GetBool("level.enemies_disabled"))
+    end
 
 end
 
-function update(dt)
-    Update_PLANES(dt)
+function update()
+    Update_PLANES()
 end
 
 function draw()
@@ -125,7 +121,7 @@ function draw()
     Draw_PLANES()
 
     if Config.draw_projectiles then
-        projectiles_draw(200, 500)
+        Projectiles_Draw(200, 500)
     end
 
 end

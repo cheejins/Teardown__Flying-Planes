@@ -136,11 +136,3 @@ end
 function CompressRange(val, lower, upper)
     return (val-lower) / (upper-lower)
 end
-
-
-function GetInterval(frequency)
-    if GetTime() % frequency > 0.5 then
-        return 1
-    end
-    return 0
-end

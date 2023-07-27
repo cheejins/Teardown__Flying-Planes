@@ -32,7 +32,6 @@ function Init_Config()
         showOptions     = { "boolean", false },
         debug           = { "boolean", false },
         unbreakable_planes = { "boolean", false },
-        enemy_aa           = { "boolean", false },
 
         sounds_stall_warning = { "boolean", true },
         spawn_aiplanes = { "boolean", true },

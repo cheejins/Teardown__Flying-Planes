@@ -4,7 +4,7 @@
 function plane_Animate_AeroParts(plane, ignore_input)
 
     local sub_dir = Vec(0,0,0)
-    if IsSimpleFlight and plane.camera then
+    if IsSimpleFlight() and plane.camera then
         if plane.camera.tr then
 
             local cam_dir = Vec(GetQuatEuler(plane.camera.tr.rot or Quat()))
@@ -273,7 +273,7 @@ function plane_Animate_AeroParts(plane, ignore_input)
 
                 local gearRot = QuatRotateQuat(pivot_tr.rot, QuatEuler(0, 0, angle))
 
-                plane_Animate_AeroParts_Paralell(plane, vtol, gearRot, QuatSlerp(parentTr.rot, QuatLookDown(), 0.1), math.huge)
+                plane_Animate_AeroParts_Paralell(plane, vtol, gearRot, parentTr.rot, math.huge)
                 ConstrainPosition(vtol.body, plane.body, pivot_tr.pos, parentTr.pos)
 
 

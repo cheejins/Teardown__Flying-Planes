@@ -21,6 +21,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
         plane.speed = plane.lvel[3] * -1
         plane.angVel = GetBodyAngularVelocity(plane.body)
         plane.totalVel = math.abs(plane.vel[1]) + math.abs(plane.vel[2]) + math.abs(plane.vel[3])
+        plane.fwdVel = clamp(math.abs(plane.topSpeed / -plane.lvel[3]), 0, 100)
 
 
         plane.playerInPlane = GetPlayerVehicle() == plane.vehicle
@@ -31,7 +32,6 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
         plane.speedFac = clamp(plane.speed, 1, plane.speed) / plane.topSpeed
         plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), -1, 1)
         plane.liftSpeedFac = plane_getLiftSpeedFac(plane)
-        plane.isStalling = plane.speed*2 < plane.totalVel
 
         plane.status = ""
 
@@ -305,8 +305,9 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
     function VehicleIsAlivePlane(vehicle) return VehicleIsPlane(vehicle) and GetVehicleHealth(vehicle) >= PLANE_DEAD_HEALTH end
 
     function IsSimulationFlight() return FlightMode == FlightModes.simulation end
+    function IsSimpleFlight() return FlightMode == FlightModes.simple end
 
-    function manage_small_map_mode()
+    function Manage_SmallMapMode()
 
         local smm = Config.smallMapMode
 
@@ -374,7 +375,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                         end
 
                         -- Shoot projectile.
-                        projectile_create(shootTr, Projectiles, projPreset, { plane.body })
+                        Projectiles_CreateProjectile(shootTr, Projectiles, projPreset, { plane.body })
 
 
                         ParticleReset()
@@ -413,7 +414,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
                     if plane.model == "harrier" then
 
-                        projectile_create(
+                        Projectiles_CreateProjectile(
                             shootTr,
                             Projectiles,
                             ProjectilePresets.rockets.standard,
@@ -424,7 +425,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                     elseif plane.model == 'mig29-u' then
                         Spawn("MOD/prefabs/grenade.xml", shootTr)
                     else
-                        projectile_create(
+                        Projectiles_CreateProjectile(
                             shootTr,
                             Projectiles,
                             ProjectilePresets.missiles.standard,
@@ -469,7 +470,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             local tr = GetLightTransform(weap.light)
                             local bombTr = Transform(tr.pos, QuatLookDown(tr.pos))
 
-                            projectile_create(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
+                            Projectiles_CreateProjectile(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
 
                         end
 

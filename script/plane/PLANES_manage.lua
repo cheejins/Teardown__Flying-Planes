@@ -1,7 +1,7 @@
-function init_planes()
+function Init_PLANES()
 end
 
-function Tick_PLANES(dt)
+function Tick_PLANES()
 
     PlayerInPlane = false
 
@@ -21,9 +21,9 @@ function Tick_PLANES(dt)
             -- Plane move.
             if plane.isAlive then
 
+                plane_ApplyAerodynamics(plane)
                 plane_ProcessHealth(plane)
                 plane_Move(plane)
-                plane_ApplyAerodynamics(plane)
 
             end
 
@@ -39,19 +39,19 @@ function Tick_PLANES(dt)
 
                 PlayerInPlane = true
 
-                plane_camera_change_next()
+                plane_ChangeCamera()
                 plane_CheckTargetLocked(plane)
                 plane_ManageTargetting(plane)
 
                 if not ShouldDrawIngameOptions then
-                    plane_camera_manage(plane, dt)
+                    plane_Camera(plane)
                 end
 
                 if plane.isAlive then
 
                     if not ShouldDrawIngameOptions then
 
-                        if IsSimpleFlight and SelectedCamera ~= 'Vehicle' then
+                        if IsSimpleFlight() and SelectedCamera ~= 'Vehicle' then
                             plane_Steer_Simple(plane)
                         elseif IsSimulationFlight() then
                             plane_Steer(plane)
@@ -83,7 +83,7 @@ function Tick_PLANES(dt)
     end
 end
 
-function Update_PLANES(dt)
+function Update_PLANES()
     for key, plane in pairs(PLANES) do
 
         if plane.isValid then
@@ -93,7 +93,7 @@ function Update_PLANES(dt)
                 plane_Animate_AeroParts(plane)
 
                 if not ShouldDrawIngameOptions then
-                    plane_camera_manage(plane, dt)
+                    plane_Camera(plane)
                 end
 
             else
@@ -110,7 +110,7 @@ end
 function Draw_PLANES()
     UiPush()
 
-        local uiW = 800
+        local uiW = 600
         local uiH = 650
 
 

@@ -1,5 +1,4 @@
 #include "umf.lua"
-#include "util_camera.lua"
 #include "util_color.lua"
 #include "util_debug.lua"
 #include "util_env.lua"

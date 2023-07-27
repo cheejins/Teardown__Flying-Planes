@@ -1,8 +1,3 @@
-2022.11.24
-> Added airfoil animations to simple flight mode.
-> Fixed MG AA tank moving target shooting.
-
-
 2022.11.18
 > Added navy destroyer and simple mode airfoil animations.
 
