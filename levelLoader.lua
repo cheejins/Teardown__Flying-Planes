@@ -56,7 +56,7 @@ end
 
 function draw()
 
-    UiColor(0.7,0.7,0.7,1)
+    UiColor(0.6,0.6,0.6,1)
     UiRect(UiWidth(), UiHeight())
     UiMakeInteractive()
 
