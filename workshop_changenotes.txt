@@ -1,3 +1,8 @@
+2024.11.1
+> Fixed landing gear on spawned in planes.
+>
+
+
 2022.11.18
 > Added navy destroyer and simple mode airfoil animations.
 
