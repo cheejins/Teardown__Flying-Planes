@@ -101,11 +101,6 @@ function tick()
     Manage_Enemies()
     plane_RunPropellers()
 
-
-    if InputPressed("m") then
-        SetBool("level.enemies_disabled", not GetBool("level.enemies_disabled"))
-    end
-
 end
 
 function update()

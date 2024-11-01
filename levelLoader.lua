@@ -62,13 +62,24 @@ function draw()
 
     uiSetFont(ui.text.size.m)
 
-    draw_mainmenu_banner()
+    UiPush()
+        draw_mainmenu_banner()
 
-    if not FlightModeSet then
-        draw_flightModeSelection()
-    else
-        draw_levelSelection()
+        if not FlightModeSet then
+            draw_flightModeSelection()
+        else
+            draw_levelSelection()
+        end
+    UiPop()
+
+    UiColor(0,0,0, 1)
+    UiAlign("center bottom")
+    UiTranslate(UiCenter(), UiHeight() - 25)
+    UiButtonImageBox("ui/common/box-outline-6.png", 10,10, 0,0,0, 1)
+    if UiTextButton('Close', 150, 70) then
+        Menu()
     end
+
 
 end
 
@@ -76,7 +87,7 @@ end
 function draw_mainmenu_banner(w, h)
     UiPush()
 
-        h = h or ui.text.size.l * 2
+        h = h or ui.text.size.l * 3
         w = w or UiWidth()
 
         -- BG

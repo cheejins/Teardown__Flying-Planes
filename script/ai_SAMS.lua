@@ -44,7 +44,7 @@ function Manage_Enemies()
 
     Tick_Utils()
 
-    if GetBool("level.enemies_disabled") then
+    if not GetBool("savegame.mod.enemies_enabled") then
         return
     end
 
