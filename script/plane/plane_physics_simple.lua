@@ -18,14 +18,14 @@ function plane_Steer_Simple(plane, rot, disable_input)
 
     if not disable_input then
 
-        if InputDown("w") and plane.thrust + plane.thrustIncrement <= 101 then
+        if InputDown(PlaneControls.thrust_increase) and plane.thrust + plane.thrustIncrement <= 101 then
             plane.thrust = plane.thrust + 1
         end
-        if InputDown("s") and plane.thrust - plane.thrustIncrement >= 0 then
+        if InputDown(PlaneControls.thrust_decrease) and plane.thrust - plane.thrustIncrement >= 0 then
             plane.thrust = plane.thrust - 1
         end
 
-        if InputDown("space") then
+        if InputDown(PlaneControls.airbrake) then
             ApplyBodyImpulse(
                 plane.body,
                 TransformToParentPoint(

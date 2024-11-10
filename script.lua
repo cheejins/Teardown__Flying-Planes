@@ -1,7 +1,9 @@
+--[[
 #include "Automatic.lua"
 #include "TDSU/tdsu.lua"
 #include "script/ai_SAMS.lua"
 #include "script/ai_planes.lua"
+#include "script/controls.lua"
 #include "script/debug.lua"
 #include "script/input/controlPanel.lua"
 #include "script/input/input.lua"
@@ -13,10 +15,10 @@
 #include "script/plane/plane_constructor.lua"
 #include "script/plane/plane_functions.lua"
 #include "script/plane/plane_hud.lua"
-#include "script/plane/plane_targetting.lua"
 #include "script/plane/plane_physics.lua"
 #include "script/plane/plane_physics_simple.lua"
 #include "script/plane/plane_presets.lua"
+#include "script/plane/plane_targetting.lua"
 #include "script/plane/planes_manage.lua"
 #include "script/projectiles.lua"
 #include "script/registry.lua"
@@ -28,6 +30,7 @@
 #include "script/ui/ui_textBinding.lua"
 #include "script/ui/ui_tools.lua"
 #include "script/weapons.lua"
+]]
 
 
 
@@ -43,6 +46,7 @@ PLANE_DEAD_HEALTH = 0.6
 function init()
 
     Init_Utils()
+    PlaneControls = Init_FlightControls()
 
     Init_PLANES()
     Init_AIPLANES()
@@ -53,10 +57,9 @@ function init()
     Init_Draw()
     Manage_SmallMapMode()
 
-
     SelectedCamera = CameraPositions[1]
 
-    SetString("hud.notification", "Note: The F-15 landing gear system is still in development.")
+    -- SetString("hud.notification", "Note: The F-15 landing gear system is still in development.")
 
 end
 

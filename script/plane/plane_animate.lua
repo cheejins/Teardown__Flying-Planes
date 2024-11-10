@@ -1,6 +1,3 @@
----comment
----@param plane table
----@param controlsVec table Vec which contains data for pitch, yaw and roll.
 function plane_Animate_AeroParts(plane, ignore_input)
 
     local sub_dir = Vec(0,0,0)
@@ -19,14 +16,14 @@ function plane_Animate_AeroParts(plane, ignore_input)
     end
 
     local dead_zone = 5
-    local w = InputDown("w") or (sub_dir[1] > dead_zone)
-    local s = InputDown("s") or (sub_dir[1] < -dead_zone)
+    local w = InputDown(PlaneControls.pitch_up) or (sub_dir[1] > dead_zone)
+    local s = InputDown(PlaneControls.pitch_down) or (sub_dir[1] < -dead_zone)
 
-    local a = InputDown("a") or (sub_dir[3] > dead_zone)
-    local d = InputDown("d") or (sub_dir[3] < -dead_zone)
+    local a = InputDown(PlaneControls.roll_left) or (sub_dir[3] > dead_zone)
+    local d = InputDown(PlaneControls.roll_right) or (sub_dir[3] < -dead_zone)
 
-    local c = InputDown("c") or (sub_dir[2] > dead_zone)
-    local z = InputDown("z") or (sub_dir[2] < -dead_zone)
+    local c = InputDown(PlaneControls.yaw_left) or (sub_dir[2] > dead_zone)
+    local z = InputDown(PlaneControls.yaw_right) or (sub_dir[2] < -dead_zone)
 
 
     -- Aero part animations.

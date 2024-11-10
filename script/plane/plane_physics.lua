@@ -76,6 +76,9 @@ function plane_ApplyAerodynamics(plane)
     force_y = GetPitchAoA(plane.tr, plane.vel) / FwdVel
     force_z = GetYawAoA(plane.tr, plane.vel) / FwdVel / 4
 
+    if plane.flaps then
+        force_y = force_y * 3
+    end
 
     local impMult = 2
 
@@ -179,16 +182,15 @@ function plane_Steer(plane)
     local inc = InputControlIncrement
 
 
-    local w = InputDown("w")
-    local s = InputDown("s")
-    local a = InputDown("a")
-    local d = InputDown("d")
-    local c = InputDown("c")
-    local z = InputDown("z")
+    local w = InputDown(PlaneControls.pitch_up)
+    local s = InputDown(PlaneControls.pitch_down)
+    local a = InputDown(PlaneControls.roll_left)
+    local d = InputDown(PlaneControls.roll_right)
+    local c = InputDown(PlaneControls.yaw_right)
+    local z = InputDown(PlaneControls.yaw_left)
 
 
     -- if camPos == "aligned" then
-
     --     if InputValue("mousedy") > 1 then
     --         s = true
     --         ic.s = InputValue("mousedy")/10
@@ -205,7 +207,6 @@ function plane_Steer(plane)
     --         z = true
     --         ic.z = -InputValue("mousedx")/10
     --     end
-
     -- end
 
 
@@ -251,15 +252,15 @@ function plane_Steer(plane)
     end
 
 
-    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
+    if InputDown(PlaneControls.thrust_increase) and plane.thrust + plane.thrustIncrement <= 101 then
         plane.thrust = plane.thrust + 1
     end
-    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
+    if InputDown(PlaneControls.thrust_decrease) and plane.thrust - plane.thrustIncrement >= 0 then
         plane.thrust = plane.thrust - 1
     end
 
 
-    if InputDown("space") then
+    if InputDown(PlaneControls.airbrake) then
         ApplyBodyImpulse(
             plane.body,
             TransformToParentPoint(
