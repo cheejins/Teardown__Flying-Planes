@@ -1,27 +1,29 @@
 Cameras = {}
 
 
-function camera_create(x, y, z, zoom)
+function Camera_create(x, y, zoom)
 
-	return {
+	local camera = {
 		cameraX = x or 0,
 		cameraY = y or 0,
-		cameraZ = z or 0,
 		zoom 	= zoom or 2,
 	}
 
+	camera.create = Camera_create
+
+	return camera
+
 end
 
-function camera_manage_auto(camera, body, height)
+function Camera_manage(self, body, height)
 
-	local mx = InputValue("mousedx")
-	local my = InputValue("mousedy")
+	local mx, my = InputValue("mousedx"), InputValue("mousedy")
 
-	camera.cameraX = camera.cameraX - mx / 10
-	camera.cameraY = camera.cameraY - my / 10
-	camera.cameraY = clamp(camera.cameraY, -75, 75)
+	self.cameraX = self.cameraX - mx / 10
+	self.cameraY = self.cameraY - my / 10
+	self.cameraY = clamp(self.cameraY, -75, 75)
 
-	local cameraRot = QuatEuler(camera.cameraY, camera.cameraX, 0)
+	local cameraRot = QuatEuler(self.cameraY, self.cameraX, 0)
 	local cameraT = Transform(VecAdd(GetBodyTransform(body).pos, 5), cameraRot)
 
 	zoom = zoom - InputValue("mousewheel") * 2.5
@@ -35,27 +37,27 @@ function camera_manage_auto(camera, body, height)
 end
 
 
-function camera_manage(plane, camera, dt, pos, rot, camDx, camDy, camDz, height)
+-- function GetCrosshairWorldPos(pos, rejectBodies)
 
-	local mx = camDx
-	local my = camDy
-	-- local mz = camDz
+--     local crosshairTr = GetCrosshairWorldPos()
+--     RejectAllBodies(rejectBodies)
+--     local crosshairHit, crosshairHitPos = RaycastFromTransform(crosshairTr, 500)
+--     if crosshairHit then
+--         return crosshairHitPos
+--     else
+--         return nil
+--     end
 
-	camera.cameraX = camera.cameraX - (mx / 10)
-	camera.cameraY = camera.cameraY - (my / 10)
-	-- camera.cameraZ = camera.cameraZ - (mz or 0) / 10
-	-- camera.cameraY = clamp(camera.cameraY, -75, 75)
+-- end
 
-	local cameraRot = QuatEuler(camera.cameraY, camera.cameraX, 0)
+-- function GetCrosshairCameraTr(pos, x, y)
 
-	camera.zoom = camera.zoom - InputValue("mousewheel") * 2.5
-	camera.zoom = clamp(camera.zoom, 0, 20)
+--     pos = pos or GetCameraTransform()
 
-	local cameraTr = Transform(
-		VecLerp(pos, TransformToParentPoint(Transform(pos, cameraRot), Vec(0, 0, -1)), dt*20),
-		QuatRotateQuat(rot, cameraRot))
+--     local crosshairDir = UiPixelToWorld(x or UiCenter(), y or UiMiddle())
+--     local crosshairQuat = DirToQuat(crosshairDir)
+--     local crosshairTr = Transform(GetCameraTransform().pos, crosshairQuat)
 
+--     return crosshairTr
 
-	SetCameraTransform(cameraTr)
-
-end
+-- end

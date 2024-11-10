@@ -17,8 +17,6 @@ end
 function plane_draw_hud(plane, uiW, uiH)
     do UiPush()
 
-    -- plane_draw_hud_control_panel(plane)
-
 
     local c = Vec(0.5,1,0.5)
     if plane.health <= 0 then c = Vec(1,0,0) end
@@ -154,7 +152,7 @@ function plane_draw_hud(plane, uiW, uiH)
 
     -- hud STATUS
     do UiPush()
-        UiTranslate(UiCenter(), 850)
+        UiTranslate(960, 850)
         UiFont("bold.ttf", 22)
         UiSplitText("Camera", SelectedCamera)
         UiTranslate(0, 30)
@@ -316,45 +314,5 @@ function plane_draw_Speed(plane)
 
     UiColor(1,0,0,1)
     UiImageBox("MOD/img/needle.png", 200,200, 0,0)
-
-end
-
-
-function plane_draw_hud_control_panel(plane, w, h)
-
-    --todo
-    --[[
-        Consider vtol
-        horizontal span of icons with keybind under
-    ]]
-
-
-    local iconData = {
-        { icon = "MOD/img/hud/icon_brakes.png"          , state = plane.brakeOn             , title = "Engine"       , keybind = "B" },
-        { icon = "MOD/img/hud/icon_engine.png"          , state = plane.engineOn            , title = "Landing Gear" , keybind = "N" },
-        { icon = "MOD/img/hud/icon_landing_gear.png"    , state = plane.landing_gear.isDown , title = "Wheel Brake"  , keybind = "G" },
-        { icon = "MOD/img/hud/icon_homing_missiles.png" , state = plane.landing_gear.isDown , title = "Wheel Brake"  , keybind = "H" },
-    }
-
-    if plane_IsVtolCapable(plane) then
-        table.insert(iconData, { icon = "MOD/img/hud/icon_vtol.png" , plane.vtol.isDown , title = "VTOL"  , keybind = "V" })
-    end
-
-
-    UiPush()
-
-        UiTranslate(UiCenter(), UiHeight() - 300)
-
-        local iconSize = 50 -- Icon size.
-
-        UiTranslate(-1 * ((#iconData*iconSize)/2), 0)
-
-        for _, data in ipairs(iconData) do
-            UiTranslate(iconSize, 0)
-            UiImageBox(data.icon, iconSize, iconSize, 0, 0)
-        end
-
-    UiPop()
-
 
 end

@@ -21,6 +21,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
         plane.speed = plane.lvel[3] * -1
         plane.angVel = GetBodyAngularVelocity(plane.body)
         plane.totalVel = math.abs(plane.vel[1]) + math.abs(plane.vel[2]) + math.abs(plane.vel[3])
+        plane.fwdVel = clamp(math.abs(plane.topSpeed / -plane.lvel[3]), 0, 100)
 
 
         plane.playerInPlane = GetPlayerVehicle() == plane.vehicle
@@ -31,7 +32,6 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
         plane.speedFac = clamp(plane.speed, 1, plane.speed) / plane.topSpeed
         plane.idealSpeedFactor = clamp(math.sin(math.pi * (plane.speed / plane.topSpeed)), -1, 1)
         plane.liftSpeedFac = plane_getLiftSpeedFac(plane)
-        plane.isStalling = plane.speed*2 < plane.totalVel
 
         plane.status = ""
 
@@ -89,36 +89,34 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
             if plane.isAlive then
 
-                if InputPressed("n") then
+                if InputPressed(PlaneControls.engine) then
                     plane.engineOn = not plane.engineOn
                 end
 
-                if InputPressed("v") then
+                if InputPressed(PlaneControls.vtolToggle) then
                     plane.vtol.startTransition = true
                     plane.vtol.isDown = not plane.vtol.isDown
                 end
 
-                if InputPressed("b") then
+                if InputPressed(PlaneControls.wheelbrake) then
                     plane.brakeOn = not plane.brakeOn
                 end
 
-                if InputPressed("f") then
+                if InputPressed(PlaneControls.flaps) then
                     plane.flaps = not plane.flaps
                 end
 
-                if InputPressed(Config.toggleHoming) then
+                if InputPressed(PlaneControls.homing) then
                     plane.targetting.lock.enabled = not plane.targetting.lock.enabled
                     beep()
                 end
 
-                if InputPressed("g") then
+                if InputPressed(PlaneControls.landing_gear) then
                     plane.landing_gear.startTransition = true
                     plane.landing_gear.isDown = not plane.landing_gear.isDown
-                    beep()
                 end
 
             end
-
 
             if Config.debug then
 
@@ -145,7 +143,6 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
             end
 
         end
-
 
     end
 
@@ -305,8 +302,9 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
     function VehicleIsAlivePlane(vehicle) return VehicleIsPlane(vehicle) and GetVehicleHealth(vehicle) >= PLANE_DEAD_HEALTH end
 
     function IsSimulationFlight() return FlightMode == FlightModes.simulation end
+    function IsSimpleFlight() return FlightMode == FlightModes.simple end
 
-    function manage_small_map_mode()
+    function Manage_SmallMapMode()
 
         local smm = Config.smallMapMode
 
@@ -342,7 +340,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
             local plTr = plane.tr
 
-            if InputDown('lmb') and #plane.weap.weaponObjects.primary >= 1 then
+            if InputDown(PlaneControls.shoot_primary) and #plane.weap.weaponObjects.primary >= 1 then
 
                 if plane.model == 'a10' then
                     PlayLoop(sounds.emg, GetBodyTransform(plane.body).pos, 10)
@@ -374,7 +372,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                         end
 
                         -- Shoot projectile.
-                        projectile_create(shootTr, Projectiles, projPreset, { plane.body })
+                        Projectiles_CreateProjectile(shootTr, Projectiles, projPreset, { plane.body })
 
 
                         ParticleReset()
@@ -394,7 +392,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
             end
 
-            if InputDown('rmb') and #plane.weap.weaponObjects.secondary >= 1 then
+            if InputDown(PlaneControls.shoot_secondary) and #plane.weap.weaponObjects.secondary >= 1 then
 
                 if plane.timers.weap.secondary.time <= 0 then
                     TimerResetTime(plane.timers.weap.secondary)
@@ -413,7 +411,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
                     if plane.model == "harrier" then
 
-                        projectile_create(
+                        Projectiles_CreateProjectile(
                             shootTr,
                             Projectiles,
                             ProjectilePresets.rockets.standard,
@@ -424,7 +422,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                     elseif plane.model == 'mig29-u' then
                         Spawn("MOD/prefabs/grenade.xml", shootTr)
                     else
-                        projectile_create(
+                        Projectiles_CreateProjectile(
                             shootTr,
                             Projectiles,
                             ProjectilePresets.missiles.standard,
@@ -458,7 +456,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
 
                 end
 
-                if InputDown('rmb') then
+                if InputDown(PlaneControls.shoot_secondary) then
 
                     if plane.timers.weap.special.time <= 0 then
 
@@ -469,7 +467,7 @@ InputControls = { w = 0, a = 0, s = 0, d = 0, c = 0, z = 0, }
                             local tr = GetLightTransform(weap.light)
                             local bombTr = Transform(tr.pos, QuatLookDown(tr.pos))
 
-                            projectile_create(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
+                            Projectiles_CreateProjectile(bombTr, Projectiles, ProjectilePresets.bombs.standard, { plane.body })
 
                         end
 

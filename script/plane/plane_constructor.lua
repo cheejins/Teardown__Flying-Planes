@@ -127,7 +127,6 @@ function createPlaneObject(ID)
     plane_ManageTargetting(plane)
     plane_SetMinAltitude(plane)
     plane_AutoConvertToPreset(plane)
-    plane_init_camera(plane)
 
 
     plane.landing_gear = {
@@ -158,6 +157,8 @@ function createPlaneObject(ID)
         SetShapeCollisionFilter(shape, 4, 1)
     end
 
+    -- Secondary Order System used to smooth simple flight mode steering/rotation.
+    plane.rotSOS = AutoSM_DefineQuat(plane.tr.rot, 0, 0, 0)
 
     SetTag(plane.vehicle, 'planeActive')
 

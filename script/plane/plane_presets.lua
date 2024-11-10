@@ -20,6 +20,7 @@ function plane_AutoConvertToPreset(plane)
 
 end
 
+
 function convertPlaneToSpitfire(plane)
     plane.topSpeed = 70
     plane.thrustImpulseAmount = 20
@@ -38,6 +39,7 @@ function convertPlaneToSpitfire(plane)
     plane.targetting.homingCapable = false
 
 end
+
 
 function convertPlaneToA10(plane)
     plane.topSpeed = 130
@@ -62,6 +64,7 @@ function convertPlaneToA10(plane)
     }
 
 end
+
 
 function convertPlaneToBombardierJet(plane)
     plane.isArmed = false
@@ -142,7 +145,6 @@ function convertPlaneToF15(plane)
     plane.yawFac = 1
 
 end
-
 function convertPlaneToHarrier(plane)
     plane.isArmed = true
 

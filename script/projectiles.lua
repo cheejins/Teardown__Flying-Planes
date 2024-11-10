@@ -1,7 +1,7 @@
 Projectiles = {}
 
 
-function init_projectiles()
+function Init_Projectiles()
 
     ProjectilePresets = {
 
@@ -104,7 +104,7 @@ function init_projectiles()
                 spread = 0.025,
                 drop = 0,
                 dropIncrement = 0,
-                explosionSize = 3.2,
+                explosionSize = 1.75,
                 rcRad = 0,
                 force = 0,
                 penetrate = false,
@@ -315,13 +315,13 @@ function init_projectiles()
 
 end
 
-
-function projectile_create(transform, projectiles, projPreset, ignoreBodies, homingShape) --- Instantiates a proj and adds it to the projectiles table.
+function Projectiles_CreateProjectile(transform, projectiles, projPreset, ignoreBodies, homingShape) --- Instantiates a proj and adds it to the projectiles table.
 
     local proj = DeepCopy(projPreset)
     proj.ignoreBodies = DeepCopy(ignoreBodies)
 
     proj.transform = transform
+    proj.transformLast = TransformCopy(proj.transform)
 
     proj.transform.rot = QuatRotateQuat(
         proj.transform.rot,
@@ -347,18 +347,20 @@ function projectile_create(transform, projectiles, projPreset, ignoreBodies, hom
 
     end
 
+    proj.lifeStart = GetTime()
+
     table.insert(projectiles, proj)
 
 end
 
-function projectiles_manage()
+function Projectiles_Manage()
 
     local projectilesToRemove = {} -- projectiles iterations.
     for i, proj in ipairs(Projectiles) do
 
         if proj.isActive then
 
-            projectile_propel(proj)
+            Projectiles_PropelProjectile(proj)
 
         else-- if proj is inactive.
 
@@ -374,10 +376,12 @@ function projectiles_manage()
 
 end
 
-function projectile_propel(proj)
+function Projectiles_PropelProjectile(proj)
 
     --+ Move proj forward.
     proj.transform.pos = TransformToParentPoint(proj.transform, Vec(0,0,-proj.speed))
+    proj.vel = VecSub(proj.transform.pos, proj.transformLast.pos)
+    -- proj.lifeRemaining = (proj.lifeLength + proj.lifeStart) - proj.lifeStart
 
 
     proj.lifeLength = proj.lifeLength - GetTimeStep()
@@ -434,30 +438,30 @@ function projectile_propel(proj)
     --+ Proj homing.
     if proj.homing.max > 0 and proj.homing.targetShape ~= nil then
 
-        local targetBody = GetShapeBody(proj.homing.targetShape)
-        local targetBodyTr = GetBodyTransform(targetBody)
+        local targetBodyTr = GetBodyTransform(GetShapeBody(proj.homing.targetShape))
         local targetPos = TransformToParentPoint(targetBodyTr, proj.homing.targetBodyRelPos)
-        local targetVel = GetBodyVelocity(targetBody)
+        local targetVel = GetBodyVelocity(GetShapeBody(proj.homing.targetShape))
+
 
         dbl(proj.transform.pos, targetPos, 1,0,0, 0.5)
         dbcr(targetPos, 1,0,0, 1)
         dbcr(proj.transform.pos, 1,0,0, 1)
         dbray(proj.transform, 30, 0,1,1, 1)
 
+        -- local propGuidance = proportional_navigation_direction_3d(targetPos, targetVel, proj.transform.pos, proj.vel, proj.lifeRemaining)
+        -- local propGuidance = proportional_navigation_direction_3d(targetPos, targetVel, proj.transform.pos, proj.vel, 10)
+        -- DebugWatch(proj.lifeRemaining, propGuidance)
+
+        -- local ang = VecDot(QuatToDir(proj.transform.rot), QuatLookAt(proj.transform.pos, targetPos))
+        -- print("ang", ang)
+
         proj.transform.rot = MakeQuaternion(proj.transform.rot)
         proj.transform.rot = proj.transform.rot:Approach(QuatLookAt(proj.transform.pos, targetPos), proj.homing.force) -- Rotate towards homing target.
+
 
         if proj.homing.force < proj.homing.max then -- Increment homing strength.
             proj.homing.force = proj.homing.force + proj.homing.gain
         end
-
-
-        local guidance = proportional_navigation_guidance(
-            targetPos, targetVel,
-            proj.transform.pos, VecScale(quat_to_dir(proj.transform.rot), proj.speed),
-            1)
-
-        DebugWatch("guidance", guidance)
 
     end
 
@@ -482,9 +486,11 @@ function projectile_propel(proj)
     local c = proj.effects.color
     PointLight(proj.transform.pos, c[1], c[2], c[3], math.random()+1)
 
+    proj.transformLast = TransformCopy(proj.transform)
+
 end
 
-function projectiles_draw(minDist, maxDist)
+function Projectiles_Draw(minDist, maxDist)
     UiPush()
 
         for index, proj in ipairs(Projectiles) do
@@ -521,45 +527,91 @@ function projectiles_draw(minDist, maxDist)
     UiPop()
 end
 
+-- -- Calculates the 3D proportional navigation guidance command
+-- -- target_pos: table representing the target position with fields x, y, and z
+-- -- target_vel: table representing the target velocity with fields x, y, and z
+-- -- own_pos: table representing the ownship position with fields x, y, and z
+-- -- own_vel: table representing the ownship velocity with fields x, y, and z
+-- -- time_to_impact: estimated time to impact in seconds
+-- function proportional_navigation_guidance_3d(target_pos, target_vel, own_pos, own_vel, time_to_impact)
 
--- Source: OpenAI
--- Calculates the 3D proportional navigation guidance command
-function proportional_navigation_guidance(target_pos, target_vel, own_pos, own_vel, time_to_impact)
-    -- target_pos: table representing the target position with fields x, y, and z
-    -- target_vel: table representing the target velocity with fields x, y, and z
-    -- own_pos: table representing the ownship position with fields x, y, and z
-    -- own_vel: table representing the ownship velocity with fields x, y, and z
-    -- time_to_impact: estimated time to impact in seconds
+--     local rel_pos = Vec(
+--         target_pos[1] - own_pos[1],
+--         target_pos[2] - own_pos[2],
+--         target_pos[3] - own_pos[3])
 
-    local rel_pos = Vec(target_pos[1] - own_pos[1], target_pos[2] - own_pos[2], target_pos[3] - own_pos[3])
-    local rel_vel = Vec(target_vel[1] - own_vel[1], target_vel[2] - own_vel[2], target_vel[3] - own_vel[3])
+--     local rel_vel = Vec(
+--         target_vel[1] - own_vel[1],
+--         target_vel[2] - own_vel[2],
+--         target_vel[3] - own_vel[3])
 
+--     -- Calculate magnitude of relative position and velocity vectors
+--     local range = math.sqrt(rel_pos[1] ^ 2 + rel_pos[2] ^ 2 + rel_pos[3] ^ 2)
+--     local closing_speed = (rel_pos[1] * rel_vel[1] + rel_pos[2] * rel_vel[2] + rel_pos[3] * rel_vel[3]) / range
+
+--     -- Check for divide by zero
+--     if closing_speed == 0 then
+--         return Vec(0, 0, 0)
+--     end
+
+--     -- Calculate proportional gain and navigation constant
+--     local proportional_gain = 3 / time_to_impact -- Proportional gain
+--     local gamma = proportional_gain / closing_speed -- Navigation constant
+
+--     -- Calculate navigation command
+--     local vel_perp = Vec(
+--         rel_vel[2] * rel_pos[3] - rel_vel[3] * rel_pos[2],
+--         rel_vel[3] * rel_pos[1] - rel_vel[1] * rel_pos[3],
+--         rel_vel[1] * rel_pos[2] - rel_vel[2] * rel_pos[1])
+
+--     local vel_perp_mag = math.sqrt(vel_perp[1] ^ 2 + vel_perp[2] ^ 2 + vel_perp[3] ^ 2)
+--     local guidance = Vec(
+--         gamma * vel_perp[1] / vel_perp_mag,
+--         gamma * vel_perp[2] / vel_perp_mag,
+--         gamma * vel_perp[3] / vel_perp_mag)
+
+--     return guidance
+
+-- end
+
+
+-- Calculates the 3D proportional navigation desired direction
+-- target_pos: table representing the target position with fields x, y, and z
+-- target_vel: table representing the target velocity with fields x, y, and z
+-- own_pos: table representing the ownship position with fields x, y, and z
+-- own_vel: table representing the ownship velocity with fields x, y, and z
+-- time_to_impact: estimated time to impact in seconds
+function proportional_navigation_direction_3d(target_pos, target_vel, own_pos, own_vel, time_to_impact)
+    local rel_pos = { target_pos[1] - own_pos[1], target_pos[2] - own_pos[2], target_pos[3] - own_pos[3] }
+    local rel_vel = { target_vel[1] - own_vel[1], target_vel[2] - own_vel[2], target_vel[3] - own_vel[3] }
+  
     -- Calculate magnitude of relative position and velocity vectors
-    local range = math.sqrt(rel_pos[1] ^ 2 + rel_pos[2] ^ 2 + rel_pos[3] ^ 2)
+    local range = math.sqrt(rel_pos[1]^2 + rel_pos[2]^2 + rel_pos[3]^2)
     local closing_speed = (rel_pos[1] * rel_vel[1] + rel_pos[2] * rel_vel[2] + rel_pos[3] * rel_vel[3]) / range
-
+  
     -- Check for divide by zero
     if closing_speed == 0 then
-        return Vec(0, 0, 0)
+      return { 0, 0, 0 }
     end
-
+  
     -- Calculate proportional gain and navigation constant
     local proportional_gain = 3 / time_to_impact -- Proportional gain
     local gamma = proportional_gain / closing_speed -- Navigation constant
-
-    -- Calculate navigation command
-    local vel_perp = Vec(
-        rel_vel[2] * rel_pos[3] - rel_vel[3] * rel_pos[2],
-        rel_vel[3] * rel_pos[1] - rel_vel[1] * rel_pos[3],
-        rel_vel[1] * rel_pos[2] - rel_vel[2] * rel_pos[1])
-
-    local vel_perp_mag = math.sqrt(vel_perp[1] ^ 2 + vel_perp[2] ^ 2 + vel_perp[3] ^ 2)
-    local guidance = Vec(
-        gamma * vel_perp[1] / vel_perp_mag,
-        gamma * vel_perp[2] / vel_perp_mag,
-        gamma * vel_perp[3] / vel_perp_mag)
-
-
-    return guidance
-
-end
+  
+    -- Calculate navigation direction
+    local direction = {
+      gamma * (rel_vel[2] * rel_pos[3] - rel_vel[3] * rel_pos[2]),
+      gamma * (rel_vel[3] * rel_pos[1] - rel_vel[1] * rel_pos[3]),
+      gamma * (rel_vel[1] * rel_pos[2] - rel_vel[2] * rel_pos[1])
+    }
+  
+    -- Normalize direction vector
+    local direction_mag = math.sqrt(direction[1]^2 + direction[2]^2 + direction[3]^2)
+    if direction_mag > 0 then
+      direction[1] = direction[1] / direction_mag
+      direction[2] = direction[2] / direction_mag
+      direction[3] = direction[3] / direction_mag
+    end
+  
+    return direction
+  end

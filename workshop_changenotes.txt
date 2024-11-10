@@ -1,6 +1,6 @@
-2022.11.24
-> Added airfoil animations to simple flight mode.
-> Fixed MG AA tank moving target shooting.
+2024.11.1
+> Fixed landing gear on spawned in planes.
+>
 
 
 2022.11.18

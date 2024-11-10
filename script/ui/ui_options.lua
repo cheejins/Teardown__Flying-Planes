@@ -75,7 +75,7 @@ function DrawIngameOptions()
     UiPop()
 
     UiPush()
-        local c = boolColor(IsSimpleFlight)
+        local c = boolColor(IsSimpleFlight())
         UiColor(c[1], c[2], c[3])
         margin(-btn_w/2, 0)
         UiAlign('center middle')
@@ -86,7 +86,7 @@ function DrawIngameOptions()
     UiPop()
 
     margin(0, marginY2)
-    if IsSimpleFlight then
+    if IsSimpleFlight() then
 
         UiPush()
             UiColor(0.5,0.5,0.5, 1)
@@ -147,24 +147,24 @@ function DrawIngameOptions()
     margin(0, marginY2*2)
 
     UiPush()
-        local c = boolColor(Config.unbreakable_planes)
+        local c = boolColor(GetBool("savegame.mod.enemies_enabled"))
         UiColor(c[1], c[2], c[3])
         UiAlign('center middle')
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
-        if UiTextButton('Unbreakable Planes', btn_w, marginY2*1.5) then
-            Config.unbreakable_planes = not Config.unbreakable_planes
+        if UiTextButton('Ground Enemy AI', btn_w, marginY2*1.5) then
+            SetBool("savegame.mod.enemies_enabled", not GetBool("savegame.mod.enemies_enabled"))
         end
     UiPop()
 
     margin(0, marginY2*2)
 
     UiPush()
-        local c = boolColor(Config.enemy_aa)
+        local c = boolColor(Config.unbreakable_planes)
         UiColor(c[1], c[2], c[3])
         UiAlign('center middle')
         UiButtonImageBox('ui/common/box-outline-6.png', 10,10, c[1], c[2], c[3], 1)
-        if UiTextButton('Enemy AA', btn_w, marginY2*1.5) then
-            Config.enemy_aa = not Config.enemy_aa
+        if UiTextButton('Unbreakable Planes', btn_w, marginY2*1.5) then
+            Config.unbreakable_planes = not Config.unbreakable_planes
         end
     UiPop()
 
@@ -194,7 +194,7 @@ function DrawIngameOptions()
 
     margin(0, marginY2*2)
 
-    if IsSimpleFlight then
+    if IsSimpleFlight() then
         UiPush()
             local c = boolColor(Config.smallMapMode)
             UiColor(c[1], c[2], c[3])

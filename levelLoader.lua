@@ -56,19 +56,30 @@ end
 
 function draw()
 
-    UiColor(1,1,1,1)
+    UiColor(0.6,0.6,0.6,1)
     UiRect(UiWidth(), UiHeight())
     UiMakeInteractive()
 
     uiSetFont(ui.text.size.m)
 
-    draw_mainmenu_banner()
+    UiPush()
+        draw_mainmenu_banner()
 
-    if not FlightModeSet then
-        draw_flightModeSelection()
-    else
-        draw_levelSelection()
+        if not FlightModeSet then
+            draw_flightModeSelection()
+        else
+            draw_levelSelection()
+        end
+    UiPop()
+
+    UiColor(0,0,0, 1)
+    UiAlign("center bottom")
+    UiTranslate(UiCenter(), UiHeight() - 25)
+    UiButtonImageBox("ui/common/box-outline-6.png", 10,10, 0,0,0, 1)
+    if UiTextButton('Close', 150, 70) then
+        Menu()
     end
+
 
 end
 
@@ -76,7 +87,7 @@ end
 function draw_mainmenu_banner(w, h)
     UiPush()
 
-        h = h or ui.text.size.l * 2
+        h = h or ui.text.size.l * 3
         w = w or UiWidth()
 
         -- BG
@@ -106,18 +117,19 @@ function draw_flightModeSelection()
 
     do UiPush()
 
-        local c = 1
-        UiColor(c,1,c,1)
+        UiColor(1,1,1,1)
         UiFont("regular.ttf",  48)
         UiAlign('center middle')
 
 
         UiTranslate(UiCenter(), UiMiddle()/2)
+        UiColor(0,0,0,1)
         UiText("Choose flight mode")
 
         UiTranslate(-275, 0)
         do UiPush()
-            UiButtonHoverColor(0.5,0.5,0.5, 1)
+            UiColor(0,0,0,1)
+            UiButtonHoverColor(0,0,0, 1)
             UiTranslate(0, 150)
             UiText("Simple")
             UiTranslate(0, 100)
@@ -126,7 +138,7 @@ function draw_flightModeSelection()
             UiAlign("center middle")
             UiText("Easy arcade style flight but less realistic. Aim in the direction you would like to fly.")
 
-            UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
+            UiButtonImageBox("ui/common/box-outline-6.png", 10,10, 1,1,1, 1)
             if UiTextButton(' ', 500, 300) then
                 SetString("savegame.mod.FlightMode", "simple")
                 SetBool("savegame.mod.flightmodeset", true)
@@ -136,7 +148,8 @@ function draw_flightModeSelection()
 
         UiTranslate(550, 0)
         do UiPush()
-            UiButtonHoverColor(0.5,0.5,0.5, 1)
+            UiColor(0,0,0,1)
+            UiButtonHoverColor(0,0,0, 1)
             UiTranslate(0, 150)
             UiText("Simulation")
             UiTranslate(0, 100)
@@ -145,7 +158,7 @@ function draw_flightModeSelection()
             UiAlign("center middle")
             UiText("Fly with realistic aerodynamics. Control pitch, roll and yaw manually. A bit harder but more fun.")
 
-            UiButtonImageBox("ui/common/box-outline-6.png", 10,10)
+            UiButtonImageBox("ui/common/box-outline-6.png", 10,10, 1,1,1, 1)
             if UiTextButton(' ', 500, 300) then
                 SetString("savegame.mod.FlightMode", "simulation")
                 SetBool("savegame.mod.flightmodeset", true)

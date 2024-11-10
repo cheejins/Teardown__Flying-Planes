@@ -10,7 +10,7 @@ AA_Types = {
 }
 
 
-function init_enemies()
+function Init_Enemies()
 
     Init_Utils()
 
@@ -44,7 +44,7 @@ function Manage_Enemies()
 
     Tick_Utils()
 
-    if GetBool("level.enemies_disabled") then
+    if not GetBool("savegame.mod.enemies_enabled") then
         return
     end
 
@@ -126,7 +126,7 @@ function Manage_Enemies()
                             PlaySound(sounds.missile, shootTr.pos, 100)
                         end
 
-                        projectile_create(shootTr, Projectiles, proj, {AA.body}, targetShape)
+                        Projectiles_CreateProjectile(shootTr, Projectiles, proj, {AA.body}, targetShape)
                         PointLight(shootTr.pos, 1,0.25,1, 3)
 
                     end

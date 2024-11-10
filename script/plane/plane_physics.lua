@@ -3,56 +3,56 @@ function plane_Move(plane)
 
     plane_SetThrustOutput(plane)
 
-    if not plane.engineOn then
-        return
-    end
+    if plane.engineOn then
+
+        -- Slow plane speed to thrust amout.
+        if plane.speed > 1 and plane.speed/plane.topSpeed > plane.thrust/100 then
+
+            -- ApplyBodyImpulse(
+            --     plane.body,
+            --     TransformToParentPoint(
+            --         plane.tr, Vec(0, 0, -5)),
+            --     plane_GetFwdPos(plane, plane.speed * plane.brakeImpulseAmt/2))
+
+        elseif plane.speed < plane.topSpeed then
 
 
-    -- Slow plane speed to thrust amout.
-    if plane.speed > 1 and plane.speed/plane.topSpeed > plane.thrust/100 then
+            if #plane.exhausts >= 1 then
 
-        -- ApplyBodyImpulse(
-        --     plane.body,
-        --     TransformToParentPoint(
-        --         plane.tr, Vec(0, 0, -5)),
-        --     plane_GetFwdPos(plane, plane.speed * plane.brakeImpulseAmt/2))
+                local exhaust_count = #plane.exhausts
 
-    elseif plane.speed < plane.topSpeed then
+                for index, exhaust_light in ipairs(plane.exhausts) do
 
-        if #plane.exhausts >= 1 then
+                    local tr = GetLightTransform(exhaust_light)
 
-            local exhaust_count = #plane.exhausts
+                    local vtolImpulseMult = Ternary(plane.vtol.isDown, 2, 1)
 
-            for index, exhaust_light in ipairs(plane.exhausts) do
+                    local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust))
+                    thrustImpulseAmt = thrustImpulseAmt / exhaust_count * vtolImpulseMult -- Spread force evenly.
 
-                local tr = GetLightTransform(exhaust_light)
+                    ApplyBodyImpulse(
+                        plane.body,
+                        plane.tr.pos,
+                        TransformToParentPoint(tr, Vec(0, 0, thrustImpulseAmt)))
 
-                local vtolImpulseMult = Ternary(plane.vtol.isDown, 2, 1)
+                end
+
+            else
 
                 local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust))
-                thrustImpulseAmt = thrustImpulseAmt / exhaust_count * vtolImpulseMult -- Spread force evenly.
-
                 ApplyBodyImpulse(
                     plane.body,
                     plane.tr.pos,
-                    TransformToParentPoint(tr, Vec(0, 0, thrustImpulseAmt)))
+                    TransformToParentPoint(plane.tr, Vec(0, 0, thrustImpulseAmt)))
 
             end
-
-        else
-
-            local thrustImpulseAmt = plane.thrust * (-plane.thrustImpulseAmount * ((plane.thrustOutput^1.3) / plane.thrust))
-            ApplyBodyImpulse(
-                plane.body,
-                plane.tr.pos,
-                TransformToParentPoint(plane.tr, Vec(0, 0, thrustImpulseAmt)))
 
         end
 
     end
 
-
 end
+
 
 -- Apply aerodynamic impulses.
 function plane_ApplyAerodynamics(plane)
@@ -76,10 +76,13 @@ function plane_ApplyAerodynamics(plane)
     force_y = GetPitchAoA(plane.tr, plane.vel) / FwdVel
     force_z = GetYawAoA(plane.tr, plane.vel) / FwdVel / 4
 
+    if plane.flaps then
+        force_y = force_y * 3
+    end
 
     local impMult = 2
 
-    if IsSimpleFlight then
+    if IsSimpleFlight() then
         impMult = 3
         if Config.smallMapMode then
             impMult = 4
@@ -128,6 +131,7 @@ function plane_ApplyAerodynamics(plane)
 
 end
 
+
 -- Apply turbulence based on velocity and aerodynamics.
 function plane_ApplyTurbulence(plane)
 
@@ -148,6 +152,7 @@ function plane_ApplyTurbulence(plane)
 
 end
 
+
 -- Apply impulses to control the pitch, roll and yaw.
 function plane_Steer(plane)
 
@@ -165,7 +170,7 @@ function plane_Steer(plane)
 
     end
 
-    local imp = math.abs(idealSpeedFactor * GetBodyMass(plane.body) * clamp(plane.health, 0.7, 1) / 20)
+    local imp = math.abs(idealSpeedFactor * GetBodyMass(plane.body) * clamp(plane.health, 0.5, 1) / 20)
 
     local nose = TransformToParentPoint(plane.tr, Vec(0, 0, -10))
     local wing = TransformToParentPoint(plane.tr, Vec(-10, 0, 0))
@@ -177,14 +182,32 @@ function plane_Steer(plane)
     local inc = InputControlIncrement
 
 
+    local w = InputDown(PlaneControls.pitch_up)
+    local s = InputDown(PlaneControls.pitch_down)
+    local a = InputDown(PlaneControls.roll_left)
+    local d = InputDown(PlaneControls.roll_right)
+    local c = InputDown(PlaneControls.yaw_right)
+    local z = InputDown(PlaneControls.yaw_left)
 
-    local w = InputDown("w")
-    local s = InputDown("s")
-    local a = InputDown("a")
-    local d = InputDown("d")
-    local c = InputDown("c")
-    local z = InputDown("z")
 
+    -- if camPos == "aligned" then
+    --     if InputValue("mousedy") > 1 then
+    --         s = true
+    --         ic.s = InputValue("mousedy")/10
+    --     end
+    --     if InputValue("mousedy") < -1 then
+    --         w = true
+    --         ic.w = -InputValue("mousedy")/10
+    --     end
+    --     if InputValue("mousedx") > 1 then
+    --         c = true
+    --         ic.c = InputValue("mousedx")/10
+    --     end
+    --     if InputValue("mousedx") < -1 then
+    --         z = true
+    --         ic.z = -InputValue("mousedx")/10
+    --     end
+    -- end
 
 
     if w then
@@ -229,15 +252,15 @@ function plane_Steer(plane)
     end
 
 
-    if InputDown("shift") and plane.thrust + plane.thrustIncrement <= 101 then
+    if InputDown(PlaneControls.thrust_increase) and plane.thrust + plane.thrustIncrement <= 101 then
         plane.thrust = plane.thrust + 1
     end
-    if InputDown("ctrl") and plane.thrust - plane.thrustIncrement >= 0 then
+    if InputDown(PlaneControls.thrust_decrease) and plane.thrust - plane.thrustIncrement >= 0 then
         plane.thrust = plane.thrust - 1
     end
 
 
-    if InputDown("space") then
+    if InputDown(PlaneControls.airbrake) then
         ApplyBodyImpulse(
             plane.body,
             TransformToParentPoint(
@@ -246,9 +269,8 @@ function plane_Steer(plane)
         plane_StatusAppend(plane, "Air-Braking")
     end
 
-    dbw("angvel", GetBodyAngularVelocity(plane.body))
-
 end
+
 
 -- Draw aerodynamic forces debug lines.
 function plane_draw_Forces(plane, x, y, z, outness, scale)
@@ -288,6 +310,7 @@ function plane_draw_Forces(plane, x, y, z, outness, scale)
     DebugLine(plane.tr.pos, TransformToParentPoint(plane.tr, Vec(0, 0, -20)), 1, 1, 1, 1)
 
 end
+
 
 
 

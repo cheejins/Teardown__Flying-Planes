@@ -1,3 +1,115 @@
+-- Steer plane based on camera direction.
+function plane_Steer_Simple(plane, rot, disable_input)
+
+    local pTr = TransformCopy(plane.tr)
+    local pTrCopy = TransformCopy(plane.tr)
+
+    local speed = plane.speed
+    local speedClamped = (clamp(speed, 0.01, speed + 0.01))
+
+    local divSpeed = speedClamped / plane.topSpeed
+    local turnDiv = 50
+    local turnAmt = math.abs(getQuadtratic(divSpeed) / turnDiv)
+
+    if speedClamped > plane.topSpeed /2 then
+        turnAmt = math.abs(1 / turnDiv)
+    end
+
+
+    if not disable_input then
+
+        if InputDown(PlaneControls.thrust_increase) and plane.thrust + plane.thrustIncrement <= 101 then
+            plane.thrust = plane.thrust + 1
+        end
+        if InputDown(PlaneControls.thrust_decrease) and plane.thrust - plane.thrustIncrement >= 0 then
+            plane.thrust = plane.thrust - 1
+        end
+
+        if InputDown(PlaneControls.airbrake) then
+            ApplyBodyImpulse(
+                plane.body,
+                TransformToParentPoint(
+                    plane.tr, Vec(0,0,-5)),
+                plane_GetFwdPos(plane, speed*plane.brakeImpulseAmt))
+                plane_StatusAppend(plane, "Air-Braking")
+        end
+
+        -- Roll
+        if InputDown("a") or InputDown("d") then
+            local yawSign = 1
+            if InputDown("d") then yawSign = -1 end -- Determine yaw direction
+            local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 3 * CONFIG.smallMapMode.turnMult
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, yawAmt))
+        end
+        if InputDown("z") then
+            local yawSign = 1
+            local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
+        end
+        if InputDown("c") then
+            local yawSign = -1
+            local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, yawAmt, 0))
+        end
+    end
+
+
+    local steerMult = 1
+    if IsSimpleFlight() then
+        if Config.smallMapMode then
+            steerMult = 2
+        end
+    end
+
+
+    local crosshairRot = rot or QuatLookAt(plane.tr.pos, crosshairPos)
+
+    if plane_IsVtolCapable(plane) then
+
+        if plane.vtol.isDown then
+
+            pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
+            pTr.rot = pTr.rot:Approach(crosshairRot, 0.012)
+
+        else
+
+            -- Roll plane based on crosshair
+            local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
+            rollAmt[1] = rollAmt[1] * turnAmt * -350 / (plane.rollVal or 1)
+            pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
+
+            pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
+            pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / (plane.yawFac or 1) * steerMult)
+
+        end
+
+    else
+
+        -- Roll plane based on crosshair
+        local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
+        rollAmt[1] = rollAmt[1] * turnAmt * -350 / (plane.rollVal or 1)
+        pTr.rot = QuatRotateQuat(pTr.rot, QuatEuler(0, 0, rollAmt[1]))
+
+
+        -- -- Smooth roll
+        -- plane.rotSOS = AutoSM_DefineQuat(pTrCopy.rot, 0, 0.5, 0)
+        -- AutoSM_Update(plane.rotSOS, pTr.rot, GetTimeStep())
+        -- pTr.rot = AutoSM_Get(plane.rotSOS)
+
+
+        -- Align with crosshair pos
+        pTr.rot = MakeQuaternion(QuatCopy(pTr.rot))
+        pTr.rot = pTr.rot:Approach(crosshairRot, turnAmt / (plane.yawFac or 1) * steerMult)
+
+    end
+
+    if plane.totalVel > 2 then
+        SetBodyTransform(plane.body, pTr)
+    end
+
+end
+
+
 -- Apply engine/thrust impulse to move the plane forward.
 function plane_Move_Simple(plane)
 
@@ -58,131 +170,4 @@ function plane_getLiftSpeedFac(plane)
         result = x
     end
     return result
-end
-
-
-
--- end
--- Steer plane based on camera direction.
-function plane_Steer_Simple(plane, rot, disable_input)
-
-    -- SOS = SOS or AutoBatchCreateSOS(Vec(0,0,0), 0.9, 0.9, 0.9)
-    -- AutoBatchSOSUpdate(SOS, Vec(plane.camera.cameraX,plane.camera.cameraY,plane.camera.cameraZ), GetTime())
-
-    -- if plane.vehicle == GetPlayerVehicle() then
-    --     DebugWatch("pcam", Vec(plane.camera.cameraX, plane.camera.cameraY, plane.camera.cameraZ))
-    --     DebugWatch("SOS", Vec(SOS[1].value, SOS[2].value, SOS[3].value))
-    -- end
-
-
-    local speed = plane.speed
-    local speedClamped = (clamp(speed, 0.01, speed + 0.01))
-
-    local divSpeed = speedClamped / plane.topSpeed
-    local turnDiv = 50
-    local turnAmt = math.abs(getQuadtratic(divSpeed) / turnDiv)
-
-
-    if speedClamped > plane.topSpeed /2 then
-        turnAmt = math.abs(1 / turnDiv)
-    end
-
-
-    if not disable_input then
-
-        if InputDown("w") and plane.thrust + plane.thrustIncrement <= 101 then
-            plane.thrust = plane.thrust + 1
-        end
-        if InputDown("s") and plane.thrust - plane.thrustIncrement >= 0 then
-            plane.thrust = plane.thrust - 1
-        end
-
-        if InputDown("space") then
-            ApplyBodyImpulse(
-                plane.body,
-                TransformToParentPoint(
-                    plane.tr, Vec(0,0,-5)),
-                plane_GetFwdPos(plane, speed*plane.brakeImpulseAmt))
-                plane_StatusAppend(plane, "Air-Braking")
-        end
-
-        -- Roll
-        if InputDown("a") or InputDown("d") then
-            local yawSign = 1
-            if InputDown("d") then yawSign = -1 end -- Determine yaw direction
-            local yawAmt = yawSign * turnAmt * turnDiv / plane.rollVal * 3 * CONFIG.smallMapMode.turnMult
-            plane.tr.rot = QuatRotateQuat(plane.tr.rot, QuatEuler(0, 0, yawAmt))
-        end
-        if InputDown("z") then
-            local yawSign = 1
-            local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
-            plane.tr.rot = QuatRotateQuat(plane.tr.rot, QuatEuler(0, yawAmt, 0))
-        end
-        if InputDown("c") then
-            local yawSign = -1
-            local yawAmt = yawSign * turnAmt * turnDiv / plane.yawFac * 2 * CONFIG.smallMapMode.turnMult
-            plane.tr.rot = QuatRotateQuat(plane.tr.rot, QuatEuler(0, yawAmt, 0))
-        end
-    end
-
-
-    local steerMult = 1
-    if IsSimpleFlight then
-        if Config.smallMapMode then
-            steerMult = 2
-        end
-    end
-
-
-    local crosshairRot = rot or QuatLookAt(plane.tr.pos, crosshairPos)
-
-    if plane_IsVtolCapable(plane) then
-
-        if plane.vtol.isDown then
-
-            plane.tr.rot = MakeQuaternion(QuatCopy(plane.tr.rot))
-            plane.tr.rot = plane.tr.rot:Approach(crosshairRot, 0.012)
-
-        else
-
-        -- Roll plane based on crosshair
-        local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
-        rollAmt[1] = rollAmt[1] * turnAmt * -500 / (plane.rollVal or 1)
-        plane.tr.rot = QuatRotateQuat(plane.tr.rot, QuatEuler(0, 0, rollAmt[1]))
-
-        -- Align with crosshair pos
-        plane.tr.rot = MakeQuaternion(QuatCopy(plane.tr.rot))
-        plane.tr.rot = plane.tr.rot:Approach(crosshairRot, turnAmt / (plane.yawFac or 1) * steerMult / 2)
-
-        end
-
-    else
-
-        -- Roll plane based on crosshair
-        local rollAmt = VecNormalize(TransformToLocalPoint(plane.tr, crosshairPos))
-        rollAmt[1] = rollAmt[1] * turnAmt * -500 / (plane.rollVal or 1)
-        plane.tr.rot = QuatRotateQuat(plane.tr.rot, QuatEuler(0, 0, rollAmt[1]))
-
-        -- Align with crosshair pos
-        plane.tr.rot = MakeQuaternion(QuatCopy(plane.tr.rot))
-        plane.tr.rot = plane.tr.rot:Approach(crosshairRot, turnAmt / (plane.yawFac or 1) * steerMult / 2)
-
-    end
-
-
-    if plane.totalVel > 5  then
-
-        -- local plane_cam_angle = QuatAngle(plane.tr.rot, GetCameraTransform().rot)
-
-        DebugWatch("plane_cam_angle", plane_cam_angle)
-
-        SetBodyTransform(plane.body, plane.tr)
-        ConstrainOrientation(plane.body, 0, plane.tr.rot, GetCameraTransform().rot, turnAmt * 5)
-
-    -- else
-
-        -- plane_CameraAimGroundSteering(plane)
-
-    end
-
 end

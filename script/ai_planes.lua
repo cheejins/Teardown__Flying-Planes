@@ -41,7 +41,7 @@ function CreateFlightPos(radius, heightRange)
     return VecAdd(GetMapCenter(), AutoVecSubsituteY(VecRandom(radius), math.random(heightRange[1], heightRange[2])))
 end
 
-function init_ai_planes()
+function Init_AIPLANES()
     aiplanes_CreateFlightpaths()
 end
 
@@ -199,6 +199,23 @@ function aiplane_nextFlightTarget(plane)
 
 end
 
+
+
+function aiplane_pursue_plane(plane, targetPlane)
+
+    --[[
+
+        Get behind target plane
+            Level out
+                Shoot
+                    Circle back around.
+
+        Check plane angle to target plane and dist
+            Calculate shoot transform
+        
+    ]]
+
+end
 
 
 function Draw_AiplanesFlightPaths()

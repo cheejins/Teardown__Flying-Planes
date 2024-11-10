@@ -195,18 +195,19 @@ function plane_CollectParts_Aero(plane)
     for index, shape in ipairs(plane.AllShapes) do
         if HasTag(shape, "delete") then
             table.insert(deleteShapes, shape)
-            Delete(shape)
+            -- Delete(shape)
+            SetTag(shape, "invisible")
         end
     end
-    -- Safe delete shapes.
-    for _, deleteShape in ipairs(deleteShapes) do
-        for index, shape in ipairs(plane.AllShapes) do
-            if shape == deleteShape then
-                table.remove(plane.AllShapes, index)
-                break
-            end
-        end
-    end
+    -- -- Safe delete shapes.
+    -- for _, deleteShape in ipairs(deleteShapes) do
+    --     for index, shape in ipairs(plane.AllShapes) do
+    --         if shape == deleteShape then
+    --             table.remove(plane.AllShapes, index)
+    --             break
+    --         end
+    --     end
+    -- end
 
     plane.parts = planeParts
 
